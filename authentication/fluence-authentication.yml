@@ -1,0 +1,29 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/fluence-openapi-original.yml
+docs: https://fluence.dev/docs/build/api/overview
+notes: >-
+  Primary auth is an API key sent in the X-API-KEY header (create/manage at
+  console.fluence.network/settings/api-keys); a missing or invalid key returns forbidden.
+  A JWT bearer token (access_jwt_token) is used for console/session flows. API keys carry
+  permission scopes — see scopes/fluence-scopes.yml.
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: access_jwt_token
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: JWT token issued by Fluence
+  sources:
+  - openapi/fluence-openapi-original.yml
+- name: api_key
+  type: apiKey
+  in: header
+  parameter: X-API-KEY
+  sources:
+  - openapi/fluence-openapi-original.yml
