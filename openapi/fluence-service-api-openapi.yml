@@ -1,0 +1,130 @@
+openapi: 3.1.0
+info:
+  title: Fluence Billing Service API
+  description: "# Introduction\n\nThe Fluence API gives programmatic access to the decentralized Fluence compute marketplace, letting you find, rent, and\nmanage compute resources without the web UI. Integrate Fluence directly into your applications and automated workflows.\n\nBase URL: `https://api.fluence.dev`\n\nThe documentation starts with a high-level overview of design and technology, followed by endpoint reference details.\nFor additional user guides, see the [Fluence Documentation](https://fluence.dev/docs/build/overview).\n\n## Requests\n\nSend HTTPS requests to the Fluence API. All request and response bodies are JSON.\n\n- Set `Content-Type: application/json` for POST, PUT, and PATCH calls.\n- All examples assume the default `Accept: application/json` header.\n\n### Example\n\n```bash\ncurl -X POST https://api.fluence.dev/v1/public_ips \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -d '{\n        \"addressType\": \"V4\",\n        \"clusterId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n        \"name\": \"my-public-ip\"\n      }'\n```\n\n### HTTP request methods\n\nThe interface responds to different methods depending on the action required.\n\n| Method | Description                                                                                        |\n|--------|----------------------------------------------------------------------------------------------------|\n| GET    | Retrieves resource information. These requests are read-only and won't modify any resources.       |\n| POST   | Usually used to create new resources. Include all required attributes in the request body as JSON. |\n| PATCH  | Update specific attributes of a resource.                                                          |\n| PUT    | Updates an entire resource by replacing it with the provided data, regardless of current values.   |\n| DELETE | Removes resources.                                                                                 |\n\n## Responses\n\nSuccessful requests return `2xx` status codes and a JSON object.   \n\nIf an error occurs, Fluence returns an `4xx` or `5xx` status code and a JSON object describing the problem.\n\n### Response codes\n\n| Code | Description                                                                    |\n|------|--------------------------------------------------------------------------------|\n| 2xx  | **Success** - The request was successfully received, understood, and processed |\n| 4xx  | **Client Error** - The request contains invalid syntax or cannot be fulfilled  |\n| 400  | Bad request - Invalid parameters or malformed JSON                             |\n| 401  | Unauthorized - API key missing or invalid                                      |\n| 403  | Forbidden - Authenticated but not allowed                                      |\n| 404  | Not found - Resource does not exist                                            |\n| 422  | Unprocessable Entity - Well-formed request but cannot be processed             |\n| 500  | Internal server error - Unexpected error on our side.                          |\n\n### Error Response Format\n\nWhen an error occurs, the response includes a status message and a body in JSON format with an `error` field with\nadditional information. For example:\n\n```bash\n    HTTP/1.1 403 Forbidden\n    {\n      \"error\": \"Auth failed. No such API Key\",\n    }\n```\n\n## Authentication\n\nAll endpoints require a jwt token supplied as a Bearer token in the `Authorization` header or an API key provided as the value of the `X-API-KEY` header. For example:\n\n```bash\ncurl -H 'Authorization: Bearer my_authentication_token'\n```\n\n```bash\ncurl -H 'Authorization: X-API-KEY my_api_key'\n```\n\n### Managing API Keys\n\nCreate and manage keys in\nthe [Fluence Console › Settings › API Keys](https://console.fluence.network/settings/api-keys).\n\n- **Read-only keys** – retrieve information only\n- **Full-access keys** – manage all resources\n\n> **Important**: API keys are only displayed once during creation for security reasons. Store them safely - if a key is\n> lost, expired or compromised, you'll need to delete it and create a new one.\n\n### Key Security\n\nAPI keys function as complete authentication credentials, similar to a username/password combination. Therefore:\n\n- Keep your keys secure and never share them\n- Use HTTPS for all API requests\n- Rotate keys periodically\n- Set appropriate expiration dates when creating keys\n- Delete compromised keys immediately\n\n## Cloud-init\n\nOptional `cloudInit.userData` on `POST /v2/vms` lets you bootstrap the VM with a\n[cloud-init](https://cloudinit.readthedocs.io/) configuration. The payload is\nforwarded to the VM backend verbatim; vodopad does not parse or validate the\ncontent beyond a 16 KiB byte cap.\n\n```bash\ncurl -X POST https://api.fluence.dev/v2/vms \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"clusterId\": \"...\",\n        \"name\": \"demo\",\n        \"configurationId\": \"...\",\n        \"bootDisk\": { \"...\": \"...\" },\n        \"sshKeys\": [\"...\"],\n        \"cloudInit\": {\n          \"userData\": \"#cloud-config\\nruncmd:\\n  - echo hello\\n\"\n        }\n      }'\n```\n\nNotes:\n\n- **Create-only.** `userData` is meaningful only on `POST /v2/vms`. `PATCH` requests have no `userData` field; sending one is dropped during JSON deserialization.\n- **Ephemeral.** The content is stored only until the VM transitions to `Launched` (or `Failed` on create-deadline, or `Terminating`/`Terminated` on termination), then erased in the same transaction as the status change. After that, listing or fetching the VM returns a non-null `cloudInit` object (no fields) as a permanent marker but never the original content.\n- **Length limit.** Maximum 16 KiB enforced as a **byte count** (UTF-8 multi-byte characters are counted by their byte size, not code-point count). Oversize requests are rejected with `400 Bad Request`.\n- **Privacy.** The content is never echoed back through any API endpoint. With request-body debug logging enabled (`RUST_LOG=vodopad::api::server=debug` or `sqlx=debug`), `userData` will appear in logs — see Operator notes below.\n- **Backend rejection.** Malformed userData (e.g. invalid YAML) is detected by the VM backend during provisioning and surfaces as a `Failed` VM status, not a synchronous `400`.\n\n### Operator notes\n\n- The side-table `crd.user_virtual_machine_cloud_init` keeps a row per VM that ever had cloud-init. After successful handoff to the VM backend (status `Launching` or `Launched`) — or upon terminal cleanup (`Failed` from create-deadline timeout, or `Terminating`/`Terminated` from termination) — the row's `user_data` column is set to `NULL` in the same transaction as the status change. The row itself stays as a permanent \"had cloud-init\" marker — its existence is the source of truth for the non-null `cloudInit` object on the response.\n- WAL/audit logs and `pg_dump` backups can preserve the **pre-wipe** state (raw `user_data` bytes) until they roll over. Treat these artefacts as carrying potentially-sensitive material; restrict access and retention accordingly.\n- Do not enable `RUST_LOG=vodopad::api::server=debug` in production — the request/response body logger (`buffer_and_print` in `api/server.rs`) writes every UTF-8 body verbatim to `tracing::debug!` with no path-based redaction, and runs *before* validation, so even rejected oversize `userData` payloads end up in the log.\n- Do not set `RUST_LOG=sqlx=debug` in production — sqlx debug logs can include bind values, which would expose `userData` for in-flight queries.\n"
+  contact:
+    name: Cloudless Labs
+  license:
+    name: AGPL-3
+    identifier: AGPL-3
+  version: 0.10.0
+security:
+- api_key: []
+tags:
+- name: Service
+paths:
+  /v1/service/status:
+    get:
+      tags:
+      - Service
+      operationId: get_service_status
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceStatusDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security: []
+components:
+  schemas:
+    ServiceStatusDto:
+      type: object
+      required:
+      - maintenanceMode
+      - version
+      properties:
+        maintenanceMode:
+          type: boolean
+        version:
+          type: string
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+  securitySchemes:
+    access_jwt_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token issued by Fluence
+    api_key:
+      type: apiKey
+      in: header
+      name: X-API-KEY

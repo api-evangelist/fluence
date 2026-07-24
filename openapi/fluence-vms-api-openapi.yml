@@ -1,0 +1,2225 @@
+openapi: 3.1.0
+info:
+  title: Fluence Billing VMs API
+  description: "# Introduction\n\nThe Fluence API gives programmatic access to the decentralized Fluence compute marketplace, letting you find, rent, and\nmanage compute resources without the web UI. Integrate Fluence directly into your applications and automated workflows.\n\nBase URL: `https://api.fluence.dev`\n\nThe documentation starts with a high-level overview of design and technology, followed by endpoint reference details.\nFor additional user guides, see the [Fluence Documentation](https://fluence.dev/docs/build/overview).\n\n## Requests\n\nSend HTTPS requests to the Fluence API. All request and response bodies are JSON.\n\n- Set `Content-Type: application/json` for POST, PUT, and PATCH calls.\n- All examples assume the default `Accept: application/json` header.\n\n### Example\n\n```bash\ncurl -X POST https://api.fluence.dev/v1/public_ips \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -d '{\n        \"addressType\": \"V4\",\n        \"clusterId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n        \"name\": \"my-public-ip\"\n      }'\n```\n\n### HTTP request methods\n\nThe interface responds to different methods depending on the action required.\n\n| Method | Description                                                                                        |\n|--------|----------------------------------------------------------------------------------------------------|\n| GET    | Retrieves resource information. These requests are read-only and won't modify any resources.       |\n| POST   | Usually used to create new resources. Include all required attributes in the request body as JSON. |\n| PATCH  | Update specific attributes of a resource.                                                          |\n| PUT    | Updates an entire resource by replacing it with the provided data, regardless of current values.   |\n| DELETE | Removes resources.                                                                                 |\n\n## Responses\n\nSuccessful requests return `2xx` status codes and a JSON object.   \n\nIf an error occurs, Fluence returns an `4xx` or `5xx` status code and a JSON object describing the problem.\n\n### Response codes\n\n| Code | Description                                                                    |\n|------|--------------------------------------------------------------------------------|\n| 2xx  | **Success** - The request was successfully received, understood, and processed |\n| 4xx  | **Client Error** - The request contains invalid syntax or cannot be fulfilled  |\n| 400  | Bad request - Invalid parameters or malformed JSON                             |\n| 401  | Unauthorized - API key missing or invalid                                      |\n| 403  | Forbidden - Authenticated but not allowed                                      |\n| 404  | Not found - Resource does not exist                                            |\n| 422  | Unprocessable Entity - Well-formed request but cannot be processed             |\n| 500  | Internal server error - Unexpected error on our side.                          |\n\n### Error Response Format\n\nWhen an error occurs, the response includes a status message and a body in JSON format with an `error` field with\nadditional information. For example:\n\n```bash\n    HTTP/1.1 403 Forbidden\n    {\n      \"error\": \"Auth failed. No such API Key\",\n    }\n```\n\n## Authentication\n\nAll endpoints require a jwt token supplied as a Bearer token in the `Authorization` header or an API key provided as the value of the `X-API-KEY` header. For example:\n\n```bash\ncurl -H 'Authorization: Bearer my_authentication_token'\n```\n\n```bash\ncurl -H 'Authorization: X-API-KEY my_api_key'\n```\n\n### Managing API Keys\n\nCreate and manage keys in\nthe [Fluence Console › Settings › API Keys](https://console.fluence.network/settings/api-keys).\n\n- **Read-only keys** – retrieve information only\n- **Full-access keys** – manage all resources\n\n> **Important**: API keys are only displayed once during creation for security reasons. Store them safely - if a key is\n> lost, expired or compromised, you'll need to delete it and create a new one.\n\n### Key Security\n\nAPI keys function as complete authentication credentials, similar to a username/password combination. Therefore:\n\n- Keep your keys secure and never share them\n- Use HTTPS for all API requests\n- Rotate keys periodically\n- Set appropriate expiration dates when creating keys\n- Delete compromised keys immediately\n\n## Cloud-init\n\nOptional `cloudInit.userData` on `POST /v2/vms` lets you bootstrap the VM with a\n[cloud-init](https://cloudinit.readthedocs.io/) configuration. The payload is\nforwarded to the VM backend verbatim; vodopad does not parse or validate the\ncontent beyond a 16 KiB byte cap.\n\n```bash\ncurl -X POST https://api.fluence.dev/v2/vms \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"clusterId\": \"...\",\n        \"name\": \"demo\",\n        \"configurationId\": \"...\",\n        \"bootDisk\": { \"...\": \"...\" },\n        \"sshKeys\": [\"...\"],\n        \"cloudInit\": {\n          \"userData\": \"#cloud-config\\nruncmd:\\n  - echo hello\\n\"\n        }\n      }'\n```\n\nNotes:\n\n- **Create-only.** `userData` is meaningful only on `POST /v2/vms`. `PATCH` requests have no `userData` field; sending one is dropped during JSON deserialization.\n- **Ephemeral.** The content is stored only until the VM transitions to `Launched` (or `Failed` on create-deadline, or `Terminating`/`Terminated` on termination), then erased in the same transaction as the status change. After that, listing or fetching the VM returns a non-null `cloudInit` object (no fields) as a permanent marker but never the original content.\n- **Length limit.** Maximum 16 KiB enforced as a **byte count** (UTF-8 multi-byte characters are counted by their byte size, not code-point count). Oversize requests are rejected with `400 Bad Request`.\n- **Privacy.** The content is never echoed back through any API endpoint. With request-body debug logging enabled (`RUST_LOG=vodopad::api::server=debug` or `sqlx=debug`), `userData` will appear in logs — see Operator notes below.\n- **Backend rejection.** Malformed userData (e.g. invalid YAML) is detected by the VM backend during provisioning and surfaces as a `Failed` VM status, not a synchronous `400`.\n\n### Operator notes\n\n- The side-table `crd.user_virtual_machine_cloud_init` keeps a row per VM that ever had cloud-init. After successful handoff to the VM backend (status `Launching` or `Launched`) — or upon terminal cleanup (`Failed` from create-deadline timeout, or `Terminating`/`Terminated` from termination) — the row's `user_data` column is set to `NULL` in the same transaction as the status change. The row itself stays as a permanent \"had cloud-init\" marker — its existence is the source of truth for the non-null `cloudInit` object on the response.\n- WAL/audit logs and `pg_dump` backups can preserve the **pre-wipe** state (raw `user_data` bytes) until they roll over. Treat these artefacts as carrying potentially-sensitive material; restrict access and retention accordingly.\n- Do not enable `RUST_LOG=vodopad::api::server=debug` in production — the request/response body logger (`buffer_and_print` in `api/server.rs`) writes every UTF-8 body verbatim to `tracing::debug!` with no path-based redaction, and runs *before* validation, so even rejected oversize `userData` payloads end up in the log.\n- Do not set `RUST_LOG=sqlx=debug` in production — sqlx debug logs can include bind values, which would expose `userData` for in-flight queries.\n"
+  contact:
+    name: Cloudless Labs
+  license:
+    name: AGPL-3
+    identifier: AGPL-3
+  version: 0.10.0
+security:
+- api_key: []
+tags:
+- name: VMs
+  description: Endpoints to create, view, update and delete VMs
+paths:
+  /v2/vms:
+    get:
+      tags:
+      - VMs
+      operationId: get_users_vms
+      parameters:
+      - name: ids
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmId'
+      - name: name
+        in: query
+        description: Case-insensitive ILIKE match on name; '%' and '_' in the value act as SQL wildcards (any-sequence / any-single-char), not literal characters.
+        required: false
+        schema:
+          type: string
+        example: my-vm
+      - name: status
+        in: query
+        description: 'Keep only VMs whose status is in this set. Repeat the parameter using
+
+          bracket notation (`status[0]=launched&status[1]=new`); a single
+
+          `status=launched` is also accepted. An empty set applies no filtering.'
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmStatusDto'
+      - name: excludeStatus
+        in: query
+        description: 'Drop VMs whose status is in this set (`excludeStatus[0]=terminated`).
+
+          Combined with `status`, the result is the intersection. An empty set
+
+          applies no filtering.'
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmStatusDto'
+      - name: clusterId
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/ClusterId'
+      - name: publicIpId
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/UserPublicIpId'
+      - name: sort
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/SortFieldDto'
+      - name: order
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/SortOrderDto'
+      - name: expand
+        in: query
+        description: 'Resolve attached resources inline. Repeat with bracket notation
+
+          (`expand[0]=bootDisk&expand[1]=dataDisks`). Default response keeps bare IDs.'
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/VmExpand'
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: u-int64
+          minimum: 0
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: u-int64
+          minimum: 0
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse_UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:read
+      - api_key:
+        - vms:read
+    post:
+      tags:
+      - VMs
+      operationId: create_users_vm
+      requestBody:
+        description: Create a new user VM
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserVmRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}:
+    get:
+      tags:
+      - VMs
+      operationId: get_users_vm
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to fetch
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: expand
+        in: query
+        description: 'Resolve attached resources inline. Repeat with bracket notation
+
+          (`expand[0]=bootDisk&expand[1]=dataDisks`). Default response keeps bare IDs.'
+        required: false
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/VmExpand'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:read
+      - api_key:
+        - vms:read
+    patch:
+      tags:
+      - VMs
+      operationId: update_users_vm
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to update
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Update an existing user vm
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserVmRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/interfaces:
+    get:
+      tags:
+      - VMs
+      operationId: get_vm_interfaces
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to get interfaces for
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VmNetworkInterfaceDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:read
+      - api_key:
+        - vms:read
+  /v2/vms/{vm_id}/interfaces/{interface_id}:
+    patch:
+      tags:
+      - VMs
+      operationId: update_network_interface
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to add storages to
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: interface_id
+        in: path
+        description: The ID of the network interface to assign security group to
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Update network interface of user vm
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNetworkInterfaceRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/public_ip/add:
+    post:
+      tags:
+      - VMs
+      operationId: add_public_ip
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to add public ip
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Add public ip to user vm
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPublicIpRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/public_ip/remove:
+    post:
+      tags:
+      - VMs
+      operationId: remove_public_ip
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to remove public ip from
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/restart:
+    post:
+      tags:
+      - VMs
+      operationId: restart_users_vm
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to restart
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/softreboot:
+    post:
+      tags:
+      - VMs
+      operationId: softreboot_users_vm
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to softreboot
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/storages/add:
+    post:
+      tags:
+      - VMs
+      operationId: add_storages
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to add storages to
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Add storages to user vm
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddStoragesRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/storages/remove:
+    post:
+      tags:
+      - VMs
+      operationId: remove_storages
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to remove storages from
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Remove storages from user vm
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RemoveStoragesRequest'
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/terminate:
+    post:
+      tags:
+      - VMs
+      operationId: terminate_users_vm
+      parameters:
+      - name: vm_id
+        in: path
+        description: The ID of the user vm to terminate
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserVmDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+  /v2/vms/{vm_id}/vm-api-access-token:
+    post:
+      tags:
+      - VMs
+      operationId: mint_vm_access_token
+      parameters:
+      - name: vm_id
+        in: path
+        description: VM the caller wants console access to
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Short-lived JWT and vm-api domain for the attach handshake.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsoleAccessToken'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: bad_request
+                error: Wrong parameters
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unauthorized
+                error: Auth token invalid or missing
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: forbidden
+                error: Not allowed to call this endpoint
+        '404':
+          description: VM not found, not owned by the caller, or its cluster no longer exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: unprocessable_entity
+                error: Unable to process the entity
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+              example:
+                code: internal_server_error
+                error: Unexpected server error
+        '503':
+          description: Cluster has no vm-api gateway configured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorBody'
+      security:
+      - access_jwt_token:
+        - vms:write
+      - api_key:
+        - vms:write
+components:
+  schemas:
+    NetworkInterfaceKindDto:
+      oneOf:
+      - type: object
+        required:
+        - private
+        properties:
+          private:
+            type: object
+            required:
+            - subnet
+            properties:
+              subnet:
+                $ref: '#/components/schemas/UserSubnetId'
+      - type: object
+        required:
+        - public
+        properties:
+          public:
+            type: object
+            required:
+            - public_ip
+            properties:
+              public_ip:
+                $ref: '#/components/schemas/UserPublicIpId'
+    UserPublicIpStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - failed
+      - removing
+      - removed
+    StorageRoleDto:
+      type: string
+      enum:
+      - BOOT
+      - DATA
+    VmConfigurationSlug:
+      type: string
+      enum:
+      - cpu-regular-2vcpu-4gb
+      - cpu-regular-4vcpu-8gb
+      - cpu-regular-8vcpu-16gb
+      - cpu-regular-8vcpu-32gb
+      - cpu-regular-16vcpu-32gb
+      - cpu-regular-24vcpu-48gb
+      - cpu-regular-32vcpu-64gb
+      - cpu-regular-64vcpu-128gb
+      - cpu-premium-2vcpu-4gb
+      - cpu-premium-4vcpu-8gb
+      - cpu-premium-8vcpu-16gb
+      - cpu-premium-8vcpu-32gb
+      - cpu-premium-16vcpu-32gb
+      - cpu-premium-24vcpu-48gb
+      - cpu-premium-32vcpu-64gb
+      - cpu-premium-64vcpu-128gb
+      - cpu-shared-2vcpu-2gb
+      - cpu-shared-3vcpu-4gb
+      - cpu-shared-4vcpu-8gb
+      - cpu-shared-8vcpu-16gb
+      - cpu-shared-16vcpu-32gb
+    NewStorageType:
+      type: string
+      enum:
+      - NVME
+    NewIpAddressType:
+      type: string
+      enum:
+      - V4
+    VmConfigurationId:
+      type: string
+      format: uuid
+    AddStoragesRequest:
+      type: object
+      required:
+      - dataDisks
+      properties:
+        dataDisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserStorageId'
+    CreateUserStorageRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - storageType
+      - volumeGb
+      - replicated
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        name:
+          type: string
+        osImage:
+          type:
+          - string
+          - 'null'
+          example: https://example.com/image.qcow2
+        replicated:
+          type: boolean
+        storageType:
+          $ref: '#/components/schemas/NewStorageType'
+        volumeGb:
+          type: integer
+          format: u-int32
+          minimum: 0
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    UserPublicIpId:
+      type: string
+      format: uuid
+    UserStorageStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - updating
+      - failed
+      - removing
+      - removed
+    ConsoleAccessToken:
+      type: object
+      description: 'Wire-shape returned to Pult. Identical to the response of the previous
+
+        vodopad mint endpoint, which proxied through crd-api
+
+        for the opaque token; only the contents of `token` change here (opaque
+
+        short string → RS256 JWT). Pult treats it as a bearer it forwards to
+
+        vm-api and never parses it.'
+      required:
+      - token
+      - vmApiDomain
+      - workspaceId
+      - expiresAt
+      properties:
+        expiresAt:
+          type: string
+          format: date-time
+          description: 'Absolute expiration of the JWT, mirrored from the `exp` claim so the
+
+            client can preemptively re-mint.'
+        token:
+          type: string
+          description: 'RS256 JWT signed with the vodopad `JwtService` RSA key, audience
+
+            `lightmare-vm-api`, issuer `vodopad`. Carries `{sub, vm_id,
+
+            workspace_id, iat, exp, aud, iss}` — see
+
+            [`crate::api::auth::types::VmAccessClaims`].'
+        vmApiDomain:
+          type: string
+          description: 'Public base URL of lightmare vm-api for the cluster this VM lives
+
+            on. Pult builds the attach URL from this + the JWT. Sourced from
+
+            `clusters.vm_api_domain` (migration 1147); if
+
+            the cluster row has NULL the handler answers 503.'
+        workspaceId:
+          type: string
+          format: uuid
+          description: 'Workspace the JWT is scoped to — mirrored from the `workspace_id`
+
+            claim. vm-api compares this against the path segment on every
+
+            request, so Pult must use exactly this value when building the
+
+            `/ws/{ws_id}/...` URL. Today vodopad''s model collapses workspace
+
+            onto user (`UserWorkspaceId::from(UserId)`), but Pult must treat
+
+            this as opaque — surfacing it here keeps callers off the
+
+            `workspace_id == user_id` assumption.'
+    UpdateUserVmRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+    VmBootDisk:
+      oneOf:
+      - $ref: '#/components/schemas/UserStorageId'
+      - $ref: '#/components/schemas/CreateUserStorageRequest'
+    UserVmDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - configurationId
+      - name
+      - status
+      - restartRequired
+      - allowedActions
+      - dataDisks
+      - subnets
+      - sshKeys
+      - networkInterfaces
+      - createdAt
+      - updatedAt
+      properties:
+        allowedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/VmActionDto'
+          description: Operations currently legal for this VM's `status`, derived from the same source as request validation (an advertised action will not 406).
+        bootDisk:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserStorageId'
+        cloudInit:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/CloudInitInfoDto'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        configurationId:
+          $ref: '#/components/schemas/VmConfigurationId'
+        configurationName:
+          type:
+          - string
+          - 'null'
+          description: Plan name of the VM's configuration; set on list/create responses, omitted elsewhere.
+        configurationSlug:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/VmConfigurationSlug'
+            description: Plan slug of the VM's configuration. See `configuration_name`.
+        createdAt:
+          type: string
+          format: date-time
+        dataDisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserStorageId'
+        expanded:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserVmExpandedDto'
+            description: Inlined attached resources, present only for fields named in `?expand=`.
+        id:
+          $ref: '#/components/schemas/UserVmId'
+        lastPaidAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type: string
+        networkInterfaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmNetworkInterfaceId'
+        paidUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        priceHourlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+            absent when the catalog has no active price for this resource. A UI
+
+            estimate, not the amount billed.'
+          example: '0.05'
+        priceMonthlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+            as a string. See `price_hourly_usd`.'
+          example: '36.50'
+        publicIp:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserPublicIpId'
+        ramGb:
+          type:
+          - integer
+          - 'null'
+          format: u-int64
+          description: RAM in GB (decimal) of the VM's configuration. See `configuration_name`.
+          minimum: 0
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        restartRequired:
+          type: boolean
+        sshKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSshKeyId'
+        status:
+          $ref: '#/components/schemas/UserVmStatusDto'
+        subnets:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSubnetId'
+        terminatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        userId:
+          $ref: '#/components/schemas/UserId'
+        vcpu:
+          type:
+          - integer
+          - 'null'
+          format: u-int8
+          description: vCPU count of the VM's configuration. See `configuration_name`.
+          minimum: 0
+    UserVmId:
+      type: string
+      format: uuid
+    AddPublicIpRequest:
+      type: object
+      required:
+      - publicIpId
+      properties:
+        publicIpId:
+          $ref: '#/components/schemas/UserPublicIpId'
+    PaginatedResponse_UserVmDto:
+      type: object
+      required:
+      - items
+      - pagination
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - userId
+            - clusterId
+            - configurationId
+            - name
+            - status
+            - restartRequired
+            - allowedActions
+            - dataDisks
+            - subnets
+            - sshKeys
+            - networkInterfaces
+            - createdAt
+            - updatedAt
+            properties:
+              allowedActions:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VmActionDto'
+                description: Operations currently legal for this VM's `status`, derived from the same source as request validation (an advertised action will not 406).
+              bootDisk:
+                oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/UserStorageId'
+              cloudInit:
+                oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/CloudInitInfoDto'
+              clusterId:
+                $ref: '#/components/schemas/ClusterId'
+              configurationId:
+                $ref: '#/components/schemas/VmConfigurationId'
+              configurationName:
+                type:
+                - string
+                - 'null'
+                description: Plan name of the VM's configuration; set on list/create responses, omitted elsewhere.
+              configurationSlug:
+                oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/VmConfigurationSlug'
+                  description: Plan slug of the VM's configuration. See `configuration_name`.
+              createdAt:
+                type: string
+                format: date-time
+              dataDisks:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserStorageId'
+              expanded:
+                oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/UserVmExpandedDto'
+                  description: Inlined attached resources, present only for fields named in `?expand=`.
+              id:
+                $ref: '#/components/schemas/UserVmId'
+              lastPaidAt:
+                type:
+                - string
+                - 'null'
+                format: date-time
+              name:
+                type: string
+              networkInterfaces:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserVmNetworkInterfaceId'
+              paidUntil:
+                type:
+                - string
+                - 'null'
+                format: date-time
+              priceHourlyUsd:
+                type:
+                - string
+                - 'null'
+                description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+                  absent when the catalog has no active price for this resource. A UI
+
+                  estimate, not the amount billed.'
+                example: '0.05'
+              priceMonthlyUsd:
+                type:
+                - string
+                - 'null'
+                description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+                  as a string. See `price_hourly_usd`.'
+                example: '36.50'
+              publicIp:
+                oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/UserPublicIpId'
+              ramGb:
+                type:
+                - integer
+                - 'null'
+                format: u-int64
+                description: RAM in GB (decimal) of the VM's configuration. See `configuration_name`.
+                minimum: 0
+              readySince:
+                type:
+                - string
+                - 'null'
+                format: date-time
+              restartRequired:
+                type: boolean
+              sshKeys:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSshKeyId'
+              status:
+                $ref: '#/components/schemas/UserVmStatusDto'
+              subnets:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSubnetId'
+              terminatedAt:
+                type:
+                - string
+                - 'null'
+                format: date-time
+              updatedAt:
+                type: string
+                format: date-time
+              userId:
+                $ref: '#/components/schemas/UserId'
+              vcpu:
+                type:
+                - integer
+                - 'null'
+                format: u-int8
+                description: vCPU count of the VM's configuration. See `configuration_name`.
+                minimum: 0
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    VmNetworkInterfaceDto:
+      type: object
+      required:
+      - id
+      - default
+      - kind
+      properties:
+        default:
+          type: boolean
+        id:
+          $ref: '#/components/schemas/UserVmNetworkInterfaceId'
+        kind:
+          $ref: '#/components/schemas/NetworkInterfaceKindDto'
+        securityGroup:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserSecurityGroupId'
+    UserVmExpandedDto:
+      type: object
+      description: 'Attached resources resolved inline. Each field is set only when the matching
+
+        `?expand=` member was requested; absent fields stay as bare IDs on the VM.'
+      properties:
+        bootDisk:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserStorageDto'
+        dataDisks:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UserStorageDto'
+        networkInterfaces:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VmNetworkInterfaceDto'
+        publicIp:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserPublicIpDto'
+        sshKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UserSshKeyDto'
+        subnets:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UserSubnetDto'
+    UserSubnetDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - vpcId
+      - name
+      - status
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        id:
+          $ref: '#/components/schemas/UserSubnetId'
+        ipv4Cidr:
+          type:
+          - string
+          - 'null'
+          example: 10.0.0.0/24
+        ipv6Cidr:
+          type:
+          - string
+          - 'null'
+          example: 2001:db8::/64
+        name:
+          type: string
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          $ref: '#/components/schemas/UserSubnetStatusDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        vpcId:
+          $ref: '#/components/schemas/UserVpcId'
+    UserSecurityGroupId:
+      type: string
+      format: uuid
+    VmPublicIp:
+      oneOf:
+      - $ref: '#/components/schemas/UserPublicIpId'
+      - $ref: '#/components/schemas/CreateUserPublicIpRequest'
+    CloudInitInfoDto:
+      type: object
+      description: 'Presence-only marker. If `cloud_init` is non-null on a VM, the VM was
+
+        created with cloud-init `userData`. The content itself is wiped after
+
+        the VM transitions out of `New` and is not retrievable via API.'
+    IpAddressType:
+      type: string
+      enum:
+      - V4
+      - V6
+    ClusterId:
+      type: string
+      format: uuid
+    StorageImageDto:
+      type: object
+      description: 'Slim reference to the OS image a storage was created from. Present only when
+
+        the storage''s `init_url` matches a catalog image; absent for custom URLs and
+
+        data disks.'
+      required:
+      - id
+      - name
+      - slug
+      - distribution
+      properties:
+        distribution:
+          type: string
+          example: Ubuntu
+        id:
+          type: string
+          example: da1e99153be74618820a164eebcbdc66
+        name:
+          type: string
+          example: 24.04 (LTS) x64
+        slug:
+          type: string
+          example: ubuntu-24-04-x64
+    UserStorageId:
+      type: string
+      format: uuid
+    SortOrderDto:
+      type: string
+      enum:
+      - asc
+      - desc
+    StorageActionDto:
+      type: string
+      description: 'Wire representation of [`StorageAction`] — the operations exposed via
+
+        `UserStorageDto.allowedActions`.'
+      enum:
+      - update
+      - delete
+      - attachToVm
+    UserSshKeyDto:
+      type: object
+      required:
+      - id
+      - userId
+      - name
+      - publicKey
+      - algorithm
+      - fingerprint
+      properties:
+        algorithm:
+          type: string
+        fingerprint:
+          type: string
+        id:
+          $ref: '#/components/schemas/UserSshKeyId'
+        name:
+          type: string
+        publicKey:
+          type: string
+        userId:
+          $ref: '#/components/schemas/UserId'
+    UserId:
+      type: string
+      format: uuid
+    UpdateNetworkInterfaceRequest:
+      type: object
+      properties:
+        securityGroupId:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserSecurityGroupId'
+    CloudInitDto:
+      type: object
+      properties:
+        userData:
+          type:
+          - string
+          - 'null'
+          description: 'Raw cloud-init `userData`. Forwarded to lightmare verbatim; not
+
+            retrievable after VM creation.'
+    VmExpand:
+      type: string
+      description: 'Attached resource a `?expand` member can inline on a VM response: the bare
+
+        id stays in place and the resolved object is added to the `expanded` block.'
+      enum:
+      - bootDisk
+      - dataDisks
+      - publicIp
+      - subnets
+      - sshKeys
+      - networkInterfaces
+    UserSshKeyId:
+      type: string
+      format: uuid
+    UserStorageDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - name
+      - storageType
+      - status
+      - role
+      - volumeGb
+      - replicated
+      - attachedTo
+      - createdAt
+      properties:
+        allowedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorageActionDto'
+          description: 'Operations currently legal for this storage''s `status`, derived from the
+
+            same guards as request validation.'
+        attachedTo:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmId'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/UserStorageId'
+        image:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/StorageImageDto'
+        initUrl:
+          type:
+          - string
+          - 'null'
+        lastPaidAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type: string
+        paidUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        priceHourlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+            absent when the catalog has no active price for this resource. A UI
+
+            estimate, not the amount billed.'
+          example: '0.05'
+        priceMonthlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+            as a string. See `price_hourly_usd`.'
+          example: '36.50'
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        replicated:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/StorageRoleDto'
+        status:
+          $ref: '#/components/schemas/UserStorageStatusDto'
+        storageType:
+          $ref: '#/components/schemas/StorageTypeDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        volumeGb:
+          type: integer
+          format: u-int64
+          minimum: 0
+    UserSubnetId:
+      type: string
+      format: uuid
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+    RemoveStoragesRequest:
+      type: object
+      required:
+      - dataDisks
+      properties:
+        dataDisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserStorageId'
+    UserVpcId:
+      type: string
+      format: uuid
+    UserVmStatusDto:
+      type: string
+      enum:
+      - new
+      - launching
+      - launched
+      - failed
+      - updating
+      - terminating
+      - terminated
+      - suspending
+      - suspended
+      - restarting
+      - softRebooting
+      - unknown
+    VmActionDto:
+      type: string
+      description: 'Wire representation of [`VmAction`] — the operations exposed via
+
+        `UserVmDto.allowedActions`.'
+      enum:
+      - addPublicIp
+      - removePublicIp
+      - addStorages
+      - removeStorages
+      - updateNetworkInterface
+      - restart
+      - softReboot
+      - terminate
+    UserPublicIpDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - name
+      - addressType
+      - status
+      - createdAt
+      properties:
+        address:
+          type:
+          - string
+          - 'null'
+        addressType:
+          $ref: '#/components/schemas/IpAddressType'
+        allowedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicIpActionDto'
+          description: 'Operations currently legal for this public IP''s `status`, derived from
+
+            the same guards as request validation.'
+        attachedTo:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserVmReference'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/UserPublicIpId'
+        lastPaidAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type: string
+        paidUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        priceHourlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+            absent when the catalog has no active price for this resource. A UI
+
+            estimate, not the amount billed.'
+          example: '0.05'
+        priceMonthlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+            as a string. See `price_hourly_usd`.'
+          example: '36.50'
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          $ref: '#/components/schemas/UserPublicIpStatusDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+    UserVmReference:
+      type: object
+      description: A VM reference (id + name) surfaced where a resource is attached, so callers avoid a second lookup.
+      required:
+      - id
+      - name
+      properties:
+        id:
+          $ref: '#/components/schemas/UserVmId'
+        name:
+          type: string
+    SortFieldDto:
+      type: string
+      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
+      enum:
+      - createdAt
+      - name
+      - status
+    UserSubnetStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - failed
+      - removing
+      - removed
+    VmDataDisk:
+      oneOf:
+      - $ref: '#/components/schemas/UserStorageId'
+      - $ref: '#/components/schemas/CreateUserStorageRequest'
+    CreateUserVmRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - configurationId
+      - bootDisk
+      properties:
+        bootDisk:
+          $ref: '#/components/schemas/VmBootDisk'
+        cloudInit:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/CloudInitDto'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        configurationId:
+          $ref: '#/components/schemas/VmConfigurationId'
+        dataDisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/VmDataDisk'
+        name:
+          type: string
+        publicIp:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/VmPublicIp'
+        sshKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSshKeyId'
+    CreateUserPublicIpRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - addressType
+      properties:
+        addressType:
+          $ref: '#/components/schemas/NewIpAddressType'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        name:
+          type: string
+    StorageTypeDto:
+      type: string
+      enum:
+      - HDD
+      - SSD
+      - NVME
+    UserVmNetworkInterfaceId:
+      type: string
+      format: uuid
+    PublicIpActionDto:
+      type: string
+      description: 'Wire representation of [`PublicIpAction`] — the operations exposed via
+
+        `UserPublicIpDto.allowedActions`.'
+      enum:
+      - update
+      - delete
+      - attachToVm
+  securitySchemes:
+    access_jwt_token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token issued by Fluence
+    api_key:
+      type: apiKey
+      in: header
+      name: X-API-KEY
