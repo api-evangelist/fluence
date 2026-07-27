@@ -1,8 +1,14 @@
 aid: fluence
 name: Fluence
-description: 'Fluence is a company surfaced as a portfolio company of multicoin-capital and added to the
-  API Evangelist network as a stub for enrichment. Sector: crypto-web3. This profile is a lead awaiting
-  the enrichment pipeline.'
+description: >-
+  Fluence is a decentralized (DePIN) cloud-computing platform offering enterprise-grade CPU and
+  GPU compute — virtual machines, GPU containers, and bare-metal instances — rented from a global
+  marketplace of independent infrastructure providers at up to 85% below traditional clouds, with
+  predictable pricing and zero egress fees. The Fluence API (api.fluence.dev) gives programmatic
+  access to the marketplace: search available compute, deploy and manage VMs, attach storage and
+  public IPs, configure VPCs, subnets, and security groups, register SSH keys, and handle billing.
+  Compute is paid in USDC; the FLT token is used for staking and protocol governance on Fluence's
+  Arbitrum Orbit L2 appchain. Backed by Multicoin Capital.
 url: https://raw.githubusercontent.com/api-evangelist/fluence/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -10,13 +16,297 @@ x-backed-by:
 - multicoin-capital
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
+image: https://www.fluence.network/favicon.ico
 tags:
 - Company
 - Crypto Web3
-apis: []
+- Cloud Compute
+- DePIN
+- GPU
+- Infrastructure
+- Virtual Machines
+- AI Infrastructure
+- Decentralized Cloud
+apis:
+- aid: fluence:fluence-billing-api
+  name: Fluence Billing API
+  description: Billing and payment related endpoints
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-billing-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-hardware-api
+  name: Fluence Hardware API
+  description: Hardware API endpoints
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Hardware
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-hardware-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-prices-api
+  name: Fluence Prices API
+  description: Endpoints to get prices for different resources and cost estimation
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Prices
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-prices-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-publicip-api
+  name: Fluence PublicIP API
+  description: The PublicIP API from Fluence — 3 operation(s) for publicip.
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - PublicIP
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-publicip-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-securitygroup-api
+  name: Fluence SecurityGroup API
+  description: Endpoints to create, view, update and delete security groups
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - SecurityGroup
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-securitygroup-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-service-api
+  name: Fluence Service API
+  description: The Service API from Fluence — 1 operation(s) for service.
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Service
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-service-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-ssh-keys-api
+  name: Fluence SSH keys API
+  description: Endpoints to manage SSH keys
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - SSH keys
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-ssh-keys-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-storage-api
+  name: Fluence Storage API
+  description: Endpoints to create, view, update and delete storage resources
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Storage
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-storage-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-subnets-api
+  name: Fluence Subnets API
+  description: Endpoints to create, view, update and delete subnets
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Subnets
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-subnets-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-users-api
+  name: Fluence Users API
+  description: Users API endpoints
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-users-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-vms-api
+  name: Fluence VMs API
+  description: Endpoints to create, view, update and delete VMs
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - VMs
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-vms-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-vpcs-api
+  name: Fluence VPCs API
+  description: Endpoints to create, view, update and delete VPCs
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - VPCs
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-vpcs-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -24,4 +314,55 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://fluence.network
+  url: https://www.fluence.network
+- type: DeveloperPortal
+  url: https://fluence.dev/docs/build/overview
+- type: Documentation
+  url: https://fluence.dev/docs/build/overview
+- type: APIReference
+  url: https://api.fluence.dev/swagger-ui/
+- type: GettingStarted
+  url: https://fluence.dev/docs/build/overview
+- type: Console
+  url: https://console.fluence.network
+- type: Blog
+  url: https://www.fluence.network/blog/
+- type: GitHubOrganization
+  url: https://github.com/fluencelabs
+- type: SignUp
+  url: https://console.fluence.network/auth/sign-up
+- type: TermsOfService
+  url: https://console.fluence.network/files/FLUENCE_TERMS_OF_SERVICE.pdf
+- type: PrivacyPolicy
+  url: https://console.fluence.network/files/FLUENCE_PRIVACY_POLICY.pdf
+- type: Compliance
+  url: https://www.fluence.network/
+- type: LLMsTxt
+  url: llms/fluence-llms.txt
+- type: Authentication
+  url: authentication/fluence-authentication.yml
+- type: OAuthScopes
+  url: scopes/fluence-scopes.yml
+- type: Conventions
+  url: conventions/fluence-conventions.yml
+- type: ErrorCatalog
+  url: errors/fluence-error-codes.yml
+- type: Lifecycle
+  url: lifecycle/fluence-lifecycle.yml
+- type: Conformance
+  url: conformance/fluence-conformance.yml
+- type: DataModel
+  url: data-model/fluence-data-model.yml
+- type: MCPServer
+  url: mcp/fluence-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/fluence-agentic-access.yml
+- type: DomainSecurity
+  url: security/fluence-domain-security.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

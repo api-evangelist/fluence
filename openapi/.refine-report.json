@@ -1,0 +1,36 @@
+{
+  "provider": "fluence",
+  "sources": [
+    "fluence-billing-api-openapi.yml",
+    "fluence-hardware-api-openapi.yml",
+    "fluence-prices-api-openapi.yml",
+    "fluence-publicip-api-openapi.yml",
+    "fluence-securitygroup-api-openapi.yml",
+    "fluence-service-api-openapi.yml",
+    "fluence-ssh-keys-api-openapi.yml",
+    "fluence-storage-api-openapi.yml",
+    "fluence-subnets-api-openapi.yml",
+    "fluence-users-api-openapi.yml",
+    "fluence-vms-api-openapi.yml",
+    "fluence-vpcs-api-openapi.yml"
+  ],
+  "outputs": [
+    "fluence-billing-api-openapi.yml",
+    "fluence-hardware-api-openapi.yml",
+    "fluence-prices-api-openapi.yml",
+    "fluence-publicip-api-openapi.yml",
+    "fluence-securitygroup-api-openapi.yml",
+    "fluence-service-api-openapi.yml",
+    "fluence-ssh-keys-api-openapi.yml",
+    "fluence-storage-api-openapi.yml",
+    "fluence-subnets-api-openapi.yml",
+    "fluence-users-api-openapi.yml",
+    "fluence-vms-api-openapi.yml",
+    "fluence-vpcs-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

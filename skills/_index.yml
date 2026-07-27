@@ -1,0 +1,16 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/fluence-openapi-original.yml
+skills:
+  - file: fluence-deploy-vm.md
+    name: Deploy a Fluence virtual machine
+    api: openapi/fluence-openapi-original.yml
+    operations: [get_vm_configurations, get_vm_prices, cost, create_users_ssh_key, create_users_vm, get_users_vm]
+  - file: fluence-manage-ssh-keys.md
+    name: Manage Fluence SSH keys
+    api: openapi/fluence-openapi-original.yml
+    operations: [get_users_ssh_keys, create_users_ssh_key, delete_users_ssh_key]
+  - file: fluence-find-and-price-compute.md
+    name: Find and price Fluence compute
+    api: openapi/fluence-openapi-original.yml
+    operations: [get_bulk_resources, get_available_resources, get_vm_configurations, get_vm_prices, cost]

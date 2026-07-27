@@ -1,0 +1,66 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/fluence-openapi-original.yml
+docs: https://fluence.dev/docs/build/api/overview
+# The Fluence API does NOT use RFC 9457 application/problem+json. Every non-2xx
+# response carries a custom JSON envelope { "code": <ErrorCode>, "error": <string> }
+# (schema: ErrorBody). Clients branch on the stable machine-readable `code`.
+format: custom-json
+envelope:
+  media_type: application/json
+  schema: ErrorBody
+  fields:
+    code: Stable, machine-readable error code (enum ErrorCode). Branch on this.
+    error: Human-readable error message. Do not parse.
+# Machine-readable codes carried in the `code` field (components.schemas.ErrorCode enum).
+error_codes:
+  - code: bad_request
+    http_status: 400
+    meaning: Malformed request or invalid parameters.
+  - code: unauthorized
+    http_status: 401
+    meaning: Missing or invalid credentials (API key / JWT).
+  - code: forbidden
+    http_status: 403
+    meaning: Authenticated but not permitted; also returned for a missing/invalid X-API-KEY.
+  - code: not_found
+    http_status: 404
+    meaning: Resource does not exist.
+  - code: conflict
+    http_status: 409
+    meaning: Request conflicts with current resource state.
+  - code: unprocessable_entity
+    http_status: 422
+    meaning: Semantically invalid request body (validation failure).
+  - code: not_acceptable
+    http_status: 406
+    meaning: Requested representation not acceptable.
+  - code: insufficient_balance
+    http_status: 402
+    meaning: Account balance is too low to complete the billed operation (semantic code).
+  - code: service_unavailable
+    http_status: 503
+    meaning: Service temporarily unavailable.
+  - code: internal_server_error
+    http_status: 500
+    meaning: Unexpected server-side error.
+# HTTP statuses observed across the 71 operations' 4xx/5xx responses.
+http_statuses:
+  - status: 400
+    operations: 70
+  - status: 401
+    operations: 70
+  - status: 403
+    operations: 70
+  - status: 404
+    operations: 2
+  - status: 409
+    operations: 2
+  - status: 422
+    operations: 70
+  - status: 500
+    operations: 70
+  - status: 502
+    operations: 1
+  - status: 503
+    operations: 1

@@ -1,0 +1,50 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/fluence-openapi-original.yml
+docs: https://fluence.dev/docs/build/api/overview
+summary: >-
+  Cross-cutting request/response semantics for the Fluence compute-marketplace REST API
+  (api.fluence.dev). Derived from the published OpenAPI 3.1 and the API overview docs.
+authentication:
+  style: api-key-header
+  header: X-API-KEY
+  alt: JWT bearer (access_jwt_token) issued by Fluence for console/session flows
+  scoped: true
+  scope_model: API keys carry permission scopes (see scopes/fluence-scopes.yml)
+  cross_ref: authentication/fluence-authentication.yml
+idempotency:
+  supported: false
+  notes: >-
+    The Fluence API documents no idempotency-key header or parameter; no Idempotency-Key
+    appears in the OpenAPI. Mutating operations are not advertised as idempotent.
+pagination:
+  style: page-number
+  request_params: [page, perPage]
+  response_object: PaginationInfo
+  response_fields: [totalRecords, filteredRecords, totalPages, currentPage, perPage]
+  envelope_schemas: PaginatedResponse_* (per resource)
+versioning:
+  scheme: uri-path
+  versions: [v1, v2]
+  current: v2
+  notes: >-
+    v2 supersedes v1 for VMs, billing top-ups, and user balances; v1 remains for SSH keys,
+    storage, networking (VPCs/subnets/security groups/public IPs), hardware, and prices.
+  cross_ref: lifecycle/fluence-lifecycle.yml
+content_type:
+  request: application/json
+  response: application/json
+  notes: Set Content-Type application/json on POST/PUT/PATCH.
+error_envelope:
+  format: custom-json
+  shape: '{ code: <ErrorCode>, error: <string> }'
+  branch_on: code
+  cross_ref: errors/fluence-error-codes.yml
+rate_limiting:
+  documented: false
+  notes: No rate-limit policy or headers are documented in the OpenAPI or API overview.
+billing_semantics:
+  currency: USDC
+  notes: >-
+    Compute is billed in USDC against an account balance; operations that would exceed the
+    balance return code insufficient_balance. FLT is the staking/governance token.

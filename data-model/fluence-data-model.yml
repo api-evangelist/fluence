@@ -1,0 +1,103 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/fluence-openapi-original.yml
+# Entity-relationship graph derived from OpenAPI schema id-reference fields
+# (clusterId, vpcId, userId, attachedTo, configurationId) across the *Dto resource schemas.
+entities:
+  - name: VM
+    schema: UserVmDto
+    id_field: id
+    api: /v2/vms
+  - name: Storage
+    schema: UserStorageDto
+    id_field: id
+    api: /v1/storages
+  - name: SshKey
+    schema: UserSshKeyDto
+    id_field: id
+    api: /v1/ssh_keys
+  - name: Vpc
+    schema: UserVpcDto
+    id_field: id
+    api: /v1/vpcs
+  - name: Subnet
+    schema: UserSubnetDto
+    id_field: id
+    api: /v1/subnets
+  - name: SecurityGroup
+    schema: UserSecurityGroupDto
+    id_field: id
+    api: /v1/security_groups
+  - name: PublicIp
+    schema: UserPublicIpDto
+    id_field: id
+    api: /v1/public_ips
+  - name: Cluster
+    schema: ClusterDto
+    id_field: id
+    api: /v1/clusters
+  - name: Datacenter
+    schema: DatacenterDto
+    id_field: id
+    api: /v1/datacenters
+  - name: VmConfiguration
+    schema: VmConfigurationDto
+    id_field: id
+    api: /v1/configurations/virtual_machines
+relationships:
+  - from: VM
+    to: Cluster
+    kind: belongs_to
+    via: clusterId
+  - from: VM
+    to: VmConfiguration
+    kind: belongs_to
+    via: configurationId
+  - from: VM
+    to: Storage
+    kind: has_many
+    via: dataDisks/bootDisk
+  - from: VM
+    to: PublicIp
+    kind: has_one
+    via: publicIp
+  - from: Storage
+    to: Cluster
+    kind: belongs_to
+    via: clusterId
+  - from: Storage
+    to: VM
+    kind: belongs_to
+    via: attachedTo
+  - from: Vpc
+    to: Cluster
+    kind: belongs_to
+    via: clusterId
+  - from: Subnet
+    to: Vpc
+    kind: belongs_to
+    via: vpcId
+  - from: Subnet
+    to: Cluster
+    kind: belongs_to
+    via: clusterId
+  - from: SecurityGroup
+    to: Vpc
+    kind: belongs_to
+    via: vpcId
+  - from: SecurityGroup
+    to: VM
+    kind: has_many
+    via: attachedTo
+  - from: PublicIp
+    to: Cluster
+    kind: belongs_to
+    via: clusterId
+  - from: PublicIp
+    to: VM
+    kind: belongs_to
+    via: attachedTo
+  - from: Cluster
+    to: Datacenter
+    kind: belongs_to
+    via: datacenterId

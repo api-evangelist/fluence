@@ -1,0 +1,35 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/fluence-openapi-original.yml + https://www.fluence.network/
+standards:
+  - id: oauth2
+    conforms: false
+    evidence: No oauth2 securityScheme; auth is X-API-KEY plus JWT bearer.
+  - id: oidc
+    conforms: false
+  - id: jwt-bearer
+    conforms: true
+    evidence: securityScheme access_jwt_token type http scheme bearer bearerFormat JWT.
+  - id: api-key
+    conforms: true
+    evidence: securityScheme api_key in header X-API-KEY (primary auth).
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: Errors use a custom application/json { code, error } envelope, not application/problem+json.
+  - id: openapi-3.1
+    conforms: true
+    evidence: Published OpenAPI 3.1.0 document at api.fluence.dev/docs/fluence-public.yaml.
+  - id: pagination
+    conforms: true
+    evidence: Page-number pagination (page/perPage) with a PaginationInfo response object.
+  - id: idempotency
+    conforms: false
+    evidence: No idempotency-key mechanism documented.
+# Published compliance posture (stated on fluence.network). No dedicated trust-center page found.
+compliance_program:
+  published: true
+  source: https://www.fluence.network/
+  certifications:
+    - GDPR
+    - ISO 27001
+    - SOC 2

@@ -1,0 +1,25 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Fluence API
+  version: 1.0.0
+extends: openapi/fluence-openapi-original.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-rating: 4
+      x-apievangelist-notes: >-
+        Fluence compute-marketplace REST API. OpenAPI 3.1, 71 operations, X-API-KEY + JWT auth,
+        page-number pagination, custom { code, error } error envelope. No idempotency contract,
+        no documented rate limits, no webhooks/AsyncAPI surface.
+      x-api-base-url: https://api.fluence.dev
+  - target: $.servers
+    update:
+      - url: https://api.fluence.dev
+        description: Fluence API (production) — server URL added by API Evangelist; absent from the source spec.
+  - target: $.info
+    update:
+      x-agent-ready:
+        auth-clarity: strong
+        error-semantics: stable machine-readable code enum
+        idempotency: not-supported
+        rate-limits: undocumented

@@ -1,0 +1,89 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/fluence-openapi-original.yml
+docs: https://console.fluence.network/settings/api-keys
+# Fluence is NOT OAuth2. API keys (X-API-KEY) carry a set of permission scopes
+# (components.schemas.PermissionScope). These are the API-key permission scopes, not
+# OAuth grant scopes. Admin-only scopes (admin:*) are internal and not grantable to
+# ordinary API keys; they are listed under admin_scopes for completeness.
+scheme:
+  type: apiKey
+  in: header
+  name: X-API-KEY
+scopes:
+  - scope: vms:read
+    description: List and read virtual machines.
+  - scope: vms:write
+    description: Create, update, restart, and terminate virtual machines.
+  - scope: vm:create
+    description: Create a virtual machine.
+  - scope: vm:remove
+    description: Terminate a virtual machine.
+  - scope: vm:restart
+    description: Restart a virtual machine.
+  - scope: vm:update
+    description: Update a virtual machine.
+  - scope: vm:list
+    description: List virtual machines.
+  - scope: vm:request_access
+    description: Request access to a virtual machine.
+  - scope: storage:read
+    description: List and read storage volumes.
+  - scope: storage:write
+    description: Create, update, and delete storage volumes.
+  - scope: public_ip:read
+    description: List and read public IPs.
+  - scope: public_ip:write
+    description: Allocate, update, and release public IPs.
+  - scope: subnet:read
+    description: List and read subnets.
+  - scope: subnet:write
+    description: Create, update, and delete subnets.
+  - scope: vpc:read
+    description: List and read VPCs.
+  - scope: vpc:write
+    description: Create, update, and delete VPCs.
+  - scope: security_groups:read
+    description: List and read security groups.
+  - scope: security_groups:write
+    description: Create, update, and delete security groups.
+  - scope: ssh_key:create
+    description: Create an SSH key.
+  - scope: ssh_key:remove
+    description: Delete an SSH key.
+  - scope: ssh_key:activate
+    description: Activate an SSH key.
+  - scope: ssh_key:deactivate
+    description: Deactivate an SSH key.
+  - scope: ssh_key:list
+    description: List SSH keys.
+  - scope: clusters:read
+    description: Read available compute clusters.
+  - scope: prices:read
+    description: Read compute, storage, and public-IP prices.
+  - scope: token:deposit
+    description: Deposit tokens to the account balance.
+  - scope: token:withdraw
+    description: Withdraw tokens from the account balance.
+  - scope: billing:top_up
+    description: Create a balance top-up.
+  - scope: billing:get_history
+    description: Read top-up history.
+  - scope: billing:get_spending_history
+    description: Read spending (charge) history.
+  - scope: billing:get_spending_aggregated
+    description: Read aggregated spending.
+  - scope: api_key:create
+    description: Create API keys.
+  - scope: api_key:remove
+    description: Delete API keys.
+  - scope: api_key:list
+    description: List API keys.
+admin_scopes:
+  note: >-
+    Internal administrative scopes present in the PermissionScope enum (not grantable to
+    ordinary API keys): admin:users:*, admin:vms:*, admin:invites:*, admin:peers:*,
+    admin:default_images:*, admin:promo_codes:*, admin:basic_configuration:*,
+    admin:payment_methods:*, admin:payments:read, admin:security_groups:*, admin:storages:*,
+    admin:subnets:*, admin:public_ips:*, admin:vpcs:*, admin:clusters:*, admin:prices:*,
+    and the marketplace-backend scopes akash:* and spheron:*.
