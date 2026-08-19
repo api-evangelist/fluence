@@ -1,0 +1,415 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Fluence Billing VMs API",
+    "version": "0.10.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "VMs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "get_users_vms",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/vms",
+            "params": [
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "name",
+                "value": "my-vm",
+                "type": "query",
+                "description": "Case-insensitive ILIKE match on name; '%' and '_' in the value act as SQL wildcards (any-sequence / any-single-char), not literal characters."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Keep only VMs whose status is in this set. Repeat the parameter using\nbracket notation (`status[0]=launched&status[1]=new`); a single\n`status=launched` is also accepted. An empty set applies no filtering."
+              },
+              {
+                "name": "excludeStatus",
+                "value": "",
+                "type": "query",
+                "description": "Drop VMs whose status is in this set (`excludeStatus[0]=terminated`).\nCombined with `status`, the result is the intersection. An empty set\napplies no filtering."
+              },
+              {
+                "name": "clusterId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "publicIpId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Resolve attached resources inline. Repeat with bracket notation\n(`expand[0]=bootDisk&expand[1]=dataDisks`). Default response keeps bare IDs."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "perPage",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "create_users_vm",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "get_users_vm",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/vms/:vm_id",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to fetch"
+              },
+              {
+                "name": "expand",
+                "value": "",
+                "type": "query",
+                "description": "Resolve attached resources inline. Repeat with bracket notation\n(`expand[0]=bootDisk&expand[1]=dataDisks`). Default response keeps bare IDs."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "update_users_vm",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/v2/vms/:vm_id",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "get_vm_interfaces",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/interfaces",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to get interfaces for"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "update_network_interface",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/interfaces/:interface_id",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to add storages to"
+              },
+              {
+                "name": "interface_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the network interface to assign security group to"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "add_public_ip",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/public_ip/add",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to add public ip"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "remove_public_ip",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/public_ip/remove",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to remove public ip from"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "restart_users_vm",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/restart",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to restart"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "softreboot_users_vm",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/softreboot",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to softreboot"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "add_storages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/storages/add",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to add storages to"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "remove_storages",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/storages/remove",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to remove storages from"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "terminate_users_vm",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/terminate",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user vm to terminate"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "mint_vm_access_token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v2/vms/:vm_id/vm-api-access-token",
+            "params": [
+              {
+                "name": "vm_id",
+                "value": "",
+                "type": "path",
+                "description": "VM the caller wants console access to"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

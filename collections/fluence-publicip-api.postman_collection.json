@@ -1,0 +1,2364 @@
+{
+  "item": [
+    {
+      "id": "1d013964-08f0-4e13-98fb-ef1ebd0f02e4",
+      "name": "PublicIP",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b3720a50-0272-4903-b706-abea5a1e672d",
+          "name": "get users public ips",
+          "request": {
+            "name": "get users public ips",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "public_ips"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ids",
+                  "value": "<uuid>"
+                },
+                {
+                  "disabled": false,
+                  "key": "ids",
+                  "value": "<uuid>"
+                },
+                {
+                  "disabled": false,
+                  "key": "clusterId",
+                  "value": "<uuid>"
+                },
+                {
+                  "disabled": false,
+                  "key": "datacenterId",
+                  "value": "<uuid>",
+                  "description": "Filter to public IPs in every cluster of this datacenter. Combine with\n`clusterId` to narrow to a single cluster; both must match."
+                },
+                {
+                  "disabled": false,
+                  "key": "cityCode",
+                  "value": "<string>",
+                  "description": "Filter to public IPs in every datacenter of this city (a city may span\nseveral datacenters). Combine with other filters; all must match."
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Case-insensitive ILIKE match on name; '%' and '_' in the value act as SQL wildcards (any-sequence / any-single-char), not literal characters."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Keep only public IPs whose status is in this set. Repeat the parameter\nusing bracket notation (`status[0]=ready&status[1]=new`); a single\n`status=ready` is also accepted. An empty set applies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Keep only public IPs whose status is in this set. Repeat the parameter\nusing bracket notation (`status[0]=ready&status[1]=new`); a single\n`status=ready` is also accepted. An empty set applies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "excludeStatus",
+                  "value": "<string>",
+                  "description": "Drop public IPs whose status is in this set\n(`excludeStatus[0]=removed`). Combined with `status`, the result is the\nintersection. An empty set applies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "excludeStatus",
+                  "value": "<string>",
+                  "description": "Drop public IPs whose status is in this set\n(`excludeStatus[0]=removed`). Combined with `status`, the result is the\nintersection. An empty set applies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "addressType",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "excludeAttached",
+                  "value": "<boolean>",
+                  "description": "When `true`, exclude public IPs attached to any VM, returning only\nunattached ones. Absent or `false` applies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "order",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<u-int64>"
+                },
+                {
+                  "disabled": false,
+                  "key": "perPage",
+                  "value": "<u-int64>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "4ed3c7c5-ec4f-4617-bbf0-0cc334f66a2e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "e0534ef7-f499-b6aa-4ef3-57886f4d3b3b"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "69d65e21-e3ea-526a-d9cc-457b86332b2f"
+                    },
+                    {
+                      "key": "clusterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "datacenterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "cityCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "status",
+                      "value": "new"
+                    },
+                    {
+                      "key": "status",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "new"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "addressType",
+                      "value": "V6"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"69e32f72-cf0d-2104-4053-606ab55af61c\",\n      \"userId\": \"a521a767-ce90-b9ee-1a26-ae00121ee1d8\",\n      \"clusterId\": \"624e6b07-464c-55e7-3eb0-542cfb3e16a7\",\n      \"name\": \"string\",\n      \"addressType\": \"V6\",\n      \"status\": \"removed\",\n      \"createdAt\": \"1996-07-26T20:10:55.678Z\",\n      \"address\": \"string\",\n      \"allowedActions\": [\n        \"update\",\n        \"update\"\n      ],\n      \"attachedTo\": null,\n      \"lastPaidAt\": \"1989-01-13T15:13:53.234Z\",\n      \"paidUntil\": \"2013-05-04T08:02:16.224Z\",\n      \"priceHourlyUsd\": \"0.05\",\n      \"priceMonthlyUsd\": \"36.50\",\n      \"readySince\": \"2010-01-16T13:54:59.243Z\",\n      \"removedAt\": \"1957-02-01T09:51:36.488Z\"\n    },\n    {\n      \"id\": \"633dc40b-1731-96f7-4f9d-9cda14085607\",\n      \"userId\": \"cc0e0ff4-9aa6-0269-788d-5e2d8cd1373c\",\n      \"clusterId\": \"65df45d8-3826-c434-1f5b-d7d26af0db2f\",\n      \"name\": \"string\",\n      \"addressType\": \"V4\",\n      \"status\": \"created\",\n      \"createdAt\": \"1997-01-30T09:34:15.615Z\",\n      \"address\": \"string\",\n      \"allowedActions\": [\n        \"attachToVm\",\n        \"delete\"\n      ],\n      \"attachedTo\": null,\n      \"lastPaidAt\": \"2000-12-01T01:01:06.558Z\",\n      \"paidUntil\": \"2002-11-28T11:25:06.266Z\",\n      \"priceHourlyUsd\": \"0.05\",\n      \"priceMonthlyUsd\": \"36.50\",\n      \"readySince\": \"1949-11-26T09:43:43.681Z\",\n      \"removedAt\": \"1976-05-17T01:34:36.791Z\"\n    }\n  ],\n  \"pagination\": {\n    \"totalRecords\": 3050,\n    \"filteredRecords\": 5730,\n    \"totalPages\": 6997,\n    \"currentPage\": 2193,\n    \"perPage\": 9819\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f52c1e37-b309-46cc-bdaf-8ee66c66012a",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "e0534ef7-f499-b6aa-4ef3-57886f4d3b3b"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "69d65e21-e3ea-526a-d9cc-457b86332b2f"
+                    },
+                    {
+                      "key": "clusterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "datacenterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "cityCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "status",
+                      "value": "new"
+                    },
+                    {
+                      "key": "status",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "new"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "addressType",
+                      "value": "V6"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bf8ec51b-6af2-4033-889b-92e48db68b35",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "e0534ef7-f499-b6aa-4ef3-57886f4d3b3b"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "69d65e21-e3ea-526a-d9cc-457b86332b2f"
+                    },
+                    {
+                      "key": "clusterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "datacenterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "cityCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "status",
+                      "value": "new"
+                    },
+                    {
+                      "key": "status",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "new"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "addressType",
+                      "value": "V6"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f815454b-4205-4886-85fe-12528f010cb2",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "e0534ef7-f499-b6aa-4ef3-57886f4d3b3b"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "69d65e21-e3ea-526a-d9cc-457b86332b2f"
+                    },
+                    {
+                      "key": "clusterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "datacenterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "cityCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "status",
+                      "value": "new"
+                    },
+                    {
+                      "key": "status",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "new"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "addressType",
+                      "value": "V6"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38f3a0fb-6817-4302-8e5f-c831b4dfc1a7",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "e0534ef7-f499-b6aa-4ef3-57886f4d3b3b"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "69d65e21-e3ea-526a-d9cc-457b86332b2f"
+                    },
+                    {
+                      "key": "clusterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "datacenterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "cityCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "status",
+                      "value": "new"
+                    },
+                    {
+                      "key": "status",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "new"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "addressType",
+                      "value": "V6"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07eda273-61e8-425a-b421-57e1f9a95ba9",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "e0534ef7-f499-b6aa-4ef3-57886f4d3b3b"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "69d65e21-e3ea-526a-d9cc-457b86332b2f"
+                    },
+                    {
+                      "key": "clusterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "datacenterId",
+                      "value": "d5d38ff2-edb0-b4ab-a75d-de12df6171f8"
+                    },
+                    {
+                      "key": "cityCode",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "status",
+                      "value": "new"
+                    },
+                    {
+                      "key": "status",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "new"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "failed"
+                    },
+                    {
+                      "key": "addressType",
+                      "value": "V6"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "createdAt"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "be42d56b-34e8-48dc-a163-cede712330d6",
+          "name": "create users public ip",
+          "request": {
+            "name": "create users public ip",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "public_ips"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clusterId\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"addressType\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e0ef60ef-e080-4e13-acd3-2a2da8adbb3f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"a00184d8-68c1-11d9-04a4-79decb4152bc\",\n  \"name\": \"<string>\",\n  \"addressType\": \"V4\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"398e0809-f3e5-ea71-221d-277a4f72c671\",\n  \"userId\": \"ef5f6096-1200-5b56-c9c6-62c6d85aaad5\",\n  \"clusterId\": \"12498216-3cb5-8ee1-4f37-90ced9f27445\",\n  \"name\": \"string\",\n  \"addressType\": \"V6\",\n  \"status\": \"created\",\n  \"createdAt\": \"2000-10-01T23:12:12.294Z\",\n  \"address\": \"string\",\n  \"allowedActions\": [\n    \"delete\",\n    \"attachToVm\"\n  ],\n  \"attachedTo\": null,\n  \"lastPaidAt\": \"2013-11-06T19:30:50.445Z\",\n  \"paidUntil\": \"2020-11-23T16:04:54.207Z\",\n  \"priceHourlyUsd\": \"0.05\",\n  \"priceMonthlyUsd\": \"36.50\",\n  \"readySince\": \"1995-01-07T14:23:00.732Z\",\n  \"removedAt\": \"1991-06-05T03:30:19.327Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d24471c4-04be-4892-8fb1-6bc8205d15b6",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"a00184d8-68c1-11d9-04a4-79decb4152bc\",\n  \"name\": \"<string>\",\n  \"addressType\": \"V4\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8353042c-289f-4586-be9e-9efefec2b296",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"a00184d8-68c1-11d9-04a4-79decb4152bc\",\n  \"name\": \"<string>\",\n  \"addressType\": \"V4\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "38fa60c5-2ae4-4e7c-8149-52a2bf8dd0a3",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"a00184d8-68c1-11d9-04a4-79decb4152bc\",\n  \"name\": \"<string>\",\n  \"addressType\": \"V4\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0026f8c4-4eb6-4ffe-9234-9cff9dd67b50",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"a00184d8-68c1-11d9-04a4-79decb4152bc\",\n  \"name\": \"<string>\",\n  \"addressType\": \"V4\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a492aec2-12dd-4da9-aac3-ea3532b99c0d",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"a00184d8-68c1-11d9-04a4-79decb4152bc\",\n  \"name\": \"<string>\",\n  \"addressType\": \"V4\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5695e0ec-7767-4caf-862e-117507c0742d",
+          "name": "delete users public ips",
+          "request": {
+            "name": "delete users public ips",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "public_ips",
+                "delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7ce62ff5-010a-4eed-ad1f-c959cff9caac",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"782907a0-81c2-93fa-3f67-e5bb010e14e5\",\n    \"e678c1bd-a803-2db1-a5c1-dedbe8a66a05\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"5bf2da56-d6a9-bf2c-15d9-a3adb06a9fb7\",\n    \"userId\": \"c408a560-cda1-77e5-b55a-1db2006d33c7\",\n    \"clusterId\": \"57306196-d63a-6d25-8534-cb9ee5402f0e\",\n    \"name\": \"string\",\n    \"addressType\": \"V4\",\n    \"status\": \"failed\",\n    \"createdAt\": \"2021-08-24T11:35:33.893Z\",\n    \"address\": \"string\",\n    \"allowedActions\": [\n      \"attachToVm\",\n      \"update\"\n    ],\n    \"attachedTo\": null,\n    \"lastPaidAt\": \"1962-11-26T07:38:32.665Z\",\n    \"paidUntil\": \"2016-09-15T01:41:39.579Z\",\n    \"priceHourlyUsd\": \"0.05\",\n    \"priceMonthlyUsd\": \"36.50\",\n    \"readySince\": \"1971-05-16T23:04:35.873Z\",\n    \"removedAt\": \"1983-08-12T14:12:58.831Z\"\n  },\n  {\n    \"id\": \"77f778c1-3514-571c-e66c-e5c961c80c08\",\n    \"userId\": \"66cb0259-79ee-fc6a-e09a-3f20cb6259b8\",\n    \"clusterId\": \"006f714f-3d87-9615-c421-5d066adf95da\",\n    \"name\": \"string\",\n    \"addressType\": \"V6\",\n    \"status\": \"ready\",\n    \"createdAt\": \"1962-02-21T09:55:07.115Z\",\n    \"address\": \"string\",\n    \"allowedActions\": [\n      \"delete\",\n      \"attachToVm\"\n    ],\n    \"attachedTo\": null,\n    \"lastPaidAt\": \"2022-02-16T07:54:31.947Z\",\n    \"paidUntil\": \"1978-12-12T09:50:33.375Z\",\n    \"priceHourlyUsd\": \"0.05\",\n    \"priceMonthlyUsd\": \"36.50\",\n    \"readySince\": \"1972-04-09T07:02:03.915Z\",\n    \"removedAt\": \"2017-12-10T22:26:01.591Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "177a6f2a-9e33-4d85-8f10-885a65bc60fd",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"782907a0-81c2-93fa-3f67-e5bb010e14e5\",\n    \"e678c1bd-a803-2db1-a5c1-dedbe8a66a05\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "563481ae-732a-4666-842f-ef8c996acf10",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"782907a0-81c2-93fa-3f67-e5bb010e14e5\",\n    \"e678c1bd-a803-2db1-a5c1-dedbe8a66a05\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "390f7bf7-71cc-442a-8691-0acf484edfae",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"782907a0-81c2-93fa-3f67-e5bb010e14e5\",\n    \"e678c1bd-a803-2db1-a5c1-dedbe8a66a05\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "088edb17-d5c5-4d9c-b909-759f081ae7b7",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"782907a0-81c2-93fa-3f67-e5bb010e14e5\",\n    \"e678c1bd-a803-2db1-a5c1-dedbe8a66a05\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cf01b4d4-fc9b-4eac-9908-7110221fd459",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"782907a0-81c2-93fa-3f67-e5bb010e14e5\",\n    \"e678c1bd-a803-2db1-a5c1-dedbe8a66a05\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8e6d3f79-9f65-4cf4-b6ef-d51de4d7d33c",
+          "name": "delete users public ip",
+          "request": {
+            "name": "delete users public ip",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "public_ips",
+                ":public_ip_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "public_ip_id",
+                  "description": "(Required) The ID of the public IP to remove"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "add1462a-4c80-4f65-8501-11d82824f43e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the public IP to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"398e0809-f3e5-ea71-221d-277a4f72c671\",\n  \"userId\": \"ef5f6096-1200-5b56-c9c6-62c6d85aaad5\",\n  \"clusterId\": \"12498216-3cb5-8ee1-4f37-90ced9f27445\",\n  \"name\": \"string\",\n  \"addressType\": \"V6\",\n  \"status\": \"created\",\n  \"createdAt\": \"2000-10-01T23:12:12.294Z\",\n  \"address\": \"string\",\n  \"allowedActions\": [\n    \"delete\",\n    \"attachToVm\"\n  ],\n  \"attachedTo\": null,\n  \"lastPaidAt\": \"2013-11-06T19:30:50.445Z\",\n  \"paidUntil\": \"2020-11-23T16:04:54.207Z\",\n  \"priceHourlyUsd\": \"0.05\",\n  \"priceMonthlyUsd\": \"36.50\",\n  \"readySince\": \"1995-01-07T14:23:00.732Z\",\n  \"removedAt\": \"1991-06-05T03:30:19.327Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7af215ac-c249-46e7-9482-2f707eb25591",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the public IP to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1d9f294b-119c-4dd8-a86d-01c298a2fe8a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the public IP to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8107c854-2552-4526-923e-22e649b5e115",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the public IP to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "09520f74-8e78-4fcd-8c2d-61f45bfeb52e",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the public IP to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "884f158c-8684-4b24-9b51-1b5b93e02715",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the public IP to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "587d568f-7235-4800-8927-40dbb9f19388",
+          "name": "update user public ip",
+          "request": {
+            "name": "update user public ip",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "public_ips",
+                ":public_ip_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "public_ip_id",
+                  "description": "(Required) The ID of the address to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "39410b5b-ab15-4e30-b209-7622901a8f1e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the address to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"398e0809-f3e5-ea71-221d-277a4f72c671\",\n  \"userId\": \"ef5f6096-1200-5b56-c9c6-62c6d85aaad5\",\n  \"clusterId\": \"12498216-3cb5-8ee1-4f37-90ced9f27445\",\n  \"name\": \"string\",\n  \"addressType\": \"V6\",\n  \"status\": \"created\",\n  \"createdAt\": \"2000-10-01T23:12:12.294Z\",\n  \"address\": \"string\",\n  \"allowedActions\": [\n    \"delete\",\n    \"attachToVm\"\n  ],\n  \"attachedTo\": null,\n  \"lastPaidAt\": \"2013-11-06T19:30:50.445Z\",\n  \"paidUntil\": \"2020-11-23T16:04:54.207Z\",\n  \"priceHourlyUsd\": \"0.05\",\n  \"priceMonthlyUsd\": \"36.50\",\n  \"readySince\": \"1995-01-07T14:23:00.732Z\",\n  \"removedAt\": \"1991-06-05T03:30:19.327Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5993fa3d-3270-4c6c-951f-31e2a1de7b27",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the address to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d03263f3-b0d8-4e08-9059-1e791dce987a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the address to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9ac78eda-10da-4c4c-8ce8-712a6b8ffafe",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the address to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "350c2b4d-aeb5-4238-872e-201f10715f33",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the address to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b7ac3462-65a6-4344-aebf-3b2ecce977fa",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "public_ips",
+                    ":public_ip_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "public_ip_id",
+                      "description": "(Required) The ID of the address to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "335b3678-fbfb-498b-b000-1745f3e79a92",
+    "name": "Fluence Billing PublicIP API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Introduction\n\nThe Fluence API gives programmatic access to the decentralized Fluence compute marketplace, letting you find, rent, and\nmanage compute resources without the web UI. Integrate Fluence directly into your applications and automated workflows.\n\nBase URL: `https://api.fluence.dev`\n\nThe documentation starts with a high-level overview of design and technology, followed by endpoint reference details.\nFor additional user guides, see the [Fluence Documentation](https://fluence.dev/docs/build/overview).\n\n## Requests\n\nSend HTTPS requests to the Fluence API. All request and response bodies are JSON.\n\n- Set `Content-Type: application/json` for POST, PUT, and PATCH calls.\n- All examples assume the default `Accept: application/json` header.\n\n### Example\n\n```bash\ncurl -X POST https://api.fluence.dev/v1/public_ips \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -d '{\n        \"addressType\": \"V4\",\n        \"clusterId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n        \"name\": \"my-public-ip\"\n      }'\n```\n\n### HTTP request methods\n\nThe interface responds to different methods depending on the action required.\n\n| Method | Description                                                                                        |\n|--------|----------------------------------------------------------------------------------------------------|\n| GET    | Retrieves resource information. These requests are read-only and won't modify any resources.       |\n| POST   | Usually used to create new resources. Include all required attributes in the request body as JSON. |\n| PATCH  | Update specific attributes of a resource.                                                          |\n| PUT    | Updates an entire resource by replacing it with the provided data, regardless of current values.   |\n| DELETE | Removes resources.                                                                                 |\n\n## Responses\n\nSuccessful requests return `2xx` status codes and a JSON object.   \n\nIf an error occurs, Fluence returns an `4xx` or `5xx` status code and a JSON object describing the problem.\n\n### Response codes\n\n| Code | Description                                                                    |\n|------|--------------------------------------------------------------------------------|\n| 2xx  | **Success** - The request was successfully received, understood, and processed |\n| 4xx  | **Client Error** - The request contains invalid syntax or cannot be fulfilled  |\n| 400  | Bad request - Invalid parameters or malformed JSON                             |\n| 401  | Unauthorized - API key missing or invalid                                      |\n| 403  | Forbidden - Authenticated but not allowed                                      |\n| 404  | Not found - Resource does not exist                                            |\n| 422  | Unprocessable Entity - Well-formed request but cannot be processed             |\n| 500  | Internal server error - Unexpected error on our side.                          |\n\n### Error Response Format\n\nWhen an error occurs, the response includes a status message and a body in JSON format with an `error` field with\nadditional information. For example:\n\n```bash\n    HTTP/1.1 403 Forbidden\n    {\n      \"error\": \"Auth failed. No such API Key\",\n    }\n```\n\n## Authentication\n\nAll endpoints require a jwt token supplied as a Bearer token in the `Authorization` header or an API key provided as the value of the `X-API-KEY` header. For example:\n\n```bash\ncurl -H 'Authorization: Bearer my_authentication_token'\n```\n\n```bash\ncurl -H 'Authorization: X-API-KEY my_api_key'\n```\n\n### Managing API Keys\n\nCreate and manage keys in\nthe [Fluence Console › Settings › API Keys](https://console.fluence.network/settings/api-keys).\n\n- **Read-only keys** – retrieve information only\n- **Full-access keys** – manage all resources\n\n> **Important**: API keys are only displayed once during creation for security reasons. Store them safely - if a key is\n> lost, expired or compromised, you'll need to delete it and create a new one.\n\n### Key Security\n\nAPI keys function as complete authentication credentials, similar to a username/password combination. Therefore:\n\n- Keep your keys secure and never share them\n- Use HTTPS for all API requests\n- Rotate keys periodically\n- Set appropriate expiration dates when creating keys\n- Delete compromised keys immediately\n\n## Cloud-init\n\nOptional `cloudInit.userData` on `POST /v2/vms` lets you bootstrap the VM with a\n[cloud-init](https://cloudinit.readthedocs.io/) configuration. The payload is\nforwarded to the VM backend verbatim; vodopad does not parse or validate the\ncontent beyond a 16 KiB byte cap.\n\n```bash\ncurl -X POST https://api.fluence.dev/v2/vms \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"clusterId\": \"...\",\n        \"name\": \"demo\",\n        \"configurationId\": \"...\",\n        \"bootDisk\": { \"...\": \"...\" },\n        \"sshKeys\": [\"...\"],\n        \"cloudInit\": {\n          \"userData\": \"#cloud-config\\nruncmd:\\n  - echo hello\\n\"\n        }\n      }'\n```\n\nNotes:\n\n- **Create-only.** `userData` is meaningful only on `POST /v2/vms`. `PATCH` requests have no `userData` field; sending one is dropped during JSON deserialization.\n- **Ephemeral.** The content is stored only until the VM transitions to `Launched` (or `Failed` on create-deadline, or `Terminating`/`Terminated` on termination), then erased in the same transaction as the status change. After that, listing or fetching the VM returns a non-null `cloudInit` object (no fields) as a permanent marker but never the original content.\n- **Length limit.** Maximum 16 KiB enforced as a **byte count** (UTF-8 multi-byte characters are counted by their byte size, not code-point count). Oversize requests are rejected with `400 Bad Request`.\n- **Privacy.** The content is never echoed back through any API endpoint. With request-body debug logging enabled (`RUST_LOG=vodopad::api::server=debug` or `sqlx=debug`), `userData` will appear in logs — see Operator notes below.\n- **Backend rejection.** Malformed userData (e.g. invalid YAML) is detected by the VM backend during provisioning and surfaces as a `Failed` VM status, not a synchronous `400`.\n\n### Operator notes\n\n- The side-table `crd.user_virtual_machine_cloud_init` keeps a row per VM that ever had cloud-init. After successful handoff to the VM backend (status `Launching` or `Launched`) — or upon terminal cleanup (`Failed` from create-deadline timeout, or `Terminating`/`Terminated` from termination) — the row's `user_data` column is set to `NULL` in the same transaction as the status change. The row itself stays as a permanent \"had cloud-init\" marker — its existence is the source of truth for the non-null `cloudInit` object on the response.\n- WAL/audit logs and `pg_dump` backups can preserve the **pre-wipe** state (raw `user_data` bytes) until they roll over. Treat these artefacts as carrying potentially-sensitive material; restrict access and retention accordingly.\n- Do not enable `RUST_LOG=vodopad::api::server=debug` in production — the request/response body logger (`buffer_and_print` in `api/server.rs`) writes every UTF-8 body verbatim to `tracing::debug!` with no path-based redaction, and runs *before* validation, so even rejected oversize `userData` payloads end up in the log.\n- Do not set `RUST_LOG=sqlx=debug` in production — sqlx debug logs can include bind values, which would expose `userData` for in-flight queries.\n\n\nContact Support:\n Name: Cloudless Labs",
+      "type": "text/plain"
+    }
+  }
+}

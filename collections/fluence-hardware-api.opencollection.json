@@ -1,0 +1,115 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Fluence Billing Hardware API",
+    "version": "0.10.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Hardware",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get available clusters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/clusters",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "get_bulk_resources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/clusters/resources",
+            "params": [
+              {
+                "name": "clusterIds",
+                "value": "",
+                "type": "query",
+                "description": "Restrict the result to these clusters (`clusterIds[0]=...`). Absent or\nempty returns resources for every cluster."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns available resources keyed by cluster. Per-cluster failures are skipped (partial results, not a hard error). The all-clusters path (no `clusterIds`) is capped at 100 clusters."
+        },
+        {
+          "info": {
+            "name": "get_available_resources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/clusters/:cluster_id/resources",
+            "params": [
+              {
+                "name": "cluster_id",
+                "value": "",
+                "type": "path",
+                "description": "Cluster ID"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "Raw, unfiltered catalog of *all* VM configurations (every row in\n`crd.vm_configurations`, including unpriced SKUs such as `cpu-shared-*`\nbefore Phase 2 pricing lands). This is intentionally **not** a\n\"what can I buy here\" listing: it has no price-gate, no per-cluster\n`cpu_allocation_ratio`, and no cluster scope. It backs admin/internal\ntooling that needs the full catalog (e.g. assigning prices to a SKU that\nhas none yet) and id->detail lookups for already-created VMs.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/configurations/virtual_machines",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The customer-facing, buyable listing — price-gated and ratio-gated per\ncluster — is `GET /v1/clusters/{cluster_id}/resources`\n(`api::hardware::resources::get_available_resources`). Do not treat this\nendpoint as a plan picker; selecting an unpriced SKU here would 404 on\n`POST /v2/vms`."
+        },
+        {
+          "info": {
+            "name": "get_datacenters",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/datacenters",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of datacenters"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

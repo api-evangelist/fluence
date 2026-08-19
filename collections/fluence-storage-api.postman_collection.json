@@ -1,0 +1,3032 @@
+{
+  "item": [
+    {
+      "id": "71158aa3-11e8-413a-8721-ff0ed9c01894",
+      "name": "Storage",
+      "description": {
+        "content": "Endpoints to create, view, update and delete storage resources",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "22449c0c-d1c4-4ae7-be9b-5b17fec20551",
+          "name": "get users storages",
+          "request": {
+            "name": "get users storages",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "ids",
+                  "value": "<uuid>"
+                },
+                {
+                  "disabled": false,
+                  "key": "ids",
+                  "value": "<uuid>"
+                },
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Case-insensitive ILIKE match on name; '%' and '_' in the value act as SQL wildcards (any-sequence / any-single-char), not literal characters."
+                },
+                {
+                  "disabled": false,
+                  "key": "storageType",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Keep only storages whose status is in this set. Repeat the parameter\nusing bracket notation (`status[0]=ready&status[1]=new`); a single\n`status=ready` is also accepted. An empty set applies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Keep only storages whose status is in this set. Repeat the parameter\nusing bracket notation (`status[0]=ready&status[1]=new`); a single\n`status=ready` is also accepted. An empty set applies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "excludeStatus",
+                  "value": "<string>",
+                  "description": "Drop storages whose status is in this set (`excludeStatus[0]=removed`).\nCombined with `status`, the result is the intersection. An empty set\napplies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "excludeStatus",
+                  "value": "<string>",
+                  "description": "Drop storages whose status is in this set (`excludeStatus[0]=removed`).\nCombined with `status`, the result is the intersection. An empty set\napplies no filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "excludeAttached",
+                  "value": "<boolean>",
+                  "description": "When `true`, exclude storages attached to any VM (as a boot disk or a\ndata disk), returning only unattached ones. Absent or `false` applies\nno filtering."
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "order",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<u-int64>"
+                },
+                {
+                  "disabled": false,
+                  "key": "perPage",
+                  "value": "<u-int64>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "5178e1bb-0bde-472a-a313-3a5431098ce6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "fdf71ba8-83e8-d36e-69db-b329374ad877"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "65f0657c-ed5a-4007-d93f-038babae5f03"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "storageType",
+                      "value": "NVMe"
+                    },
+                    {
+                      "key": "status",
+                      "value": "created"
+                    },
+                    {
+                      "key": "status",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "created"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"112c9c46-89c2-2533-fb19-2073205269e1\",\n      \"userId\": \"c972cfd5-fd87-3a37-f17f-14705bb1902a\",\n      \"clusterId\": \"85d12dc7-f402-9083-947e-e5bb6e77caf2\",\n      \"name\": \"string\",\n      \"storageType\": \"NVME\",\n      \"status\": \"new\",\n      \"role\": \"BOOT\",\n      \"volumeGb\": 3005,\n      \"replicated\": false,\n      \"attachedTo\": [\n        \"ead10ee7-f31d-1fbc-d013-2962242bf412\",\n        \"1eb1b9f9-0714-b853-f5f3-6b5fec07a4df\"\n      ],\n      \"createdAt\": \"2026-02-21T09:51:39.781Z\",\n      \"allowedActions\": [\n        \"update\",\n        \"attachToVm\"\n      ],\n      \"image\": null,\n      \"initUrl\": \"string\",\n      \"lastPaidAt\": \"2004-08-11T01:13:23.337Z\",\n      \"paidUntil\": \"1966-06-23T11:16:37.535Z\",\n      \"priceHourlyUsd\": \"0.05\",\n      \"priceMonthlyUsd\": \"36.50\",\n      \"readySince\": \"1984-02-27T18:48:43.199Z\",\n      \"removedAt\": \"1990-05-15T06:24:32.986Z\"\n    },\n    {\n      \"id\": \"30a93ceb-1a3b-265e-ea44-149bbcbcb749\",\n      \"userId\": \"46685bb7-5a5c-f9bf-e468-3a251c665d72\",\n      \"clusterId\": \"8a842590-65dc-50a7-53d7-129cce632975\",\n      \"name\": \"string\",\n      \"storageType\": \"HDD\",\n      \"status\": \"new\",\n      \"role\": \"BOOT\",\n      \"volumeGb\": 7876,\n      \"replicated\": true,\n      \"attachedTo\": [\n        \"1950e4b0-9143-7eb5-8782-2f3c68937d98\",\n        \"843271c2-ff9a-ec05-aed4-35e602078f2f\"\n      ],\n      \"createdAt\": \"1971-03-12T15:11:31.241Z\",\n      \"allowedActions\": [\n        \"delete\",\n        \"update\"\n      ],\n      \"image\": null,\n      \"initUrl\": \"string\",\n      \"lastPaidAt\": \"1972-02-18T19:02:11.377Z\",\n      \"paidUntil\": \"2001-10-07T14:20:07.926Z\",\n      \"priceHourlyUsd\": \"0.05\",\n      \"priceMonthlyUsd\": \"36.50\",\n      \"readySince\": \"1996-10-11T16:11:15.373Z\",\n      \"removedAt\": \"1968-06-21T12:29:43.891Z\"\n    }\n  ],\n  \"pagination\": {\n    \"totalRecords\": 9353,\n    \"filteredRecords\": 7851,\n    \"totalPages\": 5520,\n    \"currentPage\": 8297,\n    \"perPage\": 3358\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8256cc65-6279-406b-b2ef-e4bd849d6584",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "fdf71ba8-83e8-d36e-69db-b329374ad877"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "65f0657c-ed5a-4007-d93f-038babae5f03"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "storageType",
+                      "value": "NVMe"
+                    },
+                    {
+                      "key": "status",
+                      "value": "created"
+                    },
+                    {
+                      "key": "status",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "created"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "895e7bd4-e071-4dea-a68c-6470466c0ae8",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "fdf71ba8-83e8-d36e-69db-b329374ad877"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "65f0657c-ed5a-4007-d93f-038babae5f03"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "storageType",
+                      "value": "NVMe"
+                    },
+                    {
+                      "key": "status",
+                      "value": "created"
+                    },
+                    {
+                      "key": "status",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "created"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "98770521-3373-4495-8336-c4d6163c5575",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "fdf71ba8-83e8-d36e-69db-b329374ad877"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "65f0657c-ed5a-4007-d93f-038babae5f03"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "storageType",
+                      "value": "NVMe"
+                    },
+                    {
+                      "key": "status",
+                      "value": "created"
+                    },
+                    {
+                      "key": "status",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "created"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "03bf7170-0ee5-44f6-8ab3-ad6017ccc549",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "fdf71ba8-83e8-d36e-69db-b329374ad877"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "65f0657c-ed5a-4007-d93f-038babae5f03"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "storageType",
+                      "value": "NVMe"
+                    },
+                    {
+                      "key": "status",
+                      "value": "created"
+                    },
+                    {
+                      "key": "status",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "created"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "058dbbdc-22fc-4ad2-8488-00849910d12b",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "ids",
+                      "value": "fdf71ba8-83e8-d36e-69db-b329374ad877"
+                    },
+                    {
+                      "key": "ids",
+                      "value": "65f0657c-ed5a-4007-d93f-038babae5f03"
+                    },
+                    {
+                      "key": "name",
+                      "value": "my-vm"
+                    },
+                    {
+                      "key": "storageType",
+                      "value": "NVMe"
+                    },
+                    {
+                      "key": "status",
+                      "value": "created"
+                    },
+                    {
+                      "key": "status",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "created"
+                    },
+                    {
+                      "key": "excludeStatus",
+                      "value": "removing"
+                    },
+                    {
+                      "key": "excludeAttached",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "status"
+                    },
+                    {
+                      "key": "order",
+                      "value": "asc"
+                    },
+                    {
+                      "key": "page",
+                      "value": "<u-int64>"
+                    },
+                    {
+                      "key": "perPage",
+                      "value": "<u-int64>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d75fb3bc-e4b2-4542-9298-28d3402a08d0",
+          "name": "create users storage",
+          "request": {
+            "name": "create users storage",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clusterId\": \"<uuid>\",\n  \"name\": \"<string>\",\n  \"storageType\": \"<string>\",\n  \"volumeGb\": \"<u-int32>\",\n  \"replicated\": \"<boolean>\",\n  \"osImage\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "38c9de70-9f73-42e1-98ff-5763b9a5c4f4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"32d0fbab-04ac-f84f-8c7b-6af7b7647c50\",\n  \"name\": \"<string>\",\n  \"storageType\": \"NVME\",\n  \"volumeGb\": \"<u-int32>\",\n  \"replicated\": \"<boolean>\",\n  \"osImage\": \"https://example.com/image.qcow2\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"8b3402f2-f317-27af-119a-1bfacc404842\",\n  \"userId\": \"add02891-2eac-1329-a00e-a5e0680fb658\",\n  \"clusterId\": \"368d689d-79b9-3a9f-347a-1d3ca3e4f072\",\n  \"name\": \"string\",\n  \"storageType\": \"SSD\",\n  \"status\": \"updating\",\n  \"role\": \"BOOT\",\n  \"volumeGb\": 6890,\n  \"replicated\": false,\n  \"attachedTo\": [\n    \"6147bd14-4128-79e3-5b52-04e130200d16\",\n    \"2f031afc-ac43-4282-c96c-166c3735b6aa\"\n  ],\n  \"createdAt\": \"2000-09-30T08:49:46.237Z\",\n  \"allowedActions\": [\n    \"update\",\n    \"attachToVm\"\n  ],\n  \"image\": null,\n  \"initUrl\": \"string\",\n  \"lastPaidAt\": \"1960-05-20T02:28:48.283Z\",\n  \"paidUntil\": \"2016-07-07T23:22:12.010Z\",\n  \"priceHourlyUsd\": \"0.05\",\n  \"priceMonthlyUsd\": \"36.50\",\n  \"readySince\": \"1998-01-15T20:39:22.761Z\",\n  \"removedAt\": \"1963-04-08T18:21:33.878Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7ca4a71b-fc52-4274-b65e-8fbe9e94b583",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"32d0fbab-04ac-f84f-8c7b-6af7b7647c50\",\n  \"name\": \"<string>\",\n  \"storageType\": \"NVME\",\n  \"volumeGb\": \"<u-int32>\",\n  \"replicated\": \"<boolean>\",\n  \"osImage\": \"https://example.com/image.qcow2\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "75951398-2b2a-4ca3-8326-037c73b4bc2b",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"32d0fbab-04ac-f84f-8c7b-6af7b7647c50\",\n  \"name\": \"<string>\",\n  \"storageType\": \"NVME\",\n  \"volumeGb\": \"<u-int32>\",\n  \"replicated\": \"<boolean>\",\n  \"osImage\": \"https://example.com/image.qcow2\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cf8c4512-8cd4-4f10-a7e8-b0db7c24fee5",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"32d0fbab-04ac-f84f-8c7b-6af7b7647c50\",\n  \"name\": \"<string>\",\n  \"storageType\": \"NVME\",\n  \"volumeGb\": \"<u-int32>\",\n  \"replicated\": \"<boolean>\",\n  \"osImage\": \"https://example.com/image.qcow2\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4043bb0-903d-49fd-8f9a-56a76f7ccbd1",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"32d0fbab-04ac-f84f-8c7b-6af7b7647c50\",\n  \"name\": \"<string>\",\n  \"storageType\": \"NVME\",\n  \"volumeGb\": \"<u-int32>\",\n  \"replicated\": \"<boolean>\",\n  \"osImage\": \"https://example.com/image.qcow2\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b520b378-261e-4ecf-8d56-707a7d3f5514",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"clusterId\": \"32d0fbab-04ac-f84f-8c7b-6af7b7647c50\",\n  \"name\": \"<string>\",\n  \"storageType\": \"NVME\",\n  \"volumeGb\": \"<u-int32>\",\n  \"replicated\": \"<boolean>\",\n  \"osImage\": \"https://example.com/image.qcow2\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d47e35e5-2133-4b5c-9e49-e810c332963e",
+          "name": "get default images",
+          "request": {
+            "name": "get default images",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages",
+                "default_images"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ffa58a67-3d1d-4960-ab47-4c247f869c84",
+              "name": "List of default OS images",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "default_images"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-API-KEY",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"id\": \"da1e99153be74618820a164eebcbdc66\",\n      \"name\": \"24.04 (LTS) x64\",\n      \"distribution\": \"Ubuntu\",\n      \"slug\": \"ubuntu-24-04-x64\",\n      \"downloadUrl\": \"https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img\",\n      \"iconUrl\": \"https://f2nrfq3ufzjj08qq.public.blob.vercel-storage.com/images_icons/ubuntu-icon-fvmHzDIRMkyrxr21oEBTo0IV0emlv5.svg\",\n      \"username\": \"ubuntu\",\n      \"createdAt\": \"2024-01-01T00:00:00Z\",\n      \"updatedAt\": \"2024-01-01T00:00:00Z\"\n    },\n    {\n      \"id\": \"da1e99153be74618820a164eebcbdc66\",\n      \"name\": \"24.04 (LTS) x64\",\n      \"distribution\": \"Ubuntu\",\n      \"slug\": \"ubuntu-24-04-x64\",\n      \"downloadUrl\": \"https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img\",\n      \"iconUrl\": \"https://f2nrfq3ufzjj08qq.public.blob.vercel-storage.com/images_icons/ubuntu-icon-fvmHzDIRMkyrxr21oEBTo0IV0emlv5.svg\",\n      \"username\": \"ubuntu\",\n      \"createdAt\": \"2024-01-01T00:00:00Z\",\n      \"updatedAt\": \"2024-01-01T00:00:00Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "955a589a-806c-43af-9d88-4358069d73a7",
+          "name": "delete users storages",
+          "request": {
+            "name": "delete users storages",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages",
+                "delete"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ids\": [\n    \"<uuid>\",\n    \"<uuid>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8279c445-0fc9-43f0-b497-8a29658f903f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"054c8094-9583-e516-394e-3a12ba057d20\",\n    \"af3a3cca-a8db-eb0d-08c2-d57958299216\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"b45c3b9d-86af-5852-7679-c3efdea0ed53\",\n    \"userId\": \"10a6d3b5-ccb5-426c-9ad8-fd4569220255\",\n    \"clusterId\": \"35c79019-e673-a181-4e5b-013818c7edd3\",\n    \"name\": \"string\",\n    \"storageType\": \"SSD\",\n    \"status\": \"ready\",\n    \"role\": \"BOOT\",\n    \"volumeGb\": 3001,\n    \"replicated\": false,\n    \"attachedTo\": [\n      \"45f19372-cb30-f365-8fa1-5f5ee88fd0ca\",\n      \"da961e4c-a312-c1c3-bf4b-cc7e767695b4\"\n    ],\n    \"createdAt\": \"1988-09-04T17:01:05.697Z\",\n    \"allowedActions\": [\n      \"update\",\n      \"attachToVm\"\n    ],\n    \"image\": null,\n    \"initUrl\": \"string\",\n    \"lastPaidAt\": \"1968-11-11T20:52:05.721Z\",\n    \"paidUntil\": \"1975-07-09T20:01:02.784Z\",\n    \"priceHourlyUsd\": \"0.05\",\n    \"priceMonthlyUsd\": \"36.50\",\n    \"readySince\": \"2002-06-16T18:10:55.606Z\",\n    \"removedAt\": \"1964-03-23T08:13:12.063Z\"\n  },\n  {\n    \"id\": \"23a89fcb-8606-b267-07e6-0667328b8edf\",\n    \"userId\": \"27adcc47-ecc1-00a4-95d4-88ac1f8e79f3\",\n    \"clusterId\": \"11c16803-3b79-d251-b86e-93cdbbd5149e\",\n    \"name\": \"string\",\n    \"storageType\": \"NVME\",\n    \"status\": \"ready\",\n    \"role\": \"DATA\",\n    \"volumeGb\": 4552,\n    \"replicated\": false,\n    \"attachedTo\": [\n      \"c815bfb1-67a4-9ce8-9858-4b6eee5fccf9\",\n      \"997914b2-2c46-18ef-8943-bde1a91a5f5e\"\n    ],\n    \"createdAt\": \"1953-03-31T03:11:32.062Z\",\n    \"allowedActions\": [\n      \"attachToVm\",\n      \"update\"\n    ],\n    \"image\": null,\n    \"initUrl\": \"string\",\n    \"lastPaidAt\": \"1974-11-21T12:51:58.000Z\",\n    \"paidUntil\": \"1979-03-04T15:27:08.190Z\",\n    \"priceHourlyUsd\": \"0.05\",\n    \"priceMonthlyUsd\": \"36.50\",\n    \"readySince\": \"1961-11-25T09:59:17.871Z\",\n    \"removedAt\": \"1976-11-22T05:17:55.191Z\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a859a914-ca59-4c01-94a3-e948adb0acd6",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"054c8094-9583-e516-394e-3a12ba057d20\",\n    \"af3a3cca-a8db-eb0d-08c2-d57958299216\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1a302223-d599-4955-9a89-c692139f0322",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"054c8094-9583-e516-394e-3a12ba057d20\",\n    \"af3a3cca-a8db-eb0d-08c2-d57958299216\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f3998a22-6d15-4b89-85cc-5fce9113ab41",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"054c8094-9583-e516-394e-3a12ba057d20\",\n    \"af3a3cca-a8db-eb0d-08c2-d57958299216\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc3edacf-a138-4f35-a676-ce54fa298463",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"054c8094-9583-e516-394e-3a12ba057d20\",\n    \"af3a3cca-a8db-eb0d-08c2-d57958299216\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1946f14b-8c08-403f-8b7f-9c915b1a7487",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "delete"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"ids\": [\n    \"054c8094-9583-e516-394e-3a12ba057d20\",\n    \"af3a3cca-a8db-eb0d-08c2-d57958299216\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c6422d56-c724-45ef-82f2-a93029b3bfa7",
+          "name": "get storage types",
+          "request": {
+            "name": "get storage types",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages",
+                "types"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "059b8b74-8224-449e-93f6-2077908876a4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"storageType\": \"NVME\",\n      \"bootDisk\": false,\n      \"minVolumeGb\": 7880,\n      \"maxBandwidthReadMib\": 6742,\n      \"maxBandwidthWriteMib\": 7999,\n      \"maxIopsRead\": 4116,\n      \"maxIopsWrite\": 8497\n    },\n    {\n      \"storageType\": \"NVME\",\n      \"bootDisk\": false,\n      \"minVolumeGb\": 4285,\n      \"maxBandwidthReadMib\": 7027,\n      \"maxBandwidthWriteMib\": 9587,\n      \"maxIopsRead\": 4039,\n      \"maxIopsWrite\": 2639\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "51fb211b-dd87-4291-b682-bb6259d7d743",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "71f222fb-6a15-4c82-8e4d-4df8ce3765ad",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b09bf07-286c-44fe-9a9d-b5c6285037d7",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "010785e9-7ae2-4440-883a-1703808e5b22",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78682fa3-c4d9-49fa-961d-4351c6dc2f79",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    "types"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3bfaee19-1fec-4169-9c8e-ef5f2ba67e65",
+          "name": "get users storage",
+          "request": {
+            "name": "get users storage",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages",
+                ":storage_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "storage_id",
+                  "description": "(Required) The ID of the user storage to fetch"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "839a2e85-c050-48a0-bcd4-d28e865276d4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to fetch"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"8b3402f2-f317-27af-119a-1bfacc404842\",\n  \"userId\": \"add02891-2eac-1329-a00e-a5e0680fb658\",\n  \"clusterId\": \"368d689d-79b9-3a9f-347a-1d3ca3e4f072\",\n  \"name\": \"string\",\n  \"storageType\": \"SSD\",\n  \"status\": \"updating\",\n  \"role\": \"BOOT\",\n  \"volumeGb\": 6890,\n  \"replicated\": false,\n  \"attachedTo\": [\n    \"6147bd14-4128-79e3-5b52-04e130200d16\",\n    \"2f031afc-ac43-4282-c96c-166c3735b6aa\"\n  ],\n  \"createdAt\": \"2000-09-30T08:49:46.237Z\",\n  \"allowedActions\": [\n    \"update\",\n    \"attachToVm\"\n  ],\n  \"image\": null,\n  \"initUrl\": \"string\",\n  \"lastPaidAt\": \"1960-05-20T02:28:48.283Z\",\n  \"paidUntil\": \"2016-07-07T23:22:12.010Z\",\n  \"priceHourlyUsd\": \"0.05\",\n  \"priceMonthlyUsd\": \"36.50\",\n  \"readySince\": \"1998-01-15T20:39:22.761Z\",\n  \"removedAt\": \"1963-04-08T18:21:33.878Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1898b87-4616-44a8-9c55-521fe2c8efbf",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to fetch"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8d4592b6-22b6-42e0-8882-5cc1d0193ffd",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to fetch"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a7785cde-5000-47a0-aa9c-a10f2d36500b",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to fetch"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e41186a1-d6b7-4b14-ac0b-bf025e69ffbd",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to fetch"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78e67323-51c0-469e-a326-2ff87142c84c",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to fetch"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9f11aa48-91a1-43f8-99fb-82f82ca43567",
+          "name": "delete users storage",
+          "request": {
+            "name": "delete users storage",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages",
+                ":storage_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "storage_id",
+                  "description": "(Required) The ID of the user storage to remove"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "03283aa2-043f-4f53-86e2-ca0927d93163",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"8b3402f2-f317-27af-119a-1bfacc404842\",\n  \"userId\": \"add02891-2eac-1329-a00e-a5e0680fb658\",\n  \"clusterId\": \"368d689d-79b9-3a9f-347a-1d3ca3e4f072\",\n  \"name\": \"string\",\n  \"storageType\": \"SSD\",\n  \"status\": \"updating\",\n  \"role\": \"BOOT\",\n  \"volumeGb\": 6890,\n  \"replicated\": false,\n  \"attachedTo\": [\n    \"6147bd14-4128-79e3-5b52-04e130200d16\",\n    \"2f031afc-ac43-4282-c96c-166c3735b6aa\"\n  ],\n  \"createdAt\": \"2000-09-30T08:49:46.237Z\",\n  \"allowedActions\": [\n    \"update\",\n    \"attachToVm\"\n  ],\n  \"image\": null,\n  \"initUrl\": \"string\",\n  \"lastPaidAt\": \"1960-05-20T02:28:48.283Z\",\n  \"paidUntil\": \"2016-07-07T23:22:12.010Z\",\n  \"priceHourlyUsd\": \"0.05\",\n  \"priceMonthlyUsd\": \"36.50\",\n  \"readySince\": \"1998-01-15T20:39:22.761Z\",\n  \"removedAt\": \"1963-04-08T18:21:33.878Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "591fe32b-4926-4df0-9e5d-97ca60292845",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b116f4dd-1d68-4bf9-9a93-67677501826a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bc296166-fb93-4c56-868b-62fbb3458b35",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d0d3ff15-6dff-4c54-a13e-e0b58ebe48e5",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d90ea874-9bb6-468a-a82b-f8f7af406cc2",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to remove"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "af56a30f-f06c-4567-abd6-c4c7a1ac6faf",
+          "name": "update users storage",
+          "request": {
+            "name": "update users storage",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "storages",
+                ":storage_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "storage_id",
+                  "description": "(Required) The ID of the user storage to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string,null>\",\n  \"volumeGb\": \"<integer,null-u-int32>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2a3bc47d-f1c4-443b-8f14-f418c1b40365",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\",\n  \"volumeGb\": \"<integer,null-u-int32>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"8b3402f2-f317-27af-119a-1bfacc404842\",\n  \"userId\": \"add02891-2eac-1329-a00e-a5e0680fb658\",\n  \"clusterId\": \"368d689d-79b9-3a9f-347a-1d3ca3e4f072\",\n  \"name\": \"string\",\n  \"storageType\": \"SSD\",\n  \"status\": \"updating\",\n  \"role\": \"BOOT\",\n  \"volumeGb\": 6890,\n  \"replicated\": false,\n  \"attachedTo\": [\n    \"6147bd14-4128-79e3-5b52-04e130200d16\",\n    \"2f031afc-ac43-4282-c96c-166c3735b6aa\"\n  ],\n  \"createdAt\": \"2000-09-30T08:49:46.237Z\",\n  \"allowedActions\": [\n    \"update\",\n    \"attachToVm\"\n  ],\n  \"image\": null,\n  \"initUrl\": \"string\",\n  \"lastPaidAt\": \"1960-05-20T02:28:48.283Z\",\n  \"paidUntil\": \"2016-07-07T23:22:12.010Z\",\n  \"priceHourlyUsd\": \"0.05\",\n  \"priceMonthlyUsd\": \"36.50\",\n  \"readySince\": \"1998-01-15T20:39:22.761Z\",\n  \"removedAt\": \"1963-04-08T18:21:33.878Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9823952b-a124-4b3f-8273-d8f0e6052766",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\",\n  \"volumeGb\": \"<integer,null-u-int32>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad_request\",\n  \"error\": \"Wrong parameters\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f381ccf0-aff3-43f7-8d6d-9a8e7a6bcb93",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\",\n  \"volumeGb\": \"<integer,null-u-int32>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unauthorized\",\n  \"error\": \"Auth token invalid or missing\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "79f28958-2f5a-4ef9-add0-6ba37a01d597",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\",\n  \"volumeGb\": \"<integer,null-u-int32>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"forbidden\",\n  \"error\": \"Not allowed to call this endpoint\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d463597d-db7e-4061-adc9-4b6029bc0c39",
+              "name": "Unprocessable Entity",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\",\n  \"volumeGb\": \"<integer,null-u-int32>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"unprocessable_entity\",\n  \"error\": \"Unable to process the entity\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6c848e1f-9448-4b06-99f1-6cdeace528e0",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "storages",
+                    ":storage_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "storage_id",
+                      "description": "(Required) The ID of the user storage to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string,null>\",\n  \"volumeGb\": \"<integer,null-u-int32>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"internal_server_error\",\n  \"error\": \"Unexpected server error\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-KEY"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "7a71c928-b5e8-408f-b89c-8e19a48924e6",
+    "name": "Fluence Billing Storage API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# Introduction\n\nThe Fluence API gives programmatic access to the decentralized Fluence compute marketplace, letting you find, rent, and\nmanage compute resources without the web UI. Integrate Fluence directly into your applications and automated workflows.\n\nBase URL: `https://api.fluence.dev`\n\nThe documentation starts with a high-level overview of design and technology, followed by endpoint reference details.\nFor additional user guides, see the [Fluence Documentation](https://fluence.dev/docs/build/overview).\n\n## Requests\n\nSend HTTPS requests to the Fluence API. All request and response bodies are JSON.\n\n- Set `Content-Type: application/json` for POST, PUT, and PATCH calls.\n- All examples assume the default `Accept: application/json` header.\n\n### Example\n\n```bash\ncurl -X POST https://api.fluence.dev/v1/public_ips \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -d '{\n        \"addressType\": \"V4\",\n        \"clusterId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n        \"name\": \"my-public-ip\"\n      }'\n```\n\n### HTTP request methods\n\nThe interface responds to different methods depending on the action required.\n\n| Method | Description                                                                                        |\n|--------|----------------------------------------------------------------------------------------------------|\n| GET    | Retrieves resource information. These requests are read-only and won't modify any resources.       |\n| POST   | Usually used to create new resources. Include all required attributes in the request body as JSON. |\n| PATCH  | Update specific attributes of a resource.                                                          |\n| PUT    | Updates an entire resource by replacing it with the provided data, regardless of current values.   |\n| DELETE | Removes resources.                                                                                 |\n\n## Responses\n\nSuccessful requests return `2xx` status codes and a JSON object.   \n\nIf an error occurs, Fluence returns an `4xx` or `5xx` status code and a JSON object describing the problem.\n\n### Response codes\n\n| Code | Description                                                                    |\n|------|--------------------------------------------------------------------------------|\n| 2xx  | **Success** - The request was successfully received, understood, and processed |\n| 4xx  | **Client Error** - The request contains invalid syntax or cannot be fulfilled  |\n| 400  | Bad request - Invalid parameters or malformed JSON                             |\n| 401  | Unauthorized - API key missing or invalid                                      |\n| 403  | Forbidden - Authenticated but not allowed                                      |\n| 404  | Not found - Resource does not exist                                            |\n| 422  | Unprocessable Entity - Well-formed request but cannot be processed             |\n| 500  | Internal server error - Unexpected error on our side.                          |\n\n### Error Response Format\n\nWhen an error occurs, the response includes a status message and a body in JSON format with an `error` field with\nadditional information. For example:\n\n```bash\n    HTTP/1.1 403 Forbidden\n    {\n      \"error\": \"Auth failed. No such API Key\",\n    }\n```\n\n## Authentication\n\nAll endpoints require a jwt token supplied as a Bearer token in the `Authorization` header or an API key provided as the value of the `X-API-KEY` header. For example:\n\n```bash\ncurl -H 'Authorization: Bearer my_authentication_token'\n```\n\n```bash\ncurl -H 'Authorization: X-API-KEY my_api_key'\n```\n\n### Managing API Keys\n\nCreate and manage keys in\nthe [Fluence Console › Settings › API Keys](https://console.fluence.network/settings/api-keys).\n\n- **Read-only keys** – retrieve information only\n- **Full-access keys** – manage all resources\n\n> **Important**: API keys are only displayed once during creation for security reasons. Store them safely - if a key is\n> lost, expired or compromised, you'll need to delete it and create a new one.\n\n### Key Security\n\nAPI keys function as complete authentication credentials, similar to a username/password combination. Therefore:\n\n- Keep your keys secure and never share them\n- Use HTTPS for all API requests\n- Rotate keys periodically\n- Set appropriate expiration dates when creating keys\n- Delete compromised keys immediately\n\n## Cloud-init\n\nOptional `cloudInit.userData` on `POST /v2/vms` lets you bootstrap the VM with a\n[cloud-init](https://cloudinit.readthedocs.io/) configuration. The payload is\nforwarded to the VM backend verbatim; vodopad does not parse or validate the\ncontent beyond a 16 KiB byte cap.\n\n```bash\ncurl -X POST https://api.fluence.dev/v2/vms \\\n  -H \"Authorization: X-API-KEY <YOUR_API_KEY>\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\n        \"clusterId\": \"...\",\n        \"name\": \"demo\",\n        \"configurationId\": \"...\",\n        \"bootDisk\": { \"...\": \"...\" },\n        \"sshKeys\": [\"...\"],\n        \"cloudInit\": {\n          \"userData\": \"#cloud-config\\nruncmd:\\n  - echo hello\\n\"\n        }\n      }'\n```\n\nNotes:\n\n- **Create-only.** `userData` is meaningful only on `POST /v2/vms`. `PATCH` requests have no `userData` field; sending one is dropped during JSON deserialization.\n- **Ephemeral.** The content is stored only until the VM transitions to `Launched` (or `Failed` on create-deadline, or `Terminating`/`Terminated` on termination), then erased in the same transaction as the status change. After that, listing or fetching the VM returns a non-null `cloudInit` object (no fields) as a permanent marker but never the original content.\n- **Length limit.** Maximum 16 KiB enforced as a **byte count** (UTF-8 multi-byte characters are counted by their byte size, not code-point count). Oversize requests are rejected with `400 Bad Request`.\n- **Privacy.** The content is never echoed back through any API endpoint. With request-body debug logging enabled (`RUST_LOG=vodopad::api::server=debug` or `sqlx=debug`), `userData` will appear in logs — see Operator notes below.\n- **Backend rejection.** Malformed userData (e.g. invalid YAML) is detected by the VM backend during provisioning and surfaces as a `Failed` VM status, not a synchronous `400`.\n\n### Operator notes\n\n- The side-table `crd.user_virtual_machine_cloud_init` keeps a row per VM that ever had cloud-init. After successful handoff to the VM backend (status `Launching` or `Launched`) — or upon terminal cleanup (`Failed` from create-deadline timeout, or `Terminating`/`Terminated` from termination) — the row's `user_data` column is set to `NULL` in the same transaction as the status change. The row itself stays as a permanent \"had cloud-init\" marker — its existence is the source of truth for the non-null `cloudInit` object on the response.\n- WAL/audit logs and `pg_dump` backups can preserve the **pre-wipe** state (raw `user_data` bytes) until they roll over. Treat these artefacts as carrying potentially-sensitive material; restrict access and retention accordingly.\n- Do not enable `RUST_LOG=vodopad::api::server=debug` in production — the request/response body logger (`buffer_and_print` in `api/server.rs`) writes every UTF-8 body verbatim to `tracing::debug!` with no path-based redaction, and runs *before* validation, so even rejected oversize `userData` payloads end up in the log.\n- Do not set `RUST_LOG=sqlx=debug` in production — sqlx debug logs can include bind values, which would expose `userData` for in-flight queries.\n\n\nContact Support:\n Name: Cloudless Labs",
+      "type": "text/plain"
+    }
+  }
+}

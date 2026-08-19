@@ -2,10 +2,6 @@ generated: '2026-07-19'
 method: derived
 status: candidate
 source: openapi/fluence-openapi-original.yml
-# No official hosted/remote Fluence MCP server was found (checked docs, github.com/fluencelabs,
-# npm @fluencelabs, and the MCP registries). Fluence publishes AI/agent guidance at
-# fluence.dev/docs/build_with_ai but ships no MCP server. This is a CANDIDATE tool surface
-# derived from the OpenAPI operations, to seed a future MCP server.
 server:
   name: fluence
   transport: http
@@ -13,39 +9,45 @@ server:
 base_api: https://api.fluence.dev
 auth: X-API-KEY header
 tools:
-  - name: list_vms
-    description: List the user's virtual machines.
-    source_operation: openapi/fluence-openapi-original.yml#get_users_vms
-  - name: create_vm
-    description: Deploy a virtual machine from the decentralized compute marketplace.
-    source_operation: openapi/fluence-openapi-original.yml#create_users_vm
-  - name: get_vm
-    description: Get one virtual machine by id.
-    source_operation: openapi/fluence-openapi-original.yml#get_users_vm
-  - name: terminate_vm
-    description: Terminate a virtual machine.
-    source_operation: openapi/fluence-openapi-original.yml#terminate_users_vm
-  - name: restart_vm
-    description: Restart a virtual machine.
-    source_operation: openapi/fluence-openapi-original.yml#restart_users_vm
-  - name: list_clusters
-    description: List available compute clusters.
-    source_operation: openapi/fluence-openapi-original.yml#Get available clusters
-  - name: get_vm_configurations
-    description: List available VM hardware configurations.
-    source_operation: openapi/fluence-openapi-original.yml#get_vm_configurations
-  - name: estimate_cost
-    description: Estimate the cost of a compute configuration.
-    source_operation: openapi/fluence-openapi-original.yml#cost
-  - name: get_vm_prices
-    description: Get virtual-machine prices.
-    source_operation: openapi/fluence-openapi-original.yml#get_vm_prices
-  - name: list_ssh_keys
-    description: List the user's SSH keys.
-    source_operation: openapi/fluence-openapi-original.yml#get_users_ssh_keys
-  - name: create_ssh_key
-    description: Register an SSH key for instance access.
-    source_operation: openapi/fluence-openapi-original.yml#create_users_ssh_key
-  - name: list_storages
-    description: List the user's storage volumes.
-    source_operation: openapi/fluence-openapi-original.yml#get_users_storages
+- name: list_vms
+  description: List the user's virtual machines.
+  source_operation: openapi/fluence-openapi-original.yml#get_users_vms
+- name: create_vm
+  description: Deploy a virtual machine from the decentralized compute marketplace.
+  source_operation: openapi/fluence-openapi-original.yml#create_users_vm
+- name: get_vm
+  description: Get one virtual machine by id.
+  source_operation: openapi/fluence-openapi-original.yml#get_users_vm
+- name: terminate_vm
+  description: Terminate a virtual machine.
+  source_operation: openapi/fluence-openapi-original.yml#terminate_users_vm
+- name: restart_vm
+  description: Restart a virtual machine.
+  source_operation: openapi/fluence-openapi-original.yml#restart_users_vm
+- name: list_clusters
+  description: List available compute clusters.
+  source_operation: openapi/fluence-openapi-original.yml#Get available clusters
+- name: get_vm_configurations
+  description: List available VM hardware configurations.
+  source_operation: openapi/fluence-openapi-original.yml#get_vm_configurations
+- name: estimate_cost
+  description: Estimate the cost of a compute configuration.
+  source_operation: openapi/fluence-openapi-original.yml#cost
+- name: get_vm_prices
+  description: Get virtual-machine prices.
+  source_operation: openapi/fluence-openapi-original.yml#get_vm_prices
+- name: list_ssh_keys
+  description: List the user's SSH keys.
+  source_operation: openapi/fluence-openapi-original.yml#get_users_ssh_keys
+- name: create_ssh_key
+  description: Register an SSH key for instance access.
+  source_operation: openapi/fluence-openapi-original.yml#create_users_ssh_key
+- name: list_storages
+  description: List the user's storage volumes.
+  source_operation: openapi/fluence-openapi-original.yml#get_users_storages
+deployment:
+  mode: none
+  verified: derived
+  tools: 12
+  checked: '2026-08-12'
+  source: catalog MCP census

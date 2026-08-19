@@ -1,0 +1,197 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Fluence Billing PublicIP API",
+    "version": "0.10.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-API-KEY",
+      "value": "{{X-API-KEY}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "PublicIP",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "get_users_public_ips",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/v1/public_ips",
+            "params": [
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "clusterId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "datacenterId",
+                "value": "",
+                "type": "query",
+                "description": "Filter to public IPs in every cluster of this datacenter. Combine with\n`clusterId` to narrow to a single cluster; both must match."
+              },
+              {
+                "name": "cityCode",
+                "value": "",
+                "type": "query",
+                "description": "Filter to public IPs in every datacenter of this city (a city may span\nseveral datacenters). Combine with other filters; all must match."
+              },
+              {
+                "name": "name",
+                "value": "my-vm",
+                "type": "query",
+                "description": "Case-insensitive ILIKE match on name; '%' and '_' in the value act as SQL wildcards (any-sequence / any-single-char), not literal characters."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Keep only public IPs whose status is in this set. Repeat the parameter\nusing bracket notation (`status[0]=ready&status[1]=new`); a single\n`status=ready` is also accepted. An empty set applies no filtering."
+              },
+              {
+                "name": "excludeStatus",
+                "value": "",
+                "type": "query",
+                "description": "Drop public IPs whose status is in this set\n(`excludeStatus[0]=removed`). Combined with `status`, the result is the\nintersection. An empty set applies no filtering."
+              },
+              {
+                "name": "addressType",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "excludeAttached",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, exclude public IPs attached to any VM, returning only\nunattached ones. Absent or `false` applies no filtering."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "perPage",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "create_users_public_ip",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/public_ips",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "delete_users_public_ips",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/v1/public_ips/delete",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "update_user_public_ip",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/v1/public_ips/:public_ip_id",
+            "params": [
+              {
+                "name": "public_ip_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the address to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "delete_users_public_ip",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/v1/public_ips/:public_ip_id",
+            "params": [
+              {
+                "name": "public_ip_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the public IP to remove"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
