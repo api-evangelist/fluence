@@ -181,6 +181,8 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
+  - SSH Keys
+  tags_raw:
   - SSH keys
   properties:
   - type: OpenAPI
@@ -247,6 +249,8 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
@@ -291,6 +295,8 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
+  - VPC
+  tags_raw:
   - VPCs
   properties:
   - type: OpenAPI
