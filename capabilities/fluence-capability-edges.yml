@@ -1,0 +1,79 @@
+slug: fluence
+provider: Fluence
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Electrical Components & Equipment
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 7
+edges:
+- tag: VMs
+  spec_file: fluence-vms-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.88
+  evidence: POST /v2/vms create_users_vm; POST /v2/vms/{vm_id}/restart restart_users_vm; CreateUserVmRequest
+  reason: Provisioning, reboot, network-interface and storage attachment for virtual machines — core cloud
+    compute infrastructure management.
+- tag: VPCs
+  spec_file: fluence-vpcs-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.82
+  evidence: POST /v1/vpcs create_users_vpc; schema UserVpcDto, UpdateUserVpcRequest
+  reason: Virtual private cloud network lifecycle — cloud network infrastructure management.
+- tag: Storage
+  spec_file: fluence-storage-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.8
+  evidence: POST /v1/storages create_users_storage; GET /v1/storages/types get_storage_types
+  reason: Provisioning and lifecycle of cloud storage volumes and images — IT infrastructure (compute/storage)
+    management.
+- tag: Subnets
+  spec_file: fluence-subnets-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.8
+  evidence: POST /v1/vpcs/{vpc_id}/subnets create_users_subnet; schema UserSubnetDto
+  reason: Creation and management of network subnets inside VPCs — cloud network infrastructure management.
+- tag: Billing
+  spec_file: fluence-billing-api-openapi.yml
+  capability_id: BC-4250
+  capability_id_l1: BC-4250
+  capability_name: Subscription Billing & Revenue Management
+  confidence: 0.7
+  evidence: GET /v1/billing/charges/aggregated; POST /v1/billing/top_up  Create top-up request; GET /v2/payment-methods  discover_payment_methods_v2
+  reason: Consumption charges aggregation, payment-method discovery and prepaid top-up intents for a usage-based
+    cloud service — commercial billing and payment collection for the service. L2 left null because the
+    surface spans charge aggregation (rating) and top-up/payment collection.
+- tag: Hardware
+  spec_file: fluence-hardware-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.7
+  evidence: GET /v1/clusters  Get available clusters; GET /v1/configurations/virtual_machines  get_vm_configurations;
+    GET /v1/datacenters
+  reason: Enumerates clusters, datacentres and VM configuration SKUs of rentable compute capacity — compute/cloud
+    infrastructure discovery and management. Title mentions Billing but the operations are clearly infrastructure
+    inventory.
+- tag: PublicIP
+  spec_file: fluence-publicip-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.7
+  evidence: POST /v1/public_ips  create_users_public_ip; DELETE /v1/public_ips/{public_ip_id}  delete_users_public_ip
+  reason: Full CRUD over public IP address allocations attached to user VMs — network resource provisioning
+    within cloud infrastructure management. No business meaning beyond infrastructure operations.
