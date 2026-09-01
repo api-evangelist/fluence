@@ -193,7 +193,7 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
-  - SSH keys
+  - SSH Keys
   tags_raw:
   - SSH keys
   properties:
@@ -307,7 +307,7 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
-  - VPCs
+  - VPC
   tags_raw:
   - VPCs
   properties:
