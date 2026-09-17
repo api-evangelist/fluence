@@ -145,28 +145,6 @@ apis:
     url: errors/fluence-error-codes.yml
   - type: DataModel
     url: data-model/fluence-data-model.yml
-- aid: fluence:fluence-securitygroup-api
-  name: Fluence SecurityGroup API
-  description: Endpoints to create, view, update and delete security groups
-  humanURL: https://fluence.dev/docs/build/api/overview
-  baseURL: https://api.fluence.dev
-  tags:
-  - SecurityGroup
-  properties:
-  - type: OpenAPI
-    url: openapi/fluence-securitygroup-api-openapi.yml
-  - type: APIReference
-    url: https://api.fluence.dev/swagger-ui/
-  - type: Authentication
-    url: authentication/fluence-authentication.yml
-  - type: OAuthScopes
-    url: scopes/fluence-scopes.yml
-  - type: Conventions
-    url: conventions/fluence-conventions.yml
-  - type: ErrorCatalog
-    url: errors/fluence-error-codes.yml
-  - type: DataModel
-    url: data-model/fluence-data-model.yml
 - aid: fluence:fluence-service-api
   name: Fluence Service API
   description: The Service API from Fluence — 1 operation(s) for service.
@@ -282,7 +260,7 @@ apis:
   - type: DataModel
     url: data-model/fluence-data-model.yml
 - aid: fluence:fluence-vms-api
-  name: Fluence VMs API
+  name: Fluence V Ms API
   description: Endpoints to create, view, update and delete VMs
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
@@ -304,17 +282,37 @@ apis:
   - type: DataModel
     url: data-model/fluence-data-model.yml
 - aid: fluence:fluence-vpcs-api
-  name: Fluence VPCs API
+  name: Fluence VP Cs API
   description: Endpoints to create, view, update and delete VPCs
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
-  - VPC
-  tags_raw:
   - VPCs
   properties:
   - type: OpenAPI
     url: openapi/fluence-vpcs-api-openapi.yml
+  - type: APIReference
+    url: https://api.fluence.dev/swagger-ui/
+  - type: Authentication
+    url: authentication/fluence-authentication.yml
+  - type: OAuthScopes
+    url: scopes/fluence-scopes.yml
+  - type: Conventions
+    url: conventions/fluence-conventions.yml
+  - type: ErrorCatalog
+    url: errors/fluence-error-codes.yml
+  - type: DataModel
+    url: data-model/fluence-data-model.yml
+- aid: fluence:fluence-security-group-api
+  name: Fluence Security Group API
+  description: Endpoints to create, view, update and delete security groups
+  humanURL: https://fluence.dev/docs/build/api/overview
+  baseURL: https://api.fluence.dev
+  tags:
+  - Security Group
+  properties:
+  - type: OpenAPI
+    url: openapi/fluence-security-group-api-openapi.yml
   - type: APIReference
     url: https://api.fluence.dev/swagger-ui/
   - type: Authentication
