@@ -1,36 +1,47 @@
 {
   "provider": "fluence",
   "sources": [
-    "fluence-billing-api-openapi.yml",
-    "fluence-hardware-api-openapi.yml",
-    "fluence-prices-api-openapi.yml",
-    "fluence-publicip-api-openapi.yml",
-    "fluence-securitygroup-api-openapi.yml",
-    "fluence-service-api-openapi.yml",
-    "fluence-ssh-keys-api-openapi.yml",
-    "fluence-storage-api-openapi.yml",
-    "fluence-subnets-api-openapi.yml",
-    "fluence-users-api-openapi.yml",
-    "fluence-vms-api-openapi.yml",
-    "fluence-vpcs-api-openapi.yml"
+    "_original/fluence-openapi-original.yml"
   ],
   "outputs": [
     "fluence-billing-api-openapi.yml",
     "fluence-hardware-api-openapi.yml",
     "fluence-prices-api-openapi.yml",
     "fluence-publicip-api-openapi.yml",
+    "fluence-ssh-keys-api-openapi.yml",
     "fluence-securitygroup-api-openapi.yml",
     "fluence-service-api-openapi.yml",
-    "fluence-ssh-keys-api-openapi.yml",
     "fluence-storage-api-openapi.yml",
     "fluence-subnets-api-openapi.yml",
     "fluence-users-api-openapi.yml",
     "fluence-vms-api-openapi.yml",
     "fluence-vpcs-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 3 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "fluence-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "fluence-openapi-original.yml: declared missing tag: PublicIP",
+    "fluence-openapi-original.yml: declared missing tag: Service",
+    "superseded outputs removed: fluence-security-group-api-openapi.yml, fluence-v-ms-api-openapi.yml, fluence-vp-cs-api-openapi.yml",
+    "apis.yml register: written (+3 apis, 12 total)"
+  ],
+  "skipped": [
+    "fluence-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-hardware-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-prices-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-publicip-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-security-group-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-service-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-ssh-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-storage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-subnets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-v-ms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-vp-cs-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
