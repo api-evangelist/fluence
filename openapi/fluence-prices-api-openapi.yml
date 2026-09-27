@@ -302,6 +302,19 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    StorageTypeIdDto:
+      type: object
+      required:
+      - storageType
+      - replicated
+      - clusterId
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        replicated:
+          type: boolean
+        storageType:
+          $ref: '#/components/schemas/StorageTypeDto'
     CollectionResponse_VmPriceInfoDto:
       type: object
       required:
@@ -319,6 +332,58 @@ components:
                 $ref: '#/components/schemas/PriceInfoDto'
               vmTypeId:
                 $ref: '#/components/schemas/VmTypeIdDto'
+    ClusterId:
+      type: string
+      format: uuid
+    VmConfigurationId:
+      type: string
+      format: uuid
+    VmTypeIdDto:
+      type: object
+      required:
+      - vmConfigurationId
+      - clusterId
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        vmConfigurationId:
+          $ref: '#/components/schemas/VmConfigurationId'
+    CollectionResponse_PublicIpPriceInfoDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - publicIpTypeId
+            - priceInfo
+            properties:
+              priceInfo:
+                $ref: '#/components/schemas/PriceInfoDto'
+              publicIpTypeId:
+                $ref: '#/components/schemas/PublicIpTypeIdDto'
+    ResourceCostDto:
+      type: object
+      required:
+      - resource
+      - costPerSec
+      properties:
+        costPerSec:
+          type: string
+          example: '0.01'
+        resource:
+          $ref: '#/components/schemas/PricingResourceTypeDto'
+    PriceInfoDto:
+      type: object
+      required:
+      - pricePerHourPerQty
+      properties:
+        pricePerHourPerQty:
+          type: string
+          example: '0.01'
     ErrorBody:
       type: object
       required:
@@ -331,45 +396,6 @@ components:
         error:
           type: string
           description: The human-readable error message.
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    VmTypeIdDto:
-      type: object
-      required:
-      - vmConfigurationId
-      - clusterId
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        vmConfigurationId:
-          $ref: '#/components/schemas/VmConfigurationId'
-    StorageTypeDto:
-      type: string
-      enum:
-      - HDD
-      - SSD
-      - NVME
     CollectionResponse_StoragePriceInfoDto:
       type: object
       required:
@@ -387,22 +413,21 @@ components:
                 $ref: '#/components/schemas/PriceInfoDto'
               storageTypeId:
                 $ref: '#/components/schemas/StorageTypeIdDto'
-    PriceInfoDto:
+    CostRequest:
       type: object
       required:
-      - pricePerHourPerQty
+      - resources
       properties:
-        pricePerHourPerQty:
-          type: string
-          example: '0.01'
-    VmConfigurationId:
-      type: string
-      format: uuid
-    IpAddressType:
-      type: string
-      enum:
-      - V4
-      - V6
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingResourceTypeDto'
+        secs:
+          type:
+          - integer
+          - 'null'
+          format: u-int64
+          minimum: 0
     PricingResourceTypeDto:
       oneOf:
       - type: object
@@ -443,41 +468,12 @@ components:
             properties:
               resource_id:
                 $ref: '#/components/schemas/VmTypeIdDto'
-    CollectionResponse_PublicIpPriceInfoDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - publicIpTypeId
-            - priceInfo
-            properties:
-              priceInfo:
-                $ref: '#/components/schemas/PriceInfoDto'
-              publicIpTypeId:
-                $ref: '#/components/schemas/PublicIpTypeIdDto'
-    ClusterId:
+    StorageTypeDto:
       type: string
-      format: uuid
-    CostRequest:
-      type: object
-      required:
-      - resources
-      properties:
-        resources:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricingResourceTypeDto'
-        secs:
-          type:
-          - integer
-          - 'null'
-          format: u-int64
-          minimum: 0
+      enum:
+      - HDD
+      - SSD
+      - NVME
     CostResult:
       type: object
       required:
@@ -500,6 +496,34 @@ components:
         totalCostPerSec:
           type: string
           example: '0.01'
+    IpAddressType:
+      type: string
+      enum:
+      - V4
+      - V6
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
     PublicIpTypeIdDto:
       type: object
       required:
@@ -510,30 +534,6 @@ components:
           $ref: '#/components/schemas/IpAddressType'
         clusterId:
           $ref: '#/components/schemas/ClusterId'
-    StorageTypeIdDto:
-      type: object
-      required:
-      - storageType
-      - replicated
-      - clusterId
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        replicated:
-          type: boolean
-        storageType:
-          $ref: '#/components/schemas/StorageTypeDto'
-    ResourceCostDto:
-      type: object
-      required:
-      - resource
-      - costPerSec
-      properties:
-        costPerSec:
-          type: string
-          example: '0.01'
-        resource:
-          $ref: '#/components/schemas/PricingResourceTypeDto'
   securitySchemes:
     access_jwt_token:
       type: http

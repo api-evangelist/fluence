@@ -92,6 +92,16 @@ components:
         error:
           type: string
           description: The human-readable error message.
+    ServiceStatusDto:
+      type: object
+      required:
+      - maintenanceMode
+      - version
+      properties:
+        maintenanceMode:
+          type: boolean
+        version:
+          type: string
     ErrorCode:
       type: string
       description: 'Stable, machine-readable error code carried by every non-2xx response.
@@ -115,16 +125,6 @@ components:
       - insufficient_balance
       - service_unavailable
       - internal_server_error
-    ServiceStatusDto:
-      type: object
-      required:
-      - maintenanceMode
-      - version
-      properties:
-        maintenanceMode:
-          type: boolean
-        version:
-          type: string
   securitySchemes:
     access_jwt_token:
       type: http

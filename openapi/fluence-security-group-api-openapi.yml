@@ -420,6 +420,192 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    UserVmNetworkInterfaceId:
+      type: string
+      format: uuid
+    CreateUserSecurityGroupRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        egressRules:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SecurityGroupRuleDto'
+        ingressRules:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SecurityGroupRuleDto'
+        name:
+          type: string
+    SecurityGroupRulesDto:
+      oneOf:
+      - type: object
+        required:
+        - type
+        properties:
+          type:
+            type: string
+            enum:
+            - allowAll
+      - type: object
+        required:
+        - rules
+        - type
+        properties:
+          rules:
+            type: array
+            items:
+              $ref: '#/components/schemas/SecurityGroupRuleDto'
+          type:
+            type: string
+            enum:
+            - allow
+    UserVpcId:
+      type: string
+      format: uuid
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    UserId:
+      type: string
+      format: uuid
+    UserSecurityGroupId:
+      type: string
+      format: uuid
+    SecurityGroupRuleDto:
+      oneOf:
+      - allOf:
+        - $ref: '#/components/schemas/SecurityGroupRuleKindDto'
+        - type: object
+          required:
+          - type
+          properties:
+            type:
+              type: string
+              enum:
+              - ipv4
+      - allOf:
+        - $ref: '#/components/schemas/SecurityGroupRuleKindDto'
+        - type: object
+          required:
+          - type
+          properties:
+            type:
+              type: string
+              enum:
+              - ipv6
+    SecurityGroupRuleKindDto:
+      type: object
+      required:
+      - protocolKind
+      - remote
+      properties:
+        protocolKind:
+          $ref: '#/components/schemas/SgProtocolKindDto'
+        remote:
+          $ref: '#/components/schemas/SgRemoteDto'
+    UserSecurityGroupDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - vpcId
+      - name
+      - status
+      - ingressRules
+      - egressRules
+      - createdAt
+      - attachedTo
+      properties:
+        attachedTo:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmNetworkInterfaceId'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        createdAt:
+          type: string
+          format: date-time
+        egressRules:
+          $ref: '#/components/schemas/SecurityGroupRulesDto'
+        id:
+          $ref: '#/components/schemas/UserSecurityGroupId'
+        ingressRules:
+          $ref: '#/components/schemas/SecurityGroupRulesDto'
+        name:
+          type: string
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          $ref: '#/components/schemas/UserSecurityGroupStatusDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        vpcId:
+          $ref: '#/components/schemas/UserVpcId'
+    UserSecurityGroupIdsDto:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSecurityGroupId'
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
     ErrorCode:
       type: string
       description: 'Stable, machine-readable error code carried by every non-2xx response.
@@ -443,6 +629,103 @@ components:
       - insufficient_balance
       - service_unavailable
       - internal_server_error
+    PortsDto:
+      oneOf:
+      - type: string
+        enum:
+        - all
+      - type: object
+        required:
+        - exact
+        properties:
+          exact:
+            type: object
+            required:
+            - value
+            properties:
+              value:
+                type: integer
+                format: u-int16
+                minimum: 0
+      - type: object
+        required:
+        - range
+        properties:
+          range:
+            type: object
+            required:
+            - min
+            - max
+            properties:
+              max:
+                type: integer
+                format: u-int16
+                minimum: 0
+              min:
+                type: integer
+                format: u-int16
+                minimum: 0
+    ClusterId:
+      type: string
+      format: uuid
+    SgProtocolKindDto:
+      oneOf:
+      - type: string
+        enum:
+        - all
+      - type: string
+        enum:
+        - icmp
+      - type: object
+        required:
+        - tcp
+        properties:
+          tcp:
+            type: object
+            required:
+            - ports
+            properties:
+              ports:
+                $ref: '#/components/schemas/PortsDto'
+      - type: object
+        required:
+        - udp
+        properties:
+          udp:
+            type: object
+            required:
+            - ports
+            properties:
+              ports:
+                $ref: '#/components/schemas/PortsDto'
+    UpdateUserSecurityGroupRequest:
+      type: object
+      properties:
+        egressRules:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SecurityGroupRulesDto'
+        ingressRules:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/SecurityGroupRulesDto'
+            description: '`absent` — не менять; `null` — сбросить к дефолту (`AllowAll`);
+
+              объект — установить конкретные правила.'
+        name:
+          type:
+          - string
+          - 'null'
+    UserSecurityGroupStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - updating
+      - failed
+      - removing
+      - removed
     SgRemoteDto:
       oneOf:
       - type: object
@@ -515,289 +798,6 @@ components:
                 $ref: '#/components/schemas/UserVpcId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
-    SecurityGroupRulesDto:
-      oneOf:
-      - type: object
-        required:
-        - type
-        properties:
-          type:
-            type: string
-            enum:
-            - allowAll
-      - type: object
-        required:
-        - rules
-        - type
-        properties:
-          rules:
-            type: array
-            items:
-              $ref: '#/components/schemas/SecurityGroupRuleDto'
-          type:
-            type: string
-            enum:
-            - allow
-    UpdateUserSecurityGroupRequest:
-      type: object
-      properties:
-        egressRules:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/SecurityGroupRulesDto'
-        ingressRules:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/SecurityGroupRulesDto'
-            description: '`absent` — не менять; `null` — сбросить к дефолту (`AllowAll`);
-
-              объект — установить конкретные правила.'
-        name:
-          type:
-          - string
-          - 'null'
-    SecurityGroupRuleDto:
-      oneOf:
-      - allOf:
-        - $ref: '#/components/schemas/SecurityGroupRuleKindDto'
-        - type: object
-          required:
-          - type
-          properties:
-            type:
-              type: string
-              enum:
-              - ipv4
-      - allOf:
-        - $ref: '#/components/schemas/SecurityGroupRuleKindDto'
-        - type: object
-          required:
-          - type
-          properties:
-            type:
-              type: string
-              enum:
-              - ipv6
-    UserVpcId:
-      type: string
-      format: uuid
-    PaginationInfo:
-      type: object
-      required:
-      - totalRecords
-      - filteredRecords
-      - totalPages
-      - currentPage
-      - perPage
-      properties:
-        currentPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        filteredRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-        perPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalPages:
-          type: integer
-          format: u-int32
-          minimum: 0
-        totalRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    UserSecurityGroupIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserSecurityGroupId'
-    SecurityGroupRuleKindDto:
-      type: object
-      required:
-      - protocolKind
-      - remote
-      properties:
-        protocolKind:
-          $ref: '#/components/schemas/SgProtocolKindDto'
-        remote:
-          $ref: '#/components/schemas/SgRemoteDto'
-    UserSecurityGroupId:
-      type: string
-      format: uuid
-    PortsDto:
-      oneOf:
-      - type: string
-        enum:
-        - all
-      - type: object
-        required:
-        - exact
-        properties:
-          exact:
-            type: object
-            required:
-            - value
-            properties:
-              value:
-                type: integer
-                format: u-int16
-                minimum: 0
-      - type: object
-        required:
-        - range
-        properties:
-          range:
-            type: object
-            required:
-            - min
-            - max
-            properties:
-              max:
-                type: integer
-                format: u-int16
-                minimum: 0
-              min:
-                type: integer
-                format: u-int16
-                minimum: 0
-    UserSecurityGroupDto:
-      type: object
-      required:
-      - id
-      - userId
-      - clusterId
-      - vpcId
-      - name
-      - status
-      - ingressRules
-      - egressRules
-      - createdAt
-      - attachedTo
-      properties:
-        attachedTo:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserVmNetworkInterfaceId'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        createdAt:
-          type: string
-          format: date-time
-        egressRules:
-          $ref: '#/components/schemas/SecurityGroupRulesDto'
-        id:
-          $ref: '#/components/schemas/UserSecurityGroupId'
-        ingressRules:
-          $ref: '#/components/schemas/SecurityGroupRulesDto'
-        name:
-          type: string
-        readySince:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        removedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        status:
-          $ref: '#/components/schemas/UserSecurityGroupStatusDto'
-        userId:
-          $ref: '#/components/schemas/UserId'
-        vpcId:
-          $ref: '#/components/schemas/UserVpcId'
-    ClusterId:
-      type: string
-      format: uuid
-    SgProtocolKindDto:
-      oneOf:
-      - type: string
-        enum:
-        - all
-      - type: string
-        enum:
-        - icmp
-      - type: object
-        required:
-        - tcp
-        properties:
-          tcp:
-            type: object
-            required:
-            - ports
-            properties:
-              ports:
-                $ref: '#/components/schemas/PortsDto'
-      - type: object
-        required:
-        - udp
-        properties:
-          udp:
-            type: object
-            required:
-            - ports
-            properties:
-              ports:
-                $ref: '#/components/schemas/PortsDto'
-    UserId:
-      type: string
-      format: uuid
-    UserSecurityGroupStatusDto:
-      type: string
-      enum:
-      - new
-      - created
-      - ready
-      - updating
-      - failed
-      - removing
-      - removed
-    UserVmNetworkInterfaceId:
-      type: string
-      format: uuid
-    CreateUserSecurityGroupRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        egressRules:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/SecurityGroupRuleDto'
-        ingressRules:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/SecurityGroupRuleDto'
-        name:
-          type: string
   securitySchemes:
     access_jwt_token:
       type: http

@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Fluence VP Cs API
+  title: Fluence VPCs API
   description: '# Introduction
 
 
@@ -415,6 +415,16 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    UpdateUserVpcRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+    ClusterId:
+      type: string
+      format: uuid
     UserVpcDto:
       type: object
       required:
@@ -457,6 +467,9 @@ components:
           minimum: 0
         userId:
           $ref: '#/components/schemas/UserId'
+    UserVpcId:
+      type: string
+      format: uuid
     ErrorBody:
       type: object
       required:
@@ -469,48 +482,61 @@ components:
         error:
           type: string
           description: The human-readable error message.
-    UpdateUserVpcRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    UserVpcStatusDto:
-      type: string
-      enum:
-      - new
-      - created
-      - ready
-      - failed
-      - removing
-      - removed
-    ClusterId:
+    UserId:
       type: string
       format: uuid
+    CreateUserVpcRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        enableExternal:
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+    UserVpcIdsDto:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVpcId'
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
     PaginatedResponse_UserVpcDto:
       type: object
       required:
@@ -563,64 +589,38 @@ components:
                 $ref: '#/components/schemas/UserId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
-    UserVpcIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserVpcId'
-    UserVpcId:
+    ErrorCode:
       type: string
-      format: uuid
-    UserId:
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    UserVpcStatusDto:
       type: string
-      format: uuid
-    CreateUserVpcRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        enableExternal:
-          type:
-          - boolean
-          - 'null'
-        name:
-          type: string
-    PaginationInfo:
-      type: object
-      required:
-      - totalRecords
-      - filteredRecords
-      - totalPages
-      - currentPage
-      - perPage
-      properties:
-        currentPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        filteredRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-        perPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalPages:
-          type: integer
-          format: u-int32
-          minimum: 0
-        totalRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
+      enum:
+      - new
+      - created
+      - ready
+      - failed
+      - removing
+      - removed
   securitySchemes:
     access_jwt_token:
       type: http

@@ -23,7 +23,7 @@ paths:
     get:
       tags:
       - Hardware
-      operationId: Get available clusters
+      operationId: GetAvailableClusters
       responses:
         '200':
           description: List of available clusters
@@ -83,6 +83,8 @@ paths:
         - clusters:read
       summary: Get available clusters
       x-summary-source: derived
+      x-operation-id-source: normalized
+      x-operation-id-original: Get available clusters
   /v1/clusters/resources:
     get:
       tags:
@@ -374,126 +376,49 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ErrorBody:
+    AvailableStorageDto:
       type: object
       required:
-      - error
-      - code
+      - storageType
+      - replicated
+      - volumeGb
       properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    VmConfigurationDto:
-      type: object
-      required:
-      - id
-      - slug
-      - name
-      - vcpu
-      - ramGb
-      - dedicated
-      - cpuFamilies
-      - preset
-      - tags
-      - description
-      properties:
-        cpuFamilies:
-          type: array
-          items:
-            $ref: '#/components/schemas/CpuFamilyDto'
-        dedicated:
+        replicated:
           type: boolean
-        description:
-          type: string
-        id:
-          $ref: '#/components/schemas/VmConfigurationId'
-        name:
-          type: string
-        preset:
-          $ref: '#/components/schemas/VmConfigurationPreset'
-        ramGb:
+        storageType:
+          $ref: '#/components/schemas/StorageTypeDto'
+        volumeGb:
           type: integer
           format: u-int64
-          example: '4'
+          example: '100'
           minimum: 0
-        slug:
-          $ref: '#/components/schemas/VmConfigurationSlug'
-        tags:
-          type: array
-          items:
-            type: string
-        vcpu:
-          type: integer
-          format: u-int8
-          example: '2'
-          minimum: 0
-    CpuFamilyDto:
+    VmConfigurationSlug:
       type: string
       enum:
-      - AMD_ZEN2
-      - AMD_ZEN3
-      - AMD_ZEN5
-    CollectionResponse_ClusterDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - id
-            - name
-            - dcId
-            properties:
-              dcId:
-                type: string
-                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
-              id:
-                type: string
-                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
-              name:
-                type: string
-                example: Cloudless
-    VmConfigurationPreset:
+      - cpu-regular-2vcpu-4gb
+      - cpu-regular-4vcpu-8gb
+      - cpu-regular-8vcpu-16gb
+      - cpu-regular-8vcpu-32gb
+      - cpu-regular-16vcpu-32gb
+      - cpu-regular-24vcpu-48gb
+      - cpu-regular-32vcpu-64gb
+      - cpu-regular-64vcpu-128gb
+      - cpu-premium-2vcpu-4gb
+      - cpu-premium-4vcpu-8gb
+      - cpu-premium-8vcpu-16gb
+      - cpu-premium-8vcpu-32gb
+      - cpu-premium-16vcpu-32gb
+      - cpu-premium-24vcpu-48gb
+      - cpu-premium-32vcpu-64gb
+      - cpu-premium-64vcpu-128gb
+      - cpu-shared-2vcpu-2gb
+      - cpu-shared-3vcpu-4gb
+      - cpu-shared-4vcpu-8gb
+      - cpu-shared-8vcpu-16gb
+      - cpu-shared-16vcpu-32gb
+    ClusterId:
       type: string
-      enum:
-      - general
-      - cpu_optimized
-      - memory_optimized
-    StorageTypeDto:
-      type: string
-      enum:
-      - HDD
-      - SSD
-      - NVME
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
+      format: uuid
     ClusterResourcesDto:
       type: object
       required:
@@ -539,6 +464,103 @@ components:
             - replicated: false
               storageType: NVME
               volumeGb: 200
+    VmConfigurationId:
+      type: string
+      format: uuid
+    StorageTypeDto:
+      type: string
+      enum:
+      - HDD
+      - SSD
+      - NVME
+    VmConfigurationDto:
+      type: object
+      required:
+      - id
+      - slug
+      - name
+      - vcpu
+      - ramGb
+      - dedicated
+      - cpuFamilies
+      - preset
+      - tags
+      - description
+      properties:
+        cpuFamilies:
+          type: array
+          items:
+            $ref: '#/components/schemas/CpuFamilyDto'
+        dedicated:
+          type: boolean
+        description:
+          type: string
+        id:
+          $ref: '#/components/schemas/VmConfigurationId'
+        name:
+          type: string
+        preset:
+          $ref: '#/components/schemas/VmConfigurationPreset'
+        ramGb:
+          type: integer
+          format: u-int64
+          example: '4'
+          minimum: 0
+        slug:
+          $ref: '#/components/schemas/VmConfigurationSlug'
+        tags:
+          type: array
+          items:
+            type: string
+        vcpu:
+          type: integer
+          format: u-int8
+          example: '2'
+          minimum: 0
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    DatacenterId:
+      type: string
+      format: uuid
+    CollectionResponse_ClusterDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - name
+            - dcId
+            properties:
+              dcId:
+                type: string
+                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
+              id:
+                type: string
+                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
+              name:
+                type: string
+                example: Cloudless
+    VmConfigurationPreset:
+      type: string
+      enum:
+      - general
+      - cpu_optimized
+      - memory_optimized
     BulkClusterResourcesDto:
       type: object
       required:
@@ -551,33 +573,6 @@ components:
           propertyNames:
             type: string
             format: uuid
-    VmConfigurationSlug:
-      type: string
-      enum:
-      - cpu-regular-2vcpu-4gb
-      - cpu-regular-4vcpu-8gb
-      - cpu-regular-8vcpu-16gb
-      - cpu-regular-8vcpu-32gb
-      - cpu-regular-16vcpu-32gb
-      - cpu-regular-24vcpu-48gb
-      - cpu-regular-32vcpu-64gb
-      - cpu-regular-64vcpu-128gb
-      - cpu-premium-2vcpu-4gb
-      - cpu-premium-4vcpu-8gb
-      - cpu-premium-8vcpu-16gb
-      - cpu-premium-8vcpu-32gb
-      - cpu-premium-16vcpu-32gb
-      - cpu-premium-24vcpu-48gb
-      - cpu-premium-32vcpu-64gb
-      - cpu-premium-64vcpu-128gb
-      - cpu-shared-2vcpu-2gb
-      - cpu-shared-3vcpu-4gb
-      - cpu-shared-4vcpu-8gb
-      - cpu-shared-8vcpu-16gb
-      - cpu-shared-16vcpu-32gb
-    ClusterId:
-      type: string
-      format: uuid
     CollectionResponse_VmConfigurationDto:
       type: object
       required:
@@ -629,9 +624,35 @@ components:
                 format: u-int8
                 example: '2'
                 minimum: 0
-    DatacenterId:
+    CpuFamilyDto:
       type: string
-      format: uuid
+      enum:
+      - AMD_ZEN2
+      - AMD_ZEN3
+      - AMD_ZEN5
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
     CollectionResponse_DatacenterDto:
       type: object
       required:
@@ -671,25 +692,6 @@ components:
               tier:
                 type: integer
                 format: int32
-    AvailableStorageDto:
-      type: object
-      required:
-      - storageType
-      - replicated
-      - volumeGb
-      properties:
-        replicated:
-          type: boolean
-        storageType:
-          $ref: '#/components/schemas/StorageTypeDto'
-        volumeGb:
-          type: integer
-          format: u-int64
-          example: '100'
-          minimum: 0
-    VmConfigurationId:
-      type: string
-      format: uuid
   securitySchemes:
     access_jwt_token:
       type: http

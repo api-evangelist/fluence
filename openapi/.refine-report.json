@@ -18,7 +18,7 @@
     "fluence-vpcs-api-openapi.yml"
   ],
   "archived": [
-    "deleted 3 superseded output(s) from the previous generation"
+    "deleted 1 superseded output(s) from the previous generation"
   ],
   "errors": [],
   "warnings": [],
@@ -27,8 +27,8 @@
     "fluence-openapi-original.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "fluence-openapi-original.yml: declared missing tag: PublicIP",
     "fluence-openapi-original.yml: declared missing tag: Service",
-    "superseded outputs removed: fluence-security-group-api-openapi.yml, fluence-v-ms-api-openapi.yml, fluence-vp-cs-api-openapi.yml",
-    "apis.yml register: written (+3 apis, 12 total)"
+    "superseded outputs removed: fluence-security-group-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 12 total)"
   ],
   "skipped": [
     "fluence-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
@@ -41,7 +41,7 @@
     "fluence-storage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "fluence-subnets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "fluence-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "fluence-v-ms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "fluence-vp-cs-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+    "fluence-vms-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "fluence-vpcs-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

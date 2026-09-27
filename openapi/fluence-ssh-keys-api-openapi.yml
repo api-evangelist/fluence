@@ -314,6 +314,15 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    UserSshKeyIdsDto:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSshKeyId'
     UserSshKeyDto:
       type: object
       required:
@@ -368,29 +377,6 @@ components:
         error:
           type: string
           description: The human-readable error message.
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
     PaginatedResponse_UserSshKeyDto:
       type: object
       required:
@@ -423,15 +409,6 @@ components:
                 $ref: '#/components/schemas/UserId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
-    UserSshKeyIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserSshKeyId'
     UserId:
       type: string
       format: uuid
@@ -467,6 +444,29 @@ components:
           type: integer
           format: u-int64
           minimum: 0
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
   securitySchemes:
     access_jwt_token:
       type: http

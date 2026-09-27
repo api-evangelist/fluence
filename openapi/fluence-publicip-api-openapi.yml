@@ -474,57 +474,17 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    SortOrderDto:
-      type: string
-      enum:
-      - asc
-      - desc
-    CreateUserPublicIpRequest:
+    UserVmReference:
       type: object
+      description: A VM reference (id + name) surfaced where a resource is attached, so callers avoid a second lookup.
       required:
-      - clusterId
+      - id
       - name
-      - addressType
       properties:
-        addressType:
-          $ref: '#/components/schemas/NewIpAddressType'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
+        id:
+          $ref: '#/components/schemas/UserVmId'
         name:
           type: string
-    NewIpAddressType:
-      type: string
-      enum:
-      - V4
-    DatacenterId:
-      type: string
-      format: uuid
-    UserVmId:
-      type: string
-      format: uuid
     PublicIpActionDto:
       type: string
       description: 'Wire representation of [`PublicIpAction`] — the operations exposed via
@@ -534,35 +494,14 @@ components:
       - update
       - delete
       - attachToVm
-    PaginationInfo:
-      type: object
-      required:
-      - totalRecords
-      - filteredRecords
-      - totalPages
-      - currentPage
-      - perPage
-      properties:
-        currentPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        filteredRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-        perPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalPages:
-          type: integer
-          format: u-int32
-          minimum: 0
-        totalRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
+    UserVmId:
+      type: string
+      format: uuid
+    IpAddressType:
+      type: string
+      enum:
+      - V4
+      - V6
     ErrorBody:
       type: object
       required:
@@ -575,17 +514,6 @@ components:
         error:
           type: string
           description: The human-readable error message.
-    UserPublicIpId:
-      type: string
-      format: uuid
-    IpAddressType:
-      type: string
-      enum:
-      - V4
-      - V6
-    ClusterId:
-      type: string
-      format: uuid
     PaginatedResponse_UserPublicIpDto:
       type: object
       required:
@@ -675,6 +603,9 @@ components:
                 $ref: '#/components/schemas/UserId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
+    UserId:
+      type: string
+      format: uuid
     UserPublicIpDto:
       type: object
       required:
@@ -754,6 +685,88 @@ components:
           $ref: '#/components/schemas/UserPublicIpStatusDto'
         userId:
           $ref: '#/components/schemas/UserId'
+    CreateUserPublicIpRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - addressType
+      properties:
+        addressType:
+          $ref: '#/components/schemas/NewIpAddressType'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        name:
+          type: string
+    DatacenterId:
+      type: string
+      format: uuid
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+    NewIpAddressType:
+      type: string
+      enum:
+      - V4
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    ClusterId:
+      type: string
+      format: uuid
+    SortFieldDto:
+      type: string
+      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
+      enum:
+      - createdAt
+      - name
+      - status
     UpdateUserPublicIpRequest:
       type: object
       properties:
@@ -761,7 +774,12 @@ components:
           type:
           - string
           - 'null'
-    UserId:
+    SortOrderDto:
+      type: string
+      enum:
+      - asc
+      - desc
+    UserPublicIpId:
       type: string
       format: uuid
     UserPublicIpIdsDto:
@@ -773,24 +791,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserPublicIpId'
-    SortFieldDto:
-      type: string
-      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
-      enum:
-      - createdAt
-      - name
-      - status
-    UserVmReference:
-      type: object
-      description: A VM reference (id + name) surfaced where a resource is attached, so callers avoid a second lookup.
-      required:
-      - id
-      - name
-      properties:
-        id:
-          $ref: '#/components/schemas/UserVmId'
-        name:
-          type: string
     UserPublicIpStatusDto:
       type: string
       enum:
