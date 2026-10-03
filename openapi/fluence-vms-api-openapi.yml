@@ -1167,562 +1167,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    AddPublicIpRequest:
-      type: object
-      required:
-      - publicIpId
-      properties:
-        publicIpId:
-          $ref: '#/components/schemas/UserPublicIpId'
-    CloudInitDto:
-      type: object
-      properties:
-        userData:
-          type:
-          - string
-          - 'null'
-          description: 'Raw cloud-init `userData`. Forwarded to lightmare verbatim; not
-
-            retrievable after VM creation.'
-    UserVmNetworkInterfaceId:
-      type: string
-      format: uuid
-    PublicIpActionDto:
-      type: string
-      description: 'Wire representation of [`PublicIpAction`] — the operations exposed via
-
-        `UserPublicIpDto.allowedActions`.'
-      enum:
-      - update
-      - delete
-      - attachToVm
-    UserVmReference:
-      type: object
-      description: A VM reference (id + name) surfaced where a resource is attached, so callers avoid a second lookup.
-      required:
-      - id
-      - name
-      properties:
-        id:
-          $ref: '#/components/schemas/UserVmId'
-        name:
-          type: string
-    StorageActionDto:
-      type: string
-      description: 'Wire representation of [`StorageAction`] — the operations exposed via
-
-        `UserStorageDto.allowedActions`.'
-      enum:
-      - update
-      - delete
-      - attachToVm
-    UserVmId:
-      type: string
-      format: uuid
-    UserVmStatusDto:
-      type: string
-      enum:
-      - new
-      - launching
-      - launched
-      - failed
-      - updating
-      - terminating
-      - terminated
-      - suspending
-      - suspended
-      - restarting
-      - softRebooting
-      - unknown
-    CreateUserVmRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      - configurationId
-      - bootDisk
-      properties:
-        bootDisk:
-          $ref: '#/components/schemas/VmBootDisk'
-        cloudInit:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/CloudInitDto'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        configurationId:
-          $ref: '#/components/schemas/VmConfigurationId'
-        dataDisks:
-          type: array
-          items:
-            $ref: '#/components/schemas/VmDataDisk'
-        name:
-          type: string
-        publicIp:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/VmPublicIp'
-        sshKeys:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserSshKeyId'
-    StorageTypeDto:
-      type: string
-      enum:
-      - HDD
-      - SSD
-      - NVME
-    UserSubnetId:
-      type: string
-      format: uuid
-    VmNetworkInterfaceDto:
-      type: object
-      required:
-      - id
-      - default
-      - kind
-      properties:
-        default:
-          type: boolean
-        id:
-          $ref: '#/components/schemas/UserVmNetworkInterfaceId'
-        kind:
-          $ref: '#/components/schemas/NetworkInterfaceKindDto'
-        securityGroup:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/UserSecurityGroupId'
-    IpAddressType:
-      type: string
-      enum:
-      - V4
-      - V6
-    VmBootDisk:
-      oneOf:
-      - $ref: '#/components/schemas/UserStorageId'
-      - $ref: '#/components/schemas/CreateUserStorageRequest'
-    VmConfigurationId:
-      type: string
-      format: uuid
-    UserStorageId:
-      type: string
-      format: uuid
-    UserVpcId:
-      type: string
-      format: uuid
-    UserStorageDto:
-      type: object
-      required:
-      - id
-      - userId
-      - clusterId
-      - name
-      - storageType
-      - status
-      - role
-      - volumeGb
-      - replicated
-      - attachedTo
-      - createdAt
-      properties:
-        allowedActions:
-          type: array
-          items:
-            $ref: '#/components/schemas/StorageActionDto'
-          description: 'Operations currently legal for this storage''s `status`, derived from the
-
-            same guards as request validation.'
-        attachedTo:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserVmId'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        createdAt:
-          type: string
-          format: date-time
-        id:
-          $ref: '#/components/schemas/UserStorageId'
-        image:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/StorageImageDto'
-        initUrl:
-          type:
-          - string
-          - 'null'
-        lastPaidAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        name:
-          type: string
-        paidUntil:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        priceHourlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time hourly price snapshot in USD, serialized as a string;
-
-            absent when the catalog has no active price for this resource. A UI
-
-            estimate, not the amount billed.'
-          example: '0.05'
-        priceMonthlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
-
-            as a string. See `price_hourly_usd`.'
-          example: '36.50'
-        readySince:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        removedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        replicated:
-          type: boolean
-        role:
-          $ref: '#/components/schemas/StorageRoleDto'
-        status:
-          $ref: '#/components/schemas/UserStorageStatusDto'
-        storageType:
-          $ref: '#/components/schemas/StorageTypeDto'
-        userId:
-          $ref: '#/components/schemas/UserId'
-        volumeGb:
-          type: integer
-          format: u-int64
-          minimum: 0
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    CloudInitInfoDto:
-      type: object
-      description: 'Presence-only marker. If `cloud_init` is non-null on a VM, the VM was
-
-        created with cloud-init `userData`. The content itself is wiped after
-
-        the VM transitions out of `New` and is not retrievable via API.'
-    UserId:
-      type: string
-      format: uuid
-    VmActionDto:
-      type: string
-      description: 'Wire representation of [`VmAction`] — the operations exposed via
-
-        `UserVmDto.allowedActions`.'
-      enum:
-      - addPublicIp
-      - removePublicIp
-      - addStorages
-      - removeStorages
-      - updateNetworkInterface
-      - restart
-      - softReboot
-      - terminate
-    UserSecurityGroupId:
-      type: string
-      format: uuid
-    UserStorageStatusDto:
-      type: string
-      enum:
-      - new
-      - created
-      - ready
-      - updating
-      - failed
-      - removing
-      - removed
-    UpdateNetworkInterfaceRequest:
-      type: object
-      properties:
-        securityGroupId:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/UserSecurityGroupId'
-    VmPublicIp:
-      oneOf:
-      - $ref: '#/components/schemas/UserPublicIpId'
-      - $ref: '#/components/schemas/CreateUserPublicIpRequest'
-    UserSshKeyDto:
-      type: object
-      required:
-      - id
-      - userId
-      - name
-      - publicKey
-      - algorithm
-      - fingerprint
-      properties:
-        algorithm:
-          type: string
-        fingerprint:
-          type: string
-        id:
-          $ref: '#/components/schemas/UserSshKeyId'
-        name:
-          type: string
-        publicKey:
-          type: string
-        userId:
-          $ref: '#/components/schemas/UserId'
-    UserSubnetDto:
-      type: object
-      required:
-      - id
-      - userId
-      - clusterId
-      - vpcId
-      - name
-      - status
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        id:
-          $ref: '#/components/schemas/UserSubnetId'
-        ipv4Cidr:
-          type:
-          - string
-          - 'null'
-          example: 10.0.0.0/24
-        ipv6Cidr:
-          type:
-          - string
-          - 'null'
-          example: 2001:db8::/64
-        name:
-          type: string
-        readySince:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        removedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        status:
-          $ref: '#/components/schemas/UserSubnetStatusDto'
-        userId:
-          $ref: '#/components/schemas/UserId'
-        vpcId:
-          $ref: '#/components/schemas/UserVpcId'
-    StorageRoleDto:
-      type: string
-      enum:
-      - BOOT
-      - DATA
-    UserPublicIpDto:
-      type: object
-      required:
-      - id
-      - userId
-      - clusterId
-      - name
-      - addressType
-      - status
-      - createdAt
-      properties:
-        address:
-          type:
-          - string
-          - 'null'
-        addressType:
-          $ref: '#/components/schemas/IpAddressType'
-        allowedActions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PublicIpActionDto'
-          description: 'Operations currently legal for this public IP''s `status`, derived from
-
-            the same guards as request validation.'
-        attachedTo:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/UserVmReference'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        createdAt:
-          type: string
-          format: date-time
-        id:
-          $ref: '#/components/schemas/UserPublicIpId'
-        lastPaidAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        name:
-          type: string
-        paidUntil:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        priceHourlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time hourly price snapshot in USD, serialized as a string;
-
-            absent when the catalog has no active price for this resource. A UI
-
-            estimate, not the amount billed.'
-          example: '0.05'
-        priceMonthlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
-
-            as a string. See `price_hourly_usd`.'
-          example: '36.50'
-        readySince:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        removedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        status:
-          $ref: '#/components/schemas/UserPublicIpStatusDto'
-        userId:
-          $ref: '#/components/schemas/UserId'
-    VmConfigurationSlug:
-      type: string
-      enum:
-      - cpu-regular-2vcpu-4gb
-      - cpu-regular-4vcpu-8gb
-      - cpu-regular-8vcpu-16gb
-      - cpu-regular-8vcpu-32gb
-      - cpu-regular-16vcpu-32gb
-      - cpu-regular-24vcpu-48gb
-      - cpu-regular-32vcpu-64gb
-      - cpu-regular-64vcpu-128gb
-      - cpu-premium-2vcpu-4gb
-      - cpu-premium-4vcpu-8gb
-      - cpu-premium-8vcpu-16gb
-      - cpu-premium-8vcpu-32gb
-      - cpu-premium-16vcpu-32gb
-      - cpu-premium-24vcpu-48gb
-      - cpu-premium-32vcpu-64gb
-      - cpu-premium-64vcpu-128gb
-      - cpu-shared-2vcpu-2gb
-      - cpu-shared-3vcpu-4gb
-      - cpu-shared-4vcpu-8gb
-      - cpu-shared-8vcpu-16gb
-      - cpu-shared-16vcpu-32gb
-    UpdateUserVmRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-    CreateUserPublicIpRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      - addressType
-      properties:
-        addressType:
-          $ref: '#/components/schemas/NewIpAddressType'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        name:
-          type: string
-    StorageImageDto:
-      type: object
-      description: 'Slim reference to the OS image a storage was created from. Present only when
-
-        the storage''s `init_url` matches a catalog image; absent for custom URLs and
-
-        data disks.'
-      required:
-      - id
-      - name
-      - slug
-      - distribution
-      properties:
-        distribution:
-          type: string
-          example: Ubuntu
-        id:
-          type: string
-          example: da1e99153be74618820a164eebcbdc66
-        name:
-          type: string
-          example: 24.04 (LTS) x64
-        slug:
-          type: string
-          example: ubuntu-24-04-x64
-    UserSshKeyId:
-      type: string
-      format: uuid
-    UserVmExpandedDto:
-      type: object
-      description: 'Attached resources resolved inline. Each field is set only when the matching
-
-        `?expand=` member was requested; absent fields stay as bare IDs on the VM.'
-      properties:
-        bootDisk:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/UserStorageDto'
-        dataDisks:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/UserStorageDto'
-        networkInterfaces:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VmNetworkInterfaceDto'
-        publicIp:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/UserPublicIpDto'
-        sshKeys:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/UserSshKeyDto'
-        subnets:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/UserSubnetDto'
     PaginatedResponse_UserVmDto:
       type: object
       required:
@@ -1871,15 +1315,248 @@ components:
                 minimum: 0
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
-    RemoveStoragesRequest:
+    VmConfigurationId:
+      type: string
+      format: uuid
+    UserSubnetDto:
       type: object
       required:
-      - dataDisks
+      - id
+      - userId
+      - clusterId
+      - vpcId
+      - name
+      - status
       properties:
-        dataDisks:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserStorageId'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        id:
+          $ref: '#/components/schemas/UserSubnetId'
+        ipv4Cidr:
+          type:
+          - string
+          - 'null'
+          example: 10.0.0.0/24
+        ipv6Cidr:
+          type:
+          - string
+          - 'null'
+          example: 2001:db8::/64
+        name:
+          type: string
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          $ref: '#/components/schemas/UserSubnetStatusDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        vpcId:
+          $ref: '#/components/schemas/UserVpcId'
+    UserSubnetId:
+      type: string
+      format: uuid
+    CloudInitInfoDto:
+      type: object
+      description: 'Presence-only marker. If `cloud_init` is non-null on a VM, the VM was
+
+        created with cloud-init `userData`. The content itself is wiped after
+
+        the VM transitions out of `New` and is not retrievable via API.'
+    StorageImageDto:
+      type: object
+      description: 'Slim reference to the OS image a storage was created from. Present only when
+
+        the storage''s `init_url` matches a catalog image; absent for custom URLs and
+
+        data disks.'
+      required:
+      - id
+      - name
+      - slug
+      - distribution
+      properties:
+        distribution:
+          type: string
+          example: Ubuntu
+        id:
+          type: string
+          example: da1e99153be74618820a164eebcbdc66
+        name:
+          type: string
+          example: 24.04 (LTS) x64
+        slug:
+          type: string
+          example: ubuntu-24-04-x64
+    VmExpand:
+      type: string
+      description: 'Attached resource a `?expand` member can inline on a VM response: the bare
+
+        id stays in place and the resolved object is added to the `expanded` block.'
+      enum:
+      - bootDisk
+      - dataDisks
+      - publicIp
+      - subnets
+      - sshKeys
+      - networkInterfaces
+    UpdateUserVmRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+    VmDataDisk:
+      oneOf:
+      - $ref: '#/components/schemas/UserStorageId'
+      - $ref: '#/components/schemas/CreateUserStorageRequest'
+    CloudInitDto:
+      type: object
+      properties:
+        userData:
+          type:
+          - string
+          - 'null'
+          description: 'Raw cloud-init `userData`. Forwarded to lightmare verbatim; not
+
+            retrievable after VM creation.'
+    CreateUserStorageRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - storageType
+      - volumeGb
+      - replicated
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        name:
+          type: string
+        osImage:
+          type:
+          - string
+          - 'null'
+          example: https://example.com/image.qcow2
+        replicated:
+          type: boolean
+        storageType:
+          $ref: '#/components/schemas/NewStorageType'
+        volumeGb:
+          type: integer
+          format: u-int32
+          minimum: 0
+    SortOrderDto:
+      type: string
+      enum:
+      - asc
+      - desc
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    CreateUserPublicIpRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - addressType
+      properties:
+        addressType:
+          $ref: '#/components/schemas/NewIpAddressType'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        name:
+          type: string
+    UserVmId:
+      type: string
+      format: uuid
+    UserVmReference:
+      type: object
+      description: A VM reference (id + name) surfaced where a resource is attached, so callers avoid a second lookup.
+      required:
+      - id
+      - name
+      properties:
+        id:
+          $ref: '#/components/schemas/UserVmId'
+        name:
+          type: string
+    VmConfigurationSlug:
+      type: string
+      enum:
+      - cpu-regular-2vcpu-4gb
+      - cpu-regular-4vcpu-8gb
+      - cpu-regular-8vcpu-16gb
+      - cpu-regular-8vcpu-32gb
+      - cpu-regular-16vcpu-32gb
+      - cpu-regular-24vcpu-48gb
+      - cpu-regular-32vcpu-64gb
+      - cpu-regular-64vcpu-128gb
+      - cpu-premium-2vcpu-4gb
+      - cpu-premium-4vcpu-8gb
+      - cpu-premium-8vcpu-16gb
+      - cpu-premium-8vcpu-32gb
+      - cpu-premium-16vcpu-32gb
+      - cpu-premium-24vcpu-48gb
+      - cpu-premium-32vcpu-64gb
+      - cpu-premium-64vcpu-128gb
+      - cpu-shared-2vcpu-2gb
+      - cpu-shared-3vcpu-4gb
+      - cpu-shared-4vcpu-8gb
+      - cpu-shared-8vcpu-16gb
+      - cpu-shared-16vcpu-32gb
+    UserVmStatusDto:
+      type: string
+      enum:
+      - new
+      - launching
+      - launched
+      - failed
+      - updating
+      - terminating
+      - terminated
+      - suspending
+      - suspended
+      - restarting
+      - softRebooting
+      - unknown
+    UserPublicIpStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - failed
+      - removing
+      - removed
     PaginationInfo:
       type: object
       required:
@@ -1909,34 +1586,429 @@ components:
           type: integer
           format: u-int64
           minimum: 0
-    NetworkInterfaceKindDto:
-      oneOf:
-      - type: object
-        required:
-        - private
-        properties:
-          private:
-            type: object
-            required:
-            - subnet
-            properties:
-              subnet:
-                $ref: '#/components/schemas/UserSubnetId'
-      - type: object
-        required:
-        - public
-        properties:
-          public:
-            type: object
-            required:
-            - public_ip
-            properties:
-              public_ip:
-                $ref: '#/components/schemas/UserPublicIpId'
-    NewIpAddressType:
+    PublicIpActionDto:
+      type: string
+      description: 'Wire representation of [`PublicIpAction`] — the operations exposed via
+
+        `UserPublicIpDto.allowedActions`.'
+      enum:
+      - update
+      - delete
+      - attachToVm
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    VmNetworkInterfaceDto:
+      type: object
+      required:
+      - id
+      - default
+      - kind
+      properties:
+        default:
+          type: boolean
+        id:
+          $ref: '#/components/schemas/UserVmNetworkInterfaceId'
+        kind:
+          $ref: '#/components/schemas/NetworkInterfaceKindDto'
+        securityGroup:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserSecurityGroupId'
+    UserVpcId:
+      type: string
+      format: uuid
+    UserPublicIpDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - name
+      - addressType
+      - status
+      - createdAt
+      properties:
+        address:
+          type:
+          - string
+          - 'null'
+        addressType:
+          $ref: '#/components/schemas/IpAddressType'
+        allowedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicIpActionDto'
+          description: 'Operations currently legal for this public IP''s `status`, derived from
+
+            the same guards as request validation.'
+        attachedTo:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserVmReference'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/UserPublicIpId'
+        lastPaidAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type: string
+        paidUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        priceHourlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+            absent when the catalog has no active price for this resource. A UI
+
+            estimate, not the amount billed.'
+          example: '0.05'
+        priceMonthlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+            as a string. See `price_hourly_usd`.'
+          example: '36.50'
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          $ref: '#/components/schemas/UserPublicIpStatusDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+    AddStoragesRequest:
+      type: object
+      required:
+      - dataDisks
+      properties:
+        dataDisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserStorageId'
+    CreateUserVmRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - configurationId
+      - bootDisk
+      properties:
+        bootDisk:
+          $ref: '#/components/schemas/VmBootDisk'
+        cloudInit:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/CloudInitDto'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        configurationId:
+          $ref: '#/components/schemas/VmConfigurationId'
+        dataDisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/VmDataDisk'
+        name:
+          type: string
+        publicIp:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/VmPublicIp'
+        sshKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSshKeyId'
+    StorageRoleDto:
+      type: string
+      enum:
+      - BOOT
+      - DATA
+    UserVmNetworkInterfaceId:
+      type: string
+      format: uuid
+    IpAddressType:
       type: string
       enum:
       - V4
+      - V6
+    UserStorageStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - updating
+      - failed
+      - removing
+      - removed
+    UserSshKeyDto:
+      type: object
+      required:
+      - id
+      - userId
+      - name
+      - publicKey
+      - algorithm
+      - fingerprint
+      properties:
+        algorithm:
+          type: string
+        fingerprint:
+          type: string
+        id:
+          $ref: '#/components/schemas/UserSshKeyId'
+        name:
+          type: string
+        publicKey:
+          type: string
+        userId:
+          $ref: '#/components/schemas/UserId'
+    UserSubnetStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - failed
+      - removing
+      - removed
+    StorageTypeDto:
+      type: string
+      enum:
+      - HDD
+      - SSD
+      - NVME
+    VmPublicIp:
+      oneOf:
+      - $ref: '#/components/schemas/UserPublicIpId'
+      - $ref: '#/components/schemas/CreateUserPublicIpRequest'
+    AddPublicIpRequest:
+      type: object
+      required:
+      - publicIpId
+      properties:
+        publicIpId:
+          $ref: '#/components/schemas/UserPublicIpId'
+    VmBootDisk:
+      oneOf:
+      - $ref: '#/components/schemas/UserStorageId'
+      - $ref: '#/components/schemas/CreateUserStorageRequest'
+    SortFieldDto:
+      type: string
+      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
+      enum:
+      - createdAt
+      - name
+      - status
+    UserSecurityGroupId:
+      type: string
+      format: uuid
+    StorageActionDto:
+      type: string
+      description: 'Wire representation of [`StorageAction`] — the operations exposed via
+
+        `UserStorageDto.allowedActions`.'
+      enum:
+      - update
+      - delete
+      - attachToVm
+    UserStorageDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - name
+      - storageType
+      - status
+      - role
+      - volumeGb
+      - replicated
+      - attachedTo
+      - createdAt
+      properties:
+        allowedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorageActionDto'
+          description: 'Operations currently legal for this storage''s `status`, derived from the
+
+            same guards as request validation.'
+        attachedTo:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmId'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/UserStorageId'
+        image:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/StorageImageDto'
+        initUrl:
+          type:
+          - string
+          - 'null'
+        lastPaidAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type: string
+        paidUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        priceHourlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+            absent when the catalog has no active price for this resource. A UI
+
+            estimate, not the amount billed.'
+          example: '0.05'
+        priceMonthlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+            as a string. See `price_hourly_usd`.'
+          example: '36.50'
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        replicated:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/StorageRoleDto'
+        status:
+          $ref: '#/components/schemas/UserStorageStatusDto'
+        storageType:
+          $ref: '#/components/schemas/StorageTypeDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        volumeGb:
+          type: integer
+          format: u-int64
+          minimum: 0
+    ConsoleAccessToken:
+      type: object
+      description: 'Wire-shape returned to Pult. Identical to the response of the previous
+
+        vodopad mint endpoint, which proxied through crd-api
+
+        for the opaque token; only the contents of `token` change here (opaque
+
+        short string → RS256 JWT). Pult treats it as a bearer it forwards to
+
+        vm-api and never parses it.'
+      required:
+      - token
+      - vmApiDomain
+      - workspaceId
+      - expiresAt
+      properties:
+        expiresAt:
+          type: string
+          format: date-time
+          description: 'Absolute expiration of the JWT, mirrored from the `exp` claim so the
+
+            client can preemptively re-mint.'
+        token:
+          type: string
+          description: 'RS256 JWT signed with the vodopad `JwtService` RSA key, audience
+
+            `lightmare-vm-api`, issuer `vodopad`. Carries `{sub, vm_id,
+
+            workspace_id, iat, exp, aud, iss}` — see
+
+            [`crate::api::auth::types::VmAccessClaims`].'
+        vmApiDomain:
+          type: string
+          description: 'Public base URL of lightmare vm-api for the cluster this VM lives
+
+            on. Pult builds the attach URL from this + the JWT. Sourced from
+
+            `clusters.vm_api_domain` (migration 1147); if
+
+            the cluster row has NULL the handler answers 503.'
+        workspaceId:
+          type: string
+          format: uuid
+          description: 'Workspace the JWT is scoped to — mirrored from the `workspace_id`
+
+            claim. vm-api compares this against the path segment on every
+
+            request, so Pult must use exactly this value when building the
+
+            `/ws/{ws_id}/...` URL. Today vodopad''s model collapses workspace
+
+            onto user (`UserWorkspaceId::from(UserId)`), but Pult must treat
+
+            this as opaque — surfacing it here keeps callers off the
+
+            `workspace_id == user_id` assumption.'
+    UserPublicIpId:
+      type: string
+      format: uuid
+    UpdateNetworkInterfaceRequest:
+      type: object
+      properties:
+        securityGroupId:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserSecurityGroupId'
+    ClusterId:
+      type: string
+      format: uuid
+    UserId:
+      type: string
+      format: uuid
     UserVmDto:
       type: object
       required:
@@ -2075,144 +2147,21 @@ components:
           format: u-int8
           description: vCPU count of the VM's configuration. See `configuration_name`.
           minimum: 0
-    ErrorCode:
+    VmActionDto:
       type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
+      description: 'Wire representation of [`VmAction`] — the operations exposed via
 
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
+        `UserVmDto.allowedActions`.'
       enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    CreateUserStorageRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      - storageType
-      - volumeGb
-      - replicated
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        name:
-          type: string
-        osImage:
-          type:
-          - string
-          - 'null'
-          example: https://example.com/image.qcow2
-        replicated:
-          type: boolean
-        storageType:
-          $ref: '#/components/schemas/NewStorageType'
-        volumeGb:
-          type: integer
-          format: u-int32
-          minimum: 0
-    ClusterId:
-      type: string
-      format: uuid
-    UserSubnetStatusDto:
-      type: string
-      enum:
-      - new
-      - created
-      - ready
-      - failed
-      - removing
-      - removed
-    SortFieldDto:
-      type: string
-      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
-      enum:
-      - createdAt
-      - name
-      - status
-    SortOrderDto:
-      type: string
-      enum:
-      - asc
-      - desc
-    VmDataDisk:
-      oneOf:
-      - $ref: '#/components/schemas/UserStorageId'
-      - $ref: '#/components/schemas/CreateUserStorageRequest'
-    ConsoleAccessToken:
-      type: object
-      description: 'Wire-shape returned to Pult. Identical to the response of the previous
-
-        vodopad mint endpoint, which proxied through crd-api
-
-        for the opaque token; only the contents of `token` change here (opaque
-
-        short string → RS256 JWT). Pult treats it as a bearer it forwards to
-
-        vm-api and never parses it.'
-      required:
-      - token
-      - vmApiDomain
-      - workspaceId
-      - expiresAt
-      properties:
-        expiresAt:
-          type: string
-          format: date-time
-          description: 'Absolute expiration of the JWT, mirrored from the `exp` claim so the
-
-            client can preemptively re-mint.'
-        token:
-          type: string
-          description: 'RS256 JWT signed with the vodopad `JwtService` RSA key, audience
-
-            `lightmare-vm-api`, issuer `vodopad`. Carries `{sub, vm_id,
-
-            workspace_id, iat, exp, aud, iss}` — see
-
-            [`crate::api::auth::types::VmAccessClaims`].'
-        vmApiDomain:
-          type: string
-          description: 'Public base URL of lightmare vm-api for the cluster this VM lives
-
-            on. Pult builds the attach URL from this + the JWT. Sourced from
-
-            `clusters.vm_api_domain` (migration 1147); if
-
-            the cluster row has NULL the handler answers 503.'
-        workspaceId:
-          type: string
-          format: uuid
-          description: 'Workspace the JWT is scoped to — mirrored from the `workspace_id`
-
-            claim. vm-api compares this against the path segment on every
-
-            request, so Pult must use exactly this value when building the
-
-            `/ws/{ws_id}/...` URL. Today vodopad''s model collapses workspace
-
-            onto user (`UserWorkspaceId::from(UserId)`), but Pult must treat
-
-            this as opaque — surfacing it here keeps callers off the
-
-            `workspace_id == user_id` assumption.'
-    UserPublicIpId:
-      type: string
-      format: uuid
-    AddStoragesRequest:
+      - addPublicIp
+      - removePublicIp
+      - addStorages
+      - removeStorages
+      - updateNetworkInterface
+      - restart
+      - softReboot
+      - terminate
+    RemoveStoragesRequest:
       type: object
       required:
       - dataDisks
@@ -2221,31 +2170,82 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UserStorageId'
-    VmExpand:
+    NetworkInterfaceKindDto:
+      oneOf:
+      - type: object
+        required:
+        - private
+        properties:
+          private:
+            type: object
+            required:
+            - subnet
+            properties:
+              subnet:
+                $ref: '#/components/schemas/UserSubnetId'
+      - type: object
+        required:
+        - public
+        properties:
+          public:
+            type: object
+            required:
+            - public_ip
+            properties:
+              public_ip:
+                $ref: '#/components/schemas/UserPublicIpId'
+    NewIpAddressType:
       type: string
-      description: 'Attached resource a `?expand` member can inline on a VM response: the bare
-
-        id stays in place and the resolved object is added to the `expanded` block.'
       enum:
-      - bootDisk
-      - dataDisks
-      - publicIp
-      - subnets
-      - sshKeys
-      - networkInterfaces
+      - V4
+    UserSshKeyId:
+      type: string
+      format: uuid
     NewStorageType:
       type: string
       enum:
       - NVME
-    UserPublicIpStatusDto:
+    UserStorageId:
       type: string
-      enum:
-      - new
-      - created
-      - ready
-      - failed
-      - removing
-      - removed
+      format: uuid
+    UserVmExpandedDto:
+      type: object
+      description: 'Attached resources resolved inline. Each field is set only when the matching
+
+        `?expand=` member was requested; absent fields stay as bare IDs on the VM.'
+      properties:
+        bootDisk:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserStorageDto'
+        dataDisks:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UserStorageDto'
+        networkInterfaces:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VmNetworkInterfaceDto'
+        publicIp:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserPublicIpDto'
+        sshKeys:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UserSshKeyDto'
+        subnets:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UserSubnetDto'
   securitySchemes:
     access_jwt_token:
       type: http

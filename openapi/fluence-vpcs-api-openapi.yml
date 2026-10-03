@@ -415,6 +415,35 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    ClusterId:
+      type: string
+      format: uuid
+    UserId:
+      type: string
+      format: uuid
     UpdateUserVpcRequest:
       type: object
       properties:
@@ -422,9 +451,6 @@ components:
           type:
           - string
           - 'null'
-    ClusterId:
-      type: string
-      format: uuid
     UserVpcDto:
       type: object
       required:
@@ -467,47 +493,6 @@ components:
           minimum: 0
         userId:
           $ref: '#/components/schemas/UserId'
-    UserVpcId:
-      type: string
-      format: uuid
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    UserId:
-      type: string
-      format: uuid
-    CreateUserVpcRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        enableExternal:
-          type:
-          - boolean
-          - 'null'
-        name:
-          type: string
-    UserVpcIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserVpcId'
     PaginationInfo:
       type: object
       required:
@@ -537,6 +522,27 @@ components:
           type: integer
           format: u-int64
           minimum: 0
+    UserVpcIdsDto:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVpcId'
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
     PaginatedResponse_UserVpcDto:
       type: object
       required:
@@ -589,29 +595,23 @@ components:
                 $ref: '#/components/schemas/UserId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
-    ErrorCode:
+    CreateUserVpcRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        enableExternal:
+          type:
+          - boolean
+          - 'null'
+        name:
+          type: string
+    UserVpcId:
       type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
+      format: uuid
     UserVpcStatusDto:
       type: string
       enum:

@@ -80,18 +80,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
     ServiceStatusDto:
       type: object
       required:
@@ -125,6 +113,18 @@ components:
       - insufficient_balance
       - service_unavailable
       - internal_server_error
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
   securitySchemes:
     access_jwt_token:
       type: http

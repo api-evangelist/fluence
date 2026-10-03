@@ -366,6 +366,47 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    UserWithScopesDto:
+      type: object
+      required:
+      - id
+      - email
+      - permissions
+      properties:
+        email:
+          type: string
+          example: user@gmail.com
+        id:
+          type: string
+          example: 9ba32273-49e6-4655-b193-b29f61752c2f
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionScope'
+          uniqueItems: true
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
     UpdateUserProfileRequest:
       type: object
       properties:
@@ -385,35 +426,6 @@ components:
           type:
           - string
           - 'null'
-    UserProfileDto:
-      type: object
-      required:
-      - firstName
-      - lastName
-      - jobRole
-      - company
-      - updatedAt
-      properties:
-        company:
-          type: string
-          example: Cloudless
-        firstName:
-          type: string
-          example: Igor
-        jobRole:
-          type: string
-          example: Designer
-        lastName:
-          type: string
-          example: Ten
-        promptAcknowledgedAt:
-          type:
-          - string
-          - 'null'
-          example: '2025-01-01T00:00:00.000Z'
-        updatedAt:
-          type: string
-          example: '2025-01-01T00:00:00.000Z'
     ErrorBody:
       type: object
       required:
@@ -543,47 +555,35 @@ components:
         userId:
           type: string
           example: 9ba32273-49e6-4655-b193-b29f61752c2f
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    UserWithScopesDto:
+    UserProfileDto:
       type: object
       required:
-      - id
-      - email
-      - permissions
+      - firstName
+      - lastName
+      - jobRole
+      - company
+      - updatedAt
       properties:
-        email:
+        company:
           type: string
-          example: user@gmail.com
-        id:
+          example: Cloudless
+        firstName:
           type: string
-          example: 9ba32273-49e6-4655-b193-b29f61752c2f
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionScope'
-          uniqueItems: true
+          example: Igor
+        jobRole:
+          type: string
+          example: Designer
+        lastName:
+          type: string
+          example: Ten
+        promptAcknowledgedAt:
+          type:
+          - string
+          - 'null'
+          example: '2025-01-01T00:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2025-01-01T00:00:00.000Z'
   securitySchemes:
     access_jwt_token:
       type: http

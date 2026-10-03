@@ -861,6 +861,366 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    CreateTopUpV2Request:
+      type: object
+      required:
+      - amountCents
+      properties:
+        amountCents:
+          type: integer
+          format: int64
+        methodCode:
+          type:
+          - string
+          - 'null'
+          description: 'Catalog method the user picked (see `GET /v2/payment-methods`).
+
+            When absent, the provider''s default crypto method is used.'
+        provider:
+          type:
+          - string
+          - 'null'
+    CreateTopUpV2Response:
+      type: object
+      required:
+      - intentId
+      - sessionId
+      - provider
+      - providerPaymentId
+      - presentation
+      properties:
+        intentId:
+          $ref: '#/components/schemas/IntentId'
+        presentation:
+          $ref: '#/components/schemas/TopUpPresentation'
+        provider:
+          type: string
+        providerPaymentId:
+          type: string
+        sessionId:
+          $ref: '#/components/schemas/ProviderSessionId'
+    ProviderSessionId:
+      type: string
+      format: uuid
+    TopUpRequest:
+      type: object
+      required:
+      - amount
+      properties:
+        amount:
+          type: integer
+          format: int64
+        currency:
+          $ref: '#/components/schemas/Currency'
+    Currency:
+      type: string
+      enum:
+      - usdc
+      - usdt
+      - usd
+    PaymentMethodKind:
+      type: string
+      enum:
+      - crypto
+      - fiat
+    SortOrderDto:
+      type: string
+      enum:
+      - asc
+      - desc
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    TopUpSortFieldDto:
+      type: string
+      description: 'Field to order billing history by. `amount` sorts by the top-up amount;
+
+        `createdAt` (the default) is newest-first. Distinct from `SortFieldDto`
+
+        because the billing listings expose `amount` while the CRD listings do not.'
+      enum:
+      - createdAt
+      - amount
+    TopUpPresentation:
+      oneOf:
+      - type: object
+        description: Hosted checkout / invoice page the user is redirected to.
+        required:
+        - redirectUrl
+        - type
+        properties:
+          redirectUrl:
+            type: string
+          type:
+            type: string
+            enum:
+            - redirect
+      description: 'Typed presentation handed to the client in the v2 top-up response. Stored in
+
+        the provider session as JSON (`ProviderSession.presentation`); adapters write
+
+        the tagged form, readers (v2 mappers, v1 shim) accept it with a fallback to
+
+        the legacy flat `redirect_url` key for in-flight pre-migration sessions.
+
+
+        Tagged (`{ "type": "redirect", "redirectUrl": ... }`) so future variants
+
+        (e.g. a direct crypto-transfer with `payAddress`) are additive, not a
+
+        breaking field change.'
+    VmConfigurationSlug:
+      type: string
+      enum:
+      - cpu-regular-2vcpu-4gb
+      - cpu-regular-4vcpu-8gb
+      - cpu-regular-8vcpu-16gb
+      - cpu-regular-8vcpu-32gb
+      - cpu-regular-16vcpu-32gb
+      - cpu-regular-24vcpu-48gb
+      - cpu-regular-32vcpu-64gb
+      - cpu-regular-64vcpu-128gb
+      - cpu-premium-2vcpu-4gb
+      - cpu-premium-4vcpu-8gb
+      - cpu-premium-8vcpu-16gb
+      - cpu-premium-8vcpu-32gb
+      - cpu-premium-16vcpu-32gb
+      - cpu-premium-24vcpu-48gb
+      - cpu-premium-32vcpu-64gb
+      - cpu-premium-64vcpu-128gb
+      - cpu-shared-2vcpu-2gb
+      - cpu-shared-3vcpu-4gb
+      - cpu-shared-4vcpu-8gb
+      - cpu-shared-8vcpu-16gb
+      - cpu-shared-16vcpu-32gb
+    StorageType:
+      type: string
+      enum:
+      - HDD
+      - SSD
+      - NVMe
+    TotalChargesResponse:
+      type: object
+      required:
+      - total
+      properties:
+        total:
+          type: string
+      additionalProperties:
+        type: string
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    ChargeGroupByDto:
+      type: string
+      description: 'Resource dimension to aggregate charges by. Defaults to the full
+
+        `(user, resourceId, resourceType)` tuple when omitted.'
+      enum:
+      - RESOURCE
+      - RESOURCE_TYPE
+      - CLUSTER
+    IntentId:
+      type: string
+      format: uuid
+    PendingTopUpV2Response:
+      type: object
+      properties:
+        pendingTopUp:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/TopUpV2Dto'
+    TopUpV2Status:
+      type: string
+      description: 'Lifecycle status exposed by the v2 top-up read DTO. It is `IntentStatus`
+
+        plus `Failed`: terminal legacy (copperx) failures have no `IntentStatus`
+
+        image, and collapsing them into `Canceled`/`Expired` would misreport a
+
+        failure as a clean end state.'
+      enum:
+      - open
+      - needs_review
+      - resolved
+      - canceled
+      - expired
+      - failed
+    TotalChargesEntry:
+      type: object
+      required:
+      - userId
+      - totalUsageHours
+      - totalCost
+      properties:
+        clusterId:
+          type:
+          - string
+          - 'null'
+          description: Null when grouping by resource type.
+          example: 9ba32273-49e6-4655-b193-b29f61752c2f
+        ipAddressType:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/IpAddressType'
+        periodStart:
+          type:
+          - string
+          - 'null'
+          description: Start of the time bucket this row aggregates. Present only when `period` was requested.
+          example: '2024-06-10T00:00:00Z'
+        quantity:
+          type:
+          - string
+          - 'null'
+          description: Null when grouping by a dimension coarser than the individual resource.
+        replicatedStorage:
+          type:
+          - boolean
+          - 'null'
+        resourceId:
+          type:
+          - string
+          - 'null'
+          description: Null when grouping by a dimension coarser than the individual resource.
+          example: 9ba32273-49e6-4655-b193-b29f61752c2f
+        resourceName:
+          type:
+          - string
+          - 'null'
+          description: Null when grouping by a dimension coarser than the individual resource.
+        resourceType:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/ResourceTypeDto'
+            description: Null when grouping by cluster.
+        storageType:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/StorageType'
+        totalCost:
+          type: string
+        totalUsageHours:
+          type: string
+        userId:
+          type: string
+          example: 9ba32273-49e6-4655-b193-b29f61752c2f
+        vmConfiguration:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/VmConfigurationSlug'
+    IpAddressType:
+      type: string
+      enum:
+      - V4
+      - V6
+    ResourceTypeDto:
+      type: string
+      enum:
+      - VM
+      - PUBLIC_IP
+      - SECURITY_GROUP
+      - STORAGE
+      - SUBNET
+      - VPC
+      - WORKSPACE
+    TopUpStatusDTO:
+      type: string
+      enum:
+      - created
+      - failed
+      - canceled
+      - expired
+      - pending
+      - completed
+      - aml_failed
+    PendingTopUpResponse:
+      type: object
+      properties:
+        pendingTopUp:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/TopUpDto'
+    TopUpId:
+      type: string
+      format: uuid
+    UserId:
+      type: string
+      format: uuid
+    ResourceId:
+      type: string
+      format: uuid
+    ResponseOutputFormat:
+      type: string
+      enum:
+      - json
+      - csv
+    ChargePeriodDto:
+      type: string
+      description: 'Time bucket to split aggregated charges into. When omitted, charges are not
+
+        split by time.'
+      enum:
+      - DAY
+      - MONTH
     TopUpV2Dto:
       type: object
       description: 'v2-native top-up read DTO. Amounts are integer cents (matching the create
@@ -909,21 +1269,64 @@ components:
           example: '2024-01-01T00:00:00Z'
         userId:
           $ref: '#/components/schemas/UserId'
-    TopUpSortFieldDto:
-      type: string
-      description: 'Field to order billing history by. `amount` sorts by the top-up amount;
+    PaginatedResponse_TopUpV2Dto:
+      type: object
+      required:
+      - items
+      - pagination
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            description: 'v2-native top-up read DTO. Amounts are integer cents (matching the create
 
-        `createdAt` (the default) is newest-first. Distinct from `SortFieldDto`
+              input and storage — no legacy 10^8 base units); status is the provider-neutral
 
-        because the billing listings expose `amount` while the CRD listings do not.'
-      enum:
-      - createdAt
-      - amount
-    IpAddressType:
-      type: string
-      enum:
-      - V4
-      - V6
+              [`TopUpV2Status`]; the redirect URL is provider-neutral (the backend overloads
+
+              the legacy `copperx_session_url` column for any provider).'
+            required:
+            - id
+            - userId
+            - amountCents
+            - status
+            - createdAt
+            - updatedAt
+            properties:
+              amountCents:
+                type: integer
+                format: int64
+              createdAt:
+                type: string
+                example: '2024-01-01T00:00:00Z'
+              expiresAt:
+                type:
+                - string
+                - 'null'
+                description: 'When this top-up''s checkout session times out. `null` for legacy
+
+                  `public.top_ups` rows, which have no expiry.'
+                example: '2024-01-01T00:00:00Z'
+              id:
+                $ref: '#/components/schemas/TopUpId'
+              provider:
+                type:
+                - string
+                - 'null'
+              redirectUrl:
+                type:
+                - string
+                - 'null'
+              status:
+                $ref: '#/components/schemas/TopUpV2Status'
+              updatedAt:
+                type: string
+                example: '2024-01-01T00:00:00Z'
+              userId:
+                $ref: '#/components/schemas/UserId'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
     TopUpDto:
       type: object
       required:
@@ -990,16 +1393,6 @@ components:
           example: '2024-01-01T00:00:00Z'
         userId:
           $ref: '#/components/schemas/UserId'
-    PaymentMethodKind:
-      type: string
-      enum:
-      - crypto
-      - fiat
-    ResponseOutputFormat:
-      type: string
-      enum:
-      - json
-      - csv
     PaginatedResponse_TopUpDto:
       type: object
       required:
@@ -1076,98 +1469,6 @@ components:
                 $ref: '#/components/schemas/UserId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
-    ResourceTypeDto:
-      type: string
-      enum:
-      - VM
-      - PUBLIC_IP
-      - SECURITY_GROUP
-      - STORAGE
-      - SUBNET
-      - VPC
-      - WORKSPACE
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    PaginatedResponse_TopUpV2Dto:
-      type: object
-      required:
-      - items
-      - pagination
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            description: 'v2-native top-up read DTO. Amounts are integer cents (matching the create
-
-              input and storage — no legacy 10^8 base units); status is the provider-neutral
-
-              [`TopUpV2Status`]; the redirect URL is provider-neutral (the backend overloads
-
-              the legacy `copperx_session_url` column for any provider).'
-            required:
-            - id
-            - userId
-            - amountCents
-            - status
-            - createdAt
-            - updatedAt
-            properties:
-              amountCents:
-                type: integer
-                format: int64
-              createdAt:
-                type: string
-                example: '2024-01-01T00:00:00Z'
-              expiresAt:
-                type:
-                - string
-                - 'null'
-                description: 'When this top-up''s checkout session times out. `null` for legacy
-
-                  `public.top_ups` rows, which have no expiry.'
-                example: '2024-01-01T00:00:00Z'
-              id:
-                $ref: '#/components/schemas/TopUpId'
-              provider:
-                type:
-                - string
-                - 'null'
-              redirectUrl:
-                type:
-                - string
-                - 'null'
-              status:
-                $ref: '#/components/schemas/TopUpV2Status'
-              updatedAt:
-                type: string
-                example: '2024-01-01T00:00:00Z'
-              userId:
-                $ref: '#/components/schemas/UserId'
-        pagination:
-          $ref: '#/components/schemas/PaginationInfo'
-    ChargeGroupByDto:
-      type: string
-      description: 'Resource dimension to aggregate charges by. Defaults to the full
-
-        `(user, resourceId, resourceType)` tuple when omitted.'
-      enum:
-      - RESOURCE
-      - RESOURCE_TYPE
-      - CLUSTER
-    UserId:
-      type: string
-      format: uuid
     PaymentMethodDto:
       type: object
       required:
@@ -1211,307 +1512,6 @@ components:
         sortOrder:
           type: integer
           format: int32
-    PendingTopUpV2Response:
-      type: object
-      properties:
-        pendingTopUp:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/TopUpV2Dto'
-    ProviderSessionId:
-      type: string
-      format: uuid
-    CreateTopUpV2Response:
-      type: object
-      required:
-      - intentId
-      - sessionId
-      - provider
-      - providerPaymentId
-      - presentation
-      properties:
-        intentId:
-          $ref: '#/components/schemas/IntentId'
-        presentation:
-          $ref: '#/components/schemas/TopUpPresentation'
-        provider:
-          type: string
-        providerPaymentId:
-          type: string
-        sessionId:
-          $ref: '#/components/schemas/ProviderSessionId'
-    PendingTopUpResponse:
-      type: object
-      properties:
-        pendingTopUp:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/TopUpDto'
-    TotalChargesEntry:
-      type: object
-      required:
-      - userId
-      - totalUsageHours
-      - totalCost
-      properties:
-        clusterId:
-          type:
-          - string
-          - 'null'
-          description: Null when grouping by resource type.
-          example: 9ba32273-49e6-4655-b193-b29f61752c2f
-        ipAddressType:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/IpAddressType'
-        periodStart:
-          type:
-          - string
-          - 'null'
-          description: Start of the time bucket this row aggregates. Present only when `period` was requested.
-          example: '2024-06-10T00:00:00Z'
-        quantity:
-          type:
-          - string
-          - 'null'
-          description: Null when grouping by a dimension coarser than the individual resource.
-        replicatedStorage:
-          type:
-          - boolean
-          - 'null'
-        resourceId:
-          type:
-          - string
-          - 'null'
-          description: Null when grouping by a dimension coarser than the individual resource.
-          example: 9ba32273-49e6-4655-b193-b29f61752c2f
-        resourceName:
-          type:
-          - string
-          - 'null'
-          description: Null when grouping by a dimension coarser than the individual resource.
-        resourceType:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/ResourceTypeDto'
-            description: Null when grouping by cluster.
-        storageType:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/StorageType'
-        totalCost:
-          type: string
-        totalUsageHours:
-          type: string
-        userId:
-          type: string
-          example: 9ba32273-49e6-4655-b193-b29f61752c2f
-        vmConfiguration:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/VmConfigurationSlug'
-    TopUpId:
-      type: string
-      format: uuid
-    StorageType:
-      type: string
-      enum:
-      - HDD
-      - SSD
-      - NVMe
-    VmConfigurationSlug:
-      type: string
-      enum:
-      - cpu-regular-2vcpu-4gb
-      - cpu-regular-4vcpu-8gb
-      - cpu-regular-8vcpu-16gb
-      - cpu-regular-8vcpu-32gb
-      - cpu-regular-16vcpu-32gb
-      - cpu-regular-24vcpu-48gb
-      - cpu-regular-32vcpu-64gb
-      - cpu-regular-64vcpu-128gb
-      - cpu-premium-2vcpu-4gb
-      - cpu-premium-4vcpu-8gb
-      - cpu-premium-8vcpu-16gb
-      - cpu-premium-8vcpu-32gb
-      - cpu-premium-16vcpu-32gb
-      - cpu-premium-24vcpu-48gb
-      - cpu-premium-32vcpu-64gb
-      - cpu-premium-64vcpu-128gb
-      - cpu-shared-2vcpu-2gb
-      - cpu-shared-3vcpu-4gb
-      - cpu-shared-4vcpu-8gb
-      - cpu-shared-8vcpu-16gb
-      - cpu-shared-16vcpu-32gb
-    ResourceId:
-      type: string
-      format: uuid
-    TotalChargesResponse:
-      type: object
-      required:
-      - total
-      properties:
-        total:
-          type: string
-      additionalProperties:
-        type: string
-    CreateTopUpV2Request:
-      type: object
-      required:
-      - amountCents
-      properties:
-        amountCents:
-          type: integer
-          format: int64
-        methodCode:
-          type:
-          - string
-          - 'null'
-          description: 'Catalog method the user picked (see `GET /v2/payment-methods`).
-
-            When absent, the provider''s default crypto method is used.'
-        provider:
-          type:
-          - string
-          - 'null'
-    TopUpRequest:
-      type: object
-      required:
-      - amount
-      properties:
-        amount:
-          type: integer
-          format: int64
-        currency:
-          $ref: '#/components/schemas/Currency'
-    PaginationInfo:
-      type: object
-      required:
-      - totalRecords
-      - filteredRecords
-      - totalPages
-      - currentPage
-      - perPage
-      properties:
-        currentPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        filteredRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-        perPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalPages:
-          type: integer
-          format: u-int32
-          minimum: 0
-        totalRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-    ChargePeriodDto:
-      type: string
-      description: 'Time bucket to split aggregated charges into. When omitted, charges are not
-
-        split by time.'
-      enum:
-      - DAY
-      - MONTH
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    TopUpV2Status:
-      type: string
-      description: 'Lifecycle status exposed by the v2 top-up read DTO. It is `IntentStatus`
-
-        plus `Failed`: terminal legacy (copperx) failures have no `IntentStatus`
-
-        image, and collapsing them into `Canceled`/`Expired` would misreport a
-
-        failure as a clean end state.'
-      enum:
-      - open
-      - needs_review
-      - resolved
-      - canceled
-      - expired
-      - failed
-    IntentId:
-      type: string
-      format: uuid
-    TopUpStatusDTO:
-      type: string
-      enum:
-      - created
-      - failed
-      - canceled
-      - expired
-      - pending
-      - completed
-      - aml_failed
-    SortOrderDto:
-      type: string
-      enum:
-      - asc
-      - desc
-    TopUpPresentation:
-      oneOf:
-      - type: object
-        description: Hosted checkout / invoice page the user is redirected to.
-        required:
-        - redirectUrl
-        - type
-        properties:
-          redirectUrl:
-            type: string
-          type:
-            type: string
-            enum:
-            - redirect
-      description: 'Typed presentation handed to the client in the v2 top-up response. Stored in
-
-        the provider session as JSON (`ProviderSession.presentation`); adapters write
-
-        the tagged form, readers (v2 mappers, v1 shim) accept it with a fallback to
-
-        the legacy flat `redirect_url` key for in-flight pre-migration sessions.
-
-
-        Tagged (`{ "type": "redirect", "redirectUrl": ... }`) so future variants
-
-        (e.g. a direct crypto-transfer with `payAddress`) are additive, not a
-
-        breaking field change.'
-    Currency:
-      type: string
-      enum:
-      - usdc
-      - usdt
-      - usd
   securitySchemes:
     access_jwt_token:
       type: http
