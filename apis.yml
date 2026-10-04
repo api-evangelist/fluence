@@ -317,8 +317,6 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
-  - SecurityGroup
-  tags_raw:
   - Security Group
   properties:
   - type: OpenAPI

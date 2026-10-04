@@ -366,47 +366,84 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    UserWithScopesDto:
+    ErrorBody:
       type: object
       required:
-      - id
-      - email
-      - permissions
+      - error
+      - code
       properties:
-        email:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
           type: string
-          example: user@gmail.com
-        id:
+          description: The human-readable error message.
+    EntitlementValueDto:
+      type: object
+      required:
+      - balance
+      - usage
+      - estimatedUsage
+      - overage
+      - totalDepositedAmount
+      - userId
+      - featureKey
+      properties:
+        balance:
+          type: string
+          example: '100.50'
+        estimatedUsage:
+          type: string
+          example: '100.50'
+        featureKey:
+          type: string
+        overage:
+          type: string
+          example: '100.50'
+        totalDepositedAmount:
+          type: string
+          example: '100.50'
+        usage:
+          type: string
+          example: '100.50'
+        usageDaysLeft:
+          type:
+          - integer
+          - 'null'
+          format: u-int16
+          minimum: 0
+        userId:
           type: string
           example: 9ba32273-49e6-4655-b193-b29f61752c2f
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionScope'
-          uniqueItems: true
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
+    UserProfileDto:
+      type: object
+      required:
+      - firstName
+      - lastName
+      - jobRole
+      - company
+      - updatedAt
+      properties:
+        company:
+          type: string
+          example: Cloudless
+        firstName:
+          type: string
+          example: Igor
+        jobRole:
+          type: string
+          example: Designer
+        lastName:
+          type: string
+          example: Ten
+        promptAcknowledgedAt:
+          type:
+          - string
+          - 'null'
+          example: '2025-01-01T00:00:00.000Z'
+        updatedAt:
+          type: string
+          example: '2025-01-01T00:00:00.000Z'
     UpdateUserProfileRequest:
       type: object
       properties:
@@ -426,18 +463,24 @@ components:
           type:
           - string
           - 'null'
-    ErrorBody:
+    UserWithScopesDto:
       type: object
       required:
-      - error
-      - code
+      - id
+      - email
+      - permissions
       properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
+        email:
           type: string
-          description: The human-readable error message.
+          example: user@gmail.com
+        id:
+          type: string
+          example: 9ba32273-49e6-4655-b193-b29f61752c2f
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionScope'
+          uniqueItems: true
     PermissionScope:
       type: string
       enum:
@@ -518,72 +561,29 @@ components:
       - prices:read
       - vms:read
       - vms:write
-    EntitlementValueDto:
-      type: object
-      required:
-      - balance
-      - usage
-      - estimatedUsage
-      - overage
-      - totalDepositedAmount
-      - userId
-      - featureKey
-      properties:
-        balance:
-          type: string
-          example: '100.50'
-        estimatedUsage:
-          type: string
-          example: '100.50'
-        featureKey:
-          type: string
-        overage:
-          type: string
-          example: '100.50'
-        totalDepositedAmount:
-          type: string
-          example: '100.50'
-        usage:
-          type: string
-          example: '100.50'
-        usageDaysLeft:
-          type:
-          - integer
-          - 'null'
-          format: u-int16
-          minimum: 0
-        userId:
-          type: string
-          example: 9ba32273-49e6-4655-b193-b29f61752c2f
-    UserProfileDto:
-      type: object
-      required:
-      - firstName
-      - lastName
-      - jobRole
-      - company
-      - updatedAt
-      properties:
-        company:
-          type: string
-          example: Cloudless
-        firstName:
-          type: string
-          example: Igor
-        jobRole:
-          type: string
-          example: Designer
-        lastName:
-          type: string
-          example: Ten
-        promptAcknowledgedAt:
-          type:
-          - string
-          - 'null'
-          example: '2025-01-01T00:00:00.000Z'
-        updatedAt:
-          type: string
-          example: '2025-01-01T00:00:00.000Z'
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
   securitySchemes:
     access_jwt_token:
       type: http

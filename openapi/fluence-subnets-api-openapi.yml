@@ -413,166 +413,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    UserId:
-      type: string
-      format: uuid
-    ClusterId:
-      type: string
-      format: uuid
-    UserSubnetIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserSubnetId'
-    UserSubnetId:
-      type: string
-      format: uuid
-    UpdateUserSubnetRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-    UserSubnetDto:
-      type: object
-      required:
-      - id
-      - userId
-      - clusterId
-      - vpcId
-      - name
-      - status
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        id:
-          $ref: '#/components/schemas/UserSubnetId'
-        ipv4Cidr:
-          type:
-          - string
-          - 'null'
-          example: 10.0.0.0/24
-        ipv6Cidr:
-          type:
-          - string
-          - 'null'
-          example: 2001:db8::/64
-        name:
-          type: string
-        readySince:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        removedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        status:
-          $ref: '#/components/schemas/UserSubnetStatusDto'
-        userId:
-          $ref: '#/components/schemas/UserId'
-        vpcId:
-          $ref: '#/components/schemas/UserVpcId'
-    PaginationInfo:
-      type: object
-      required:
-      - totalRecords
-      - filteredRecords
-      - totalPages
-      - currentPage
-      - perPage
-      properties:
-        currentPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        filteredRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-        perPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalPages:
-          type: integer
-          format: u-int32
-          minimum: 0
-        totalRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-    CreateUserSubnetRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        ipv4Cidr:
-          type:
-          - string
-          - 'null'
-          example: 10.0.0.0/24
-        ipv6Cidr:
-          type:
-          - string
-          - 'null'
-          example: 2001:db8::/64
-        name:
-          type: string
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    UserSubnetStatusDto:
-      type: string
-      enum:
-      - new
-      - created
-      - ready
-      - failed
-      - removing
-      - removed
     PaginatedResponse_UserSubnetDto:
       type: object
       required:
@@ -625,6 +465,166 @@ components:
                 $ref: '#/components/schemas/UserVpcId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    UserSubnetId:
+      type: string
+      format: uuid
+    UpdateUserSubnetRequest:
+      type: object
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+    UserSubnetDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - vpcId
+      - name
+      - status
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        id:
+          $ref: '#/components/schemas/UserSubnetId'
+        ipv4Cidr:
+          type:
+          - string
+          - 'null'
+          example: 10.0.0.0/24
+        ipv6Cidr:
+          type:
+          - string
+          - 'null'
+          example: 2001:db8::/64
+        name:
+          type: string
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          $ref: '#/components/schemas/UserSubnetStatusDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        vpcId:
+          $ref: '#/components/schemas/UserVpcId'
+    CreateUserSubnetRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        ipv4Cidr:
+          type:
+          - string
+          - 'null'
+          example: 10.0.0.0/24
+        ipv6Cidr:
+          type:
+          - string
+          - 'null'
+          example: 2001:db8::/64
+        name:
+          type: string
+    UserSubnetIdsDto:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSubnetId'
+    ClusterId:
+      type: string
+      format: uuid
+    UserId:
+      type: string
+      format: uuid
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    UserSubnetStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - failed
+      - removing
+      - removed
     UserVpcId:
       type: string
       format: uuid

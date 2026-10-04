@@ -605,31 +605,35 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    StorageImageDto:
-      type: object
-      description: 'Slim reference to the OS image a storage was created from. Present only when
-
-        the storage''s `init_url` matches a catalog image; absent for custom URLs and
-
-        data disks.'
-      required:
-      - id
+    SortFieldDto:
+      type: string
+      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
+      enum:
+      - createdAt
       - name
-      - slug
-      - distribution
+      - status
+    UpdateUserStorageRequest:
+      type: object
       properties:
-        distribution:
-          type: string
-          example: Ubuntu
-        id:
-          type: string
-          example: da1e99153be74618820a164eebcbdc66
         name:
-          type: string
-          example: 24.04 (LTS) x64
-        slug:
-          type: string
-          example: ubuntu-24-04-x64
+          type:
+          - string
+          - 'null'
+        volumeGb:
+          type:
+          - integer
+          - 'null'
+          format: u-int32
+          minimum: 0
+    UserStorageIdsDto:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserStorageId'
     CollectionResponse_StorageTypeInfoDto:
       type: object
       required:
@@ -672,324 +676,6 @@ components:
                 minimum: 0
               storageType:
                 $ref: '#/components/schemas/StorageTypeDto'
-    CreateUserStorageRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      - storageType
-      - volumeGb
-      - replicated
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        name:
-          type: string
-        osImage:
-          type:
-          - string
-          - 'null'
-          example: https://example.com/image.qcow2
-        replicated:
-          type: boolean
-        storageType:
-          $ref: '#/components/schemas/NewStorageType'
-        volumeGb:
-          type: integer
-          format: u-int32
-          minimum: 0
-    SortOrderDto:
-      type: string
-      enum:
-      - asc
-      - desc
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    UserVmId:
-      type: string
-      format: uuid
-    StorageType:
-      type: string
-      enum:
-      - HDD
-      - SSD
-      - NVMe
-    PaginationInfo:
-      type: object
-      required:
-      - totalRecords
-      - filteredRecords
-      - totalPages
-      - currentPage
-      - perPage
-      properties:
-        currentPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        filteredRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-        perPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalPages:
-          type: integer
-          format: u-int32
-          minimum: 0
-        totalRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    StorageRoleDto:
-      type: string
-      enum:
-      - BOOT
-      - DATA
-    UpdateUserStorageRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-        volumeGb:
-          type:
-          - integer
-          - 'null'
-          format: u-int32
-          minimum: 0
-    StorageTypeDto:
-      type: string
-      enum:
-      - HDD
-      - SSD
-      - NVME
-    SortFieldDto:
-      type: string
-      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
-      enum:
-      - createdAt
-      - name
-      - status
-    StorageActionDto:
-      type: string
-      description: 'Wire representation of [`StorageAction`] — the operations exposed via
-
-        `UserStorageDto.allowedActions`.'
-      enum:
-      - update
-      - delete
-      - attachToVm
-    UserStorageDto:
-      type: object
-      required:
-      - id
-      - userId
-      - clusterId
-      - name
-      - storageType
-      - status
-      - role
-      - volumeGb
-      - replicated
-      - attachedTo
-      - createdAt
-      properties:
-        allowedActions:
-          type: array
-          items:
-            $ref: '#/components/schemas/StorageActionDto'
-          description: 'Operations currently legal for this storage''s `status`, derived from the
-
-            same guards as request validation.'
-        attachedTo:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserVmId'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        createdAt:
-          type: string
-          format: date-time
-        id:
-          $ref: '#/components/schemas/UserStorageId'
-        image:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/StorageImageDto'
-        initUrl:
-          type:
-          - string
-          - 'null'
-        lastPaidAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        name:
-          type: string
-        paidUntil:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        priceHourlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time hourly price snapshot in USD, serialized as a string;
-
-            absent when the catalog has no active price for this resource. A UI
-
-            estimate, not the amount billed.'
-          example: '0.05'
-        priceMonthlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
-
-            as a string. See `price_hourly_usd`.'
-          example: '36.50'
-        readySince:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        removedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        replicated:
-          type: boolean
-        role:
-          $ref: '#/components/schemas/StorageRoleDto'
-        status:
-          $ref: '#/components/schemas/UserStorageStatusDto'
-        storageType:
-          $ref: '#/components/schemas/StorageTypeDto'
-        userId:
-          $ref: '#/components/schemas/UserId'
-        volumeGb:
-          type: integer
-          format: u-int64
-          minimum: 0
-    UserId:
-      type: string
-      format: uuid
-    ClusterId:
-      type: string
-      format: uuid
-    UserStorageIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserStorageId'
-    CollectionResponse_DefaultImageDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - id
-            - name
-            - distribution
-            - slug
-            - downloadUrl
-            - iconUrl
-            - username
-            - createdAt
-            - updatedAt
-            properties:
-              createdAt:
-                type: string
-                example: '2024-01-01T00:00:00Z'
-              distribution:
-                type: string
-                example: Ubuntu
-              downloadUrl:
-                type: string
-                example: https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img
-              iconUrl:
-                type: string
-                example: https://f2nrfq3ufzjj08qq.public.blob.vercel-storage.com/images_icons/ubuntu-icon-fvmHzDIRMkyrxr21oEBTo0IV0emlv5.svg
-              id:
-                type: string
-                example: da1e99153be74618820a164eebcbdc66
-              name:
-                type: string
-                example: 24.04 (LTS) x64
-              slug:
-                type: string
-                example: ubuntu-24-04-x64
-              updatedAt:
-                type: string
-                example: '2024-01-01T00:00:00Z'
-              username:
-                type: string
-                example: ubuntu
-    UserStorageId:
-      type: string
-      format: uuid
-    NewStorageType:
-      type: string
-      enum:
-      - NVME
-    UserStorageStatusDto:
-      type: string
-      enum:
-      - new
-      - created
-      - ready
-      - updating
-      - failed
-      - removing
-      - removed
     PaginatedResponse_UserStorageDto:
       type: object
       required:
@@ -1095,6 +781,320 @@ components:
                 minimum: 0
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
+    CollectionResponse_DefaultImageDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - name
+            - distribution
+            - slug
+            - downloadUrl
+            - iconUrl
+            - username
+            - createdAt
+            - updatedAt
+            properties:
+              createdAt:
+                type: string
+                example: '2024-01-01T00:00:00Z'
+              distribution:
+                type: string
+                example: Ubuntu
+              downloadUrl:
+                type: string
+                example: https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img
+              iconUrl:
+                type: string
+                example: https://f2nrfq3ufzjj08qq.public.blob.vercel-storage.com/images_icons/ubuntu-icon-fvmHzDIRMkyrxr21oEBTo0IV0emlv5.svg
+              id:
+                type: string
+                example: da1e99153be74618820a164eebcbdc66
+              name:
+                type: string
+                example: 24.04 (LTS) x64
+              slug:
+                type: string
+                example: ubuntu-24-04-x64
+              updatedAt:
+                type: string
+                example: '2024-01-01T00:00:00Z'
+              username:
+                type: string
+                example: ubuntu
+    UserId:
+      type: string
+      format: uuid
+    StorageType:
+      type: string
+      enum:
+      - HDD
+      - SSD
+      - NVMe
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    StorageActionDto:
+      type: string
+      description: 'Wire representation of [`StorageAction`] — the operations exposed via
+
+        `UserStorageDto.allowedActions`.'
+      enum:
+      - update
+      - delete
+      - attachToVm
+    NewStorageType:
+      type: string
+      enum:
+      - NVME
+    UserStorageId:
+      type: string
+      format: uuid
+    StorageTypeDto:
+      type: string
+      enum:
+      - HDD
+      - SSD
+      - NVME
+    UserVmId:
+      type: string
+      format: uuid
+    StorageImageDto:
+      type: object
+      description: 'Slim reference to the OS image a storage was created from. Present only when
+
+        the storage''s `init_url` matches a catalog image; absent for custom URLs and
+
+        data disks.'
+      required:
+      - id
+      - name
+      - slug
+      - distribution
+      properties:
+        distribution:
+          type: string
+          example: Ubuntu
+        id:
+          type: string
+          example: da1e99153be74618820a164eebcbdc66
+        name:
+          type: string
+          example: 24.04 (LTS) x64
+        slug:
+          type: string
+          example: ubuntu-24-04-x64
+    UserStorageStatusDto:
+      type: string
+      enum:
+      - new
+      - created
+      - ready
+      - updating
+      - failed
+      - removing
+      - removed
+    StorageRoleDto:
+      type: string
+      enum:
+      - BOOT
+      - DATA
+    CreateUserStorageRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - storageType
+      - volumeGb
+      - replicated
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        name:
+          type: string
+        osImage:
+          type:
+          - string
+          - 'null'
+          example: https://example.com/image.qcow2
+        replicated:
+          type: boolean
+        storageType:
+          $ref: '#/components/schemas/NewStorageType'
+        volumeGb:
+          type: integer
+          format: u-int32
+          minimum: 0
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+    SortOrderDto:
+      type: string
+      enum:
+      - asc
+      - desc
+    ClusterId:
+      type: string
+      format: uuid
+    UserStorageDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - name
+      - storageType
+      - status
+      - role
+      - volumeGb
+      - replicated
+      - attachedTo
+      - createdAt
+      properties:
+        allowedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/StorageActionDto'
+          description: 'Operations currently legal for this storage''s `status`, derived from the
+
+            same guards as request validation.'
+        attachedTo:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserVmId'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/UserStorageId'
+        image:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/StorageImageDto'
+        initUrl:
+          type:
+          - string
+          - 'null'
+        lastPaidAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type: string
+        paidUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        priceHourlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+            absent when the catalog has no active price for this resource. A UI
+
+            estimate, not the amount billed.'
+          example: '0.05'
+        priceMonthlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+            as a string. See `price_hourly_usd`.'
+          example: '36.50'
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        replicated:
+          type: boolean
+        role:
+          $ref: '#/components/schemas/StorageRoleDto'
+        status:
+          $ref: '#/components/schemas/UserStorageStatusDto'
+        storageType:
+          $ref: '#/components/schemas/StorageTypeDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+        volumeGb:
+          type: integer
+          format: u-int64
+          minimum: 0
   securitySchemes:
     access_jwt_token:
       type: http

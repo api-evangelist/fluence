@@ -314,32 +314,41 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
-    UserId:
+    UserSshKeyId:
       type: string
       format: uuid
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    CreateUserSshKeyRequest:
+      type: object
+      required:
+      - publicKey
+      - name
+      properties:
+        name:
+          type: string
+          description: A human-readable display name for this key, used to easily identify the SSH keys when they are displayed.
+          example: my-key
+        publicKey:
+          type: string
+          description: 'The public key in OpenSSH format. Supported algorithms are:
+
+            - ECDSA (nistp256, nistp384, nistp521)
+
+            - RSA
+
+            - ED25519'
+          example: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKgJIjnDg1DjqOOxINs78oU3f7PJXIyq9uiNocNVhXNx user@example.com
     PaginatedResponse_UserSshKeyDto:
       type: object
       required:
@@ -394,15 +403,6 @@ components:
           type: string
         userId:
           $ref: '#/components/schemas/UserId'
-    UserSshKeyIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserSshKeyId'
     PaginationInfo:
       type: object
       required:
@@ -432,41 +432,41 @@ components:
           type: integer
           format: u-int64
           minimum: 0
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    UserSshKeyId:
+    UserId:
       type: string
       format: uuid
-    CreateUserSshKeyRequest:
+    ErrorCode:
+      type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
+      enum:
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
+    UserSshKeyIdsDto:
       type: object
       required:
-      - publicKey
-      - name
+      - ids
       properties:
-        name:
-          type: string
-          description: A human-readable display name for this key, used to easily identify the SSH keys when they are displayed.
-          example: my-key
-        publicKey:
-          type: string
-          description: 'The public key in OpenSSH format. Supported algorithms are:
-
-            - ECDSA (nistp256, nistp384, nistp521)
-
-            - RSA
-
-            - ED25519'
-          example: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKgJIjnDg1DjqOOxINs78oU3f7PJXIyq9uiNocNVhXNx user@example.com
+        ids:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSshKeyId'
   securitySchemes:
     access_jwt_token:
       type: http

@@ -376,21 +376,242 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    VmConfigurationPreset:
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    StorageTypeDto:
       type: string
       enum:
-      - general
-      - cpu_optimized
-      - memory_optimized
-    VmConfigurationId:
-      type: string
-      format: uuid
+      - HDD
+      - SSD
+      - NVME
     CpuFamilyDto:
       type: string
       enum:
       - AMD_ZEN2
       - AMD_ZEN3
       - AMD_ZEN5
+    VmConfigurationId:
+      type: string
+      format: uuid
+    CollectionResponse_DatacenterDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - countryCode
+            - cityCode
+            - cityName
+            - index
+            - tier
+            - certifications
+            - slug
+            properties:
+              certifications:
+                type: array
+                items:
+                  type: string
+              cityCode:
+                type: string
+              cityName:
+                type: string
+              countryCode:
+                type: string
+              id:
+                $ref: '#/components/schemas/DatacenterId'
+              index:
+                type: integer
+                format: int32
+              slug:
+                type: string
+              tier:
+                type: integer
+                format: int32
+    CollectionResponse_ClusterDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - name
+            - dcId
+            properties:
+              dcId:
+                type: string
+                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
+              id:
+                type: string
+                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
+              name:
+                type: string
+                example: Cloudless
+    DatacenterId:
+      type: string
+      format: uuid
+    AvailableStorageDto:
+      type: object
+      required:
+      - storageType
+      - replicated
+      - volumeGb
+      properties:
+        replicated:
+          type: boolean
+        storageType:
+          $ref: '#/components/schemas/StorageTypeDto'
+        volumeGb:
+          type: integer
+          format: u-int64
+          example: '100'
+          minimum: 0
+    VmConfigurationDto:
+      type: object
+      required:
+      - id
+      - slug
+      - name
+      - vcpu
+      - ramGb
+      - dedicated
+      - cpuFamilies
+      - preset
+      - tags
+      - description
+      properties:
+        cpuFamilies:
+          type: array
+          items:
+            $ref: '#/components/schemas/CpuFamilyDto'
+        dedicated:
+          type: boolean
+        description:
+          type: string
+        id:
+          $ref: '#/components/schemas/VmConfigurationId'
+        name:
+          type: string
+        preset:
+          $ref: '#/components/schemas/VmConfigurationPreset'
+        ramGb:
+          type: integer
+          format: u-int64
+          example: '4'
+          minimum: 0
+        slug:
+          $ref: '#/components/schemas/VmConfigurationSlug'
+        tags:
+          type: array
+          items:
+            type: string
+        vcpu:
+          type: integer
+          format: u-int8
+          example: '2'
+          minimum: 0
+    ClusterId:
+      type: string
+      format: uuid
+    CollectionResponse_VmConfigurationDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - id
+            - slug
+            - name
+            - vcpu
+            - ramGb
+            - dedicated
+            - cpuFamilies
+            - preset
+            - tags
+            - description
+            properties:
+              cpuFamilies:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CpuFamilyDto'
+              dedicated:
+                type: boolean
+              description:
+                type: string
+              id:
+                $ref: '#/components/schemas/VmConfigurationId'
+              name:
+                type: string
+              preset:
+                $ref: '#/components/schemas/VmConfigurationPreset'
+              ramGb:
+                type: integer
+                format: u-int64
+                example: '4'
+                minimum: 0
+              slug:
+                $ref: '#/components/schemas/VmConfigurationSlug'
+              tags:
+                type: array
+                items:
+                  type: string
+              vcpu:
+                type: integer
+                format: u-int8
+                example: '2'
+                minimum: 0
+    VmConfigurationPreset:
+      type: string
+      enum:
+      - general
+      - cpu_optimized
+      - memory_optimized
+    VmConfigurationSlug:
+      type: string
+      enum:
+      - cpu-regular-2vcpu-4gb
+      - cpu-regular-4vcpu-8gb
+      - cpu-regular-8vcpu-16gb
+      - cpu-regular-8vcpu-32gb
+      - cpu-regular-16vcpu-32gb
+      - cpu-regular-24vcpu-48gb
+      - cpu-regular-32vcpu-64gb
+      - cpu-regular-64vcpu-128gb
+      - cpu-premium-2vcpu-4gb
+      - cpu-premium-4vcpu-8gb
+      - cpu-premium-8vcpu-16gb
+      - cpu-premium-8vcpu-32gb
+      - cpu-premium-16vcpu-32gb
+      - cpu-premium-24vcpu-48gb
+      - cpu-premium-32vcpu-64gb
+      - cpu-premium-64vcpu-128gb
+      - cpu-shared-2vcpu-2gb
+      - cpu-shared-3vcpu-4gb
+      - cpu-shared-4vcpu-8gb
+      - cpu-shared-8vcpu-16gb
+      - cpu-shared-16vcpu-32gb
     ClusterResourcesDto:
       type: object
       required:
@@ -459,144 +680,6 @@ components:
       - insufficient_balance
       - service_unavailable
       - internal_server_error
-    ClusterId:
-      type: string
-      format: uuid
-    CollectionResponse_VmConfigurationDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - id
-            - slug
-            - name
-            - vcpu
-            - ramGb
-            - dedicated
-            - cpuFamilies
-            - preset
-            - tags
-            - description
-            properties:
-              cpuFamilies:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CpuFamilyDto'
-              dedicated:
-                type: boolean
-              description:
-                type: string
-              id:
-                $ref: '#/components/schemas/VmConfigurationId'
-              name:
-                type: string
-              preset:
-                $ref: '#/components/schemas/VmConfigurationPreset'
-              ramGb:
-                type: integer
-                format: u-int64
-                example: '4'
-                minimum: 0
-              slug:
-                $ref: '#/components/schemas/VmConfigurationSlug'
-              tags:
-                type: array
-                items:
-                  type: string
-              vcpu:
-                type: integer
-                format: u-int8
-                example: '2'
-                minimum: 0
-    VmConfigurationSlug:
-      type: string
-      enum:
-      - cpu-regular-2vcpu-4gb
-      - cpu-regular-4vcpu-8gb
-      - cpu-regular-8vcpu-16gb
-      - cpu-regular-8vcpu-32gb
-      - cpu-regular-16vcpu-32gb
-      - cpu-regular-24vcpu-48gb
-      - cpu-regular-32vcpu-64gb
-      - cpu-regular-64vcpu-128gb
-      - cpu-premium-2vcpu-4gb
-      - cpu-premium-4vcpu-8gb
-      - cpu-premium-8vcpu-16gb
-      - cpu-premium-8vcpu-32gb
-      - cpu-premium-16vcpu-32gb
-      - cpu-premium-24vcpu-48gb
-      - cpu-premium-32vcpu-64gb
-      - cpu-premium-64vcpu-128gb
-      - cpu-shared-2vcpu-2gb
-      - cpu-shared-3vcpu-4gb
-      - cpu-shared-4vcpu-8gb
-      - cpu-shared-8vcpu-16gb
-      - cpu-shared-16vcpu-32gb
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    DatacenterId:
-      type: string
-      format: uuid
-    StorageTypeDto:
-      type: string
-      enum:
-      - HDD
-      - SSD
-      - NVME
-    CollectionResponse_DatacenterDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - id
-            - countryCode
-            - cityCode
-            - cityName
-            - index
-            - tier
-            - certifications
-            - slug
-            properties:
-              certifications:
-                type: array
-                items:
-                  type: string
-              cityCode:
-                type: string
-              cityName:
-                type: string
-              countryCode:
-                type: string
-              id:
-                $ref: '#/components/schemas/DatacenterId'
-              index:
-                type: integer
-                format: int32
-              slug:
-                type: string
-              tier:
-                type: integer
-                format: int32
     BulkClusterResourcesDto:
       type: object
       required:
@@ -609,89 +692,6 @@ components:
           propertyNames:
             type: string
             format: uuid
-    AvailableStorageDto:
-      type: object
-      required:
-      - storageType
-      - replicated
-      - volumeGb
-      properties:
-        replicated:
-          type: boolean
-        storageType:
-          $ref: '#/components/schemas/StorageTypeDto'
-        volumeGb:
-          type: integer
-          format: u-int64
-          example: '100'
-          minimum: 0
-    VmConfigurationDto:
-      type: object
-      required:
-      - id
-      - slug
-      - name
-      - vcpu
-      - ramGb
-      - dedicated
-      - cpuFamilies
-      - preset
-      - tags
-      - description
-      properties:
-        cpuFamilies:
-          type: array
-          items:
-            $ref: '#/components/schemas/CpuFamilyDto'
-        dedicated:
-          type: boolean
-        description:
-          type: string
-        id:
-          $ref: '#/components/schemas/VmConfigurationId'
-        name:
-          type: string
-        preset:
-          $ref: '#/components/schemas/VmConfigurationPreset'
-        ramGb:
-          type: integer
-          format: u-int64
-          example: '4'
-          minimum: 0
-        slug:
-          $ref: '#/components/schemas/VmConfigurationSlug'
-        tags:
-          type: array
-          items:
-            type: string
-        vcpu:
-          type: integer
-          format: u-int8
-          example: '2'
-          minimum: 0
-    CollectionResponse_ClusterDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - id
-            - name
-            - dcId
-            properties:
-              dcId:
-                type: string
-                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
-              id:
-                type: string
-                example: 92e6ed24-8bfa-4737-9409-a1aac994e1f5
-              name:
-                type: string
-                example: Cloudless
   securitySchemes:
     access_jwt_token:
       type: http

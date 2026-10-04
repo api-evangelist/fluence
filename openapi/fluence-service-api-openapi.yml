@@ -80,16 +80,18 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ServiceStatusDto:
+    ErrorBody:
       type: object
       required:
-      - maintenanceMode
-      - version
+      - error
+      - code
       properties:
-        maintenanceMode:
-          type: boolean
-        version:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
           type: string
+          description: The human-readable error message.
     ErrorCode:
       type: string
       description: 'Stable, machine-readable error code carried by every non-2xx response.
@@ -113,18 +115,16 @@ components:
       - insufficient_balance
       - service_unavailable
       - internal_server_error
-    ErrorBody:
+    ServiceStatusDto:
       type: object
       required:
-      - error
-      - code
+      - maintenanceMode
+      - version
       properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
+        maintenanceMode:
+          type: boolean
+        version:
           type: string
-          description: The human-readable error message.
   securitySchemes:
     access_jwt_token:
       type: http

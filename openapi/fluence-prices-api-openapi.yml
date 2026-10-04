@@ -302,40 +302,68 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    StorageTypeDto:
+      type: string
+      enum:
+      - HDD
+      - SSD
+      - NVME
+    CollectionResponse_StoragePriceInfoDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - storageTypeId
+            - priceInfo
+            properties:
+              priceInfo:
+                $ref: '#/components/schemas/PriceInfoDto'
+              storageTypeId:
+                $ref: '#/components/schemas/StorageTypeIdDto'
     VmConfigurationId:
       type: string
       format: uuid
-    ErrorCode:
-      type: string
-      description: 'Stable, machine-readable error code carried by every non-2xx response.
-
-
-        Clients should branch on `code` rather than parsing the human-readable
-
-        `error` string. Status-derived variants cover any error that does not
-
-        supply a more specific code; semantic variants are set explicitly at the
-
-        construction site (see `VodopadError::code`).'
-      enum:
-      - bad_request
-      - unauthorized
-      - forbidden
-      - not_found
-      - conflict
-      - unprocessable_entity
-      - not_acceptable
-      - insufficient_balance
-      - service_unavailable
-      - internal_server_error
+    PriceInfoDto:
+      type: object
+      required:
+      - pricePerHourPerQty
+      properties:
+        pricePerHourPerQty:
+          type: string
+          example: '0.01'
     IpAddressType:
       type: string
       enum:
       - V4
       - V6
-    ClusterId:
-      type: string
-      format: uuid
+    ResourceCostDto:
+      type: object
+      required:
+      - resource
+      - costPerSec
+      properties:
+        costPerSec:
+          type: string
+          example: '0.01'
+        resource:
+          $ref: '#/components/schemas/PricingResourceTypeDto'
     VmTypeIdDto:
       type: object
       required:
@@ -346,6 +374,71 @@ components:
           $ref: '#/components/schemas/ClusterId'
         vmConfigurationId:
           $ref: '#/components/schemas/VmConfigurationId'
+    StorageTypeIdDto:
+      type: object
+      required:
+      - storageType
+      - replicated
+      - clusterId
+      properties:
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        replicated:
+          type: boolean
+        storageType:
+          $ref: '#/components/schemas/StorageTypeDto'
+    CostResult:
+      type: object
+      required:
+      - costOfResources
+      - totalCostPerSec
+      - periodSecs
+      - totalCost
+      properties:
+        costOfResources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceCostDto'
+        periodSecs:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalCost:
+          type: string
+          example: '0.1'
+        totalCostPerSec:
+          type: string
+          example: '0.01'
+    CollectionResponse_PublicIpPriceInfoDto:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required:
+            - publicIpTypeId
+            - priceInfo
+            properties:
+              priceInfo:
+                $ref: '#/components/schemas/PriceInfoDto'
+              publicIpTypeId:
+                $ref: '#/components/schemas/PublicIpTypeIdDto'
+    PublicIpTypeIdDto:
+      type: object
+      required:
+      - addressType
+      - clusterId
+      properties:
+        addressType:
+          $ref: '#/components/schemas/IpAddressType'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+    ClusterId:
+      type: string
+      format: uuid
     CollectionResponse_VmPriceInfoDto:
       type: object
       required:
@@ -403,84 +496,29 @@ components:
             properties:
               resource_id:
                 $ref: '#/components/schemas/VmTypeIdDto'
-    ResourceCostDto:
-      type: object
-      required:
-      - resource
-      - costPerSec
-      properties:
-        costPerSec:
-          type: string
-          example: '0.01'
-        resource:
-          $ref: '#/components/schemas/PricingResourceTypeDto'
-    CostResult:
-      type: object
-      required:
-      - costOfResources
-      - totalCostPerSec
-      - periodSecs
-      - totalCost
-      properties:
-        costOfResources:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceCostDto'
-        periodSecs:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalCost:
-          type: string
-          example: '0.1'
-        totalCostPerSec:
-          type: string
-          example: '0.01'
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    CollectionResponse_StoragePriceInfoDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - storageTypeId
-            - priceInfo
-            properties:
-              priceInfo:
-                $ref: '#/components/schemas/PriceInfoDto'
-              storageTypeId:
-                $ref: '#/components/schemas/StorageTypeIdDto'
-    StorageTypeDto:
+    ErrorCode:
       type: string
+      description: 'Stable, machine-readable error code carried by every non-2xx response.
+
+
+        Clients should branch on `code` rather than parsing the human-readable
+
+        `error` string. Status-derived variants cover any error that does not
+
+        supply a more specific code; semantic variants are set explicitly at the
+
+        construction site (see `VodopadError::code`).'
       enum:
-      - HDD
-      - SSD
-      - NVME
-    PublicIpTypeIdDto:
-      type: object
-      required:
-      - addressType
-      - clusterId
-      properties:
-        addressType:
-          $ref: '#/components/schemas/IpAddressType'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
+      - bad_request
+      - unauthorized
+      - forbidden
+      - not_found
+      - conflict
+      - unprocessable_entity
+      - not_acceptable
+      - insufficient_balance
+      - service_unavailable
+      - internal_server_error
     CostRequest:
       type: object
       required:
@@ -496,44 +534,6 @@ components:
           - 'null'
           format: u-int64
           minimum: 0
-    StorageTypeIdDto:
-      type: object
-      required:
-      - storageType
-      - replicated
-      - clusterId
-      properties:
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        replicated:
-          type: boolean
-        storageType:
-          $ref: '#/components/schemas/StorageTypeDto'
-    CollectionResponse_PublicIpPriceInfoDto:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            required:
-            - publicIpTypeId
-            - priceInfo
-            properties:
-              priceInfo:
-                $ref: '#/components/schemas/PriceInfoDto'
-              publicIpTypeId:
-                $ref: '#/components/schemas/PublicIpTypeIdDto'
-    PriceInfoDto:
-      type: object
-      required:
-      - pricePerHourPerQty
-      properties:
-        pricePerHourPerQty:
-          type: string
-          example: '0.01'
   securitySchemes:
     access_jwt_token:
       type: http

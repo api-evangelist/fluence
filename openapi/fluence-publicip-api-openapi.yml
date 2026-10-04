@@ -474,21 +474,24 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    UpdateUserPublicIpRequest:
-      type: object
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
+    SortFieldDto:
+      type: string
+      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
+      enum:
+      - createdAt
+      - name
+      - status
+    IpAddressType:
+      type: string
+      enum:
+      - V4
+      - V6
     DatacenterId:
       type: string
       format: uuid
-    SortOrderDto:
+    UserId:
       type: string
-      enum:
-      - asc
-      - desc
+      format: uuid
     ErrorCode:
       type: string
       description: 'Stable, machine-readable error code carried by every non-2xx response.
@@ -512,9 +515,6 @@ components:
       - insufficient_balance
       - service_unavailable
       - internal_server_error
-    UserVmId:
-      type: string
-      format: uuid
     UserVmReference:
       type: object
       description: A VM reference (id + name) surfaced where a resource is attached, so callers avoid a second lookup.
@@ -526,19 +526,6 @@ components:
           $ref: '#/components/schemas/UserVmId'
         name:
           type: string
-    CreateUserPublicIpRequest:
-      type: object
-      required:
-      - clusterId
-      - name
-      - addressType
-      properties:
-        addressType:
-          $ref: '#/components/schemas/NewIpAddressType'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        name:
-          type: string
     UserPublicIpStatusDto:
       type: string
       enum:
@@ -548,135 +535,25 @@ components:
       - failed
       - removing
       - removed
-    PaginationInfo:
+    UpdateUserPublicIpRequest:
       type: object
-      required:
-      - totalRecords
-      - filteredRecords
-      - totalPages
-      - currentPage
-      - perPage
       properties:
-        currentPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        filteredRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-        perPage:
-          type: integer
-          format: u-int64
-          minimum: 0
-        totalPages:
-          type: integer
-          format: u-int32
-          minimum: 0
-        totalRecords:
-          type: integer
-          format: u-int64
-          minimum: 0
-    PublicIpActionDto:
-      type: string
-      description: 'Wire representation of [`PublicIpAction`] — the operations exposed via
-
-        `UserPublicIpDto.allowedActions`.'
-      enum:
-      - update
-      - delete
-      - attachToVm
-    ErrorBody:
-      type: object
-      required:
-      - error
-      - code
-      properties:
-        code:
-          $ref: '#/components/schemas/ErrorCode'
-          description: The stable, machine-readable error code.
-        error:
-          type: string
-          description: The human-readable error message.
-    UserPublicIpDto:
-      type: object
-      required:
-      - id
-      - userId
-      - clusterId
-      - name
-      - addressType
-      - status
-      - createdAt
-      properties:
-        address:
+        name:
           type:
           - string
           - 'null'
-        addressType:
-          $ref: '#/components/schemas/IpAddressType'
-        allowedActions:
+    UserVmId:
+      type: string
+      format: uuid
+    UserPublicIpIdsDto:
+      type: object
+      required:
+      - ids
+      properties:
+        ids:
           type: array
           items:
-            $ref: '#/components/schemas/PublicIpActionDto'
-          description: 'Operations currently legal for this public IP''s `status`, derived from
-
-            the same guards as request validation.'
-        attachedTo:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/UserVmReference'
-        clusterId:
-          $ref: '#/components/schemas/ClusterId'
-        createdAt:
-          type: string
-          format: date-time
-        id:
-          $ref: '#/components/schemas/UserPublicIpId'
-        lastPaidAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        name:
-          type: string
-        paidUntil:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        priceHourlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time hourly price snapshot in USD, serialized as a string;
-
-            absent when the catalog has no active price for this resource. A UI
-
-            estimate, not the amount billed.'
-          example: '0.05'
-        priceMonthlyUsd:
-          type:
-          - string
-          - 'null'
-          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
-
-            as a string. See `price_hourly_usd`.'
-          example: '36.50'
-        readySince:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        removedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        status:
-          $ref: '#/components/schemas/UserPublicIpStatusDto'
-        userId:
-          $ref: '#/components/schemas/UserId'
+            $ref: '#/components/schemas/UserPublicIpId'
     PaginatedResponse_UserPublicIpDto:
       type: object
       required:
@@ -766,40 +643,163 @@ components:
                 $ref: '#/components/schemas/UserId'
         pagination:
           $ref: '#/components/schemas/PaginationInfo'
-    IpAddressType:
+    ErrorBody:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          $ref: '#/components/schemas/ErrorCode'
+          description: The stable, machine-readable error code.
+        error:
+          type: string
+          description: The human-readable error message.
+    PaginationInfo:
+      type: object
+      required:
+      - totalRecords
+      - filteredRecords
+      - totalPages
+      - currentPage
+      - perPage
+      properties:
+        currentPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        filteredRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+        perPage:
+          type: integer
+          format: u-int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: u-int32
+          minimum: 0
+        totalRecords:
+          type: integer
+          format: u-int64
+          minimum: 0
+    CreateUserPublicIpRequest:
+      type: object
+      required:
+      - clusterId
+      - name
+      - addressType
+      properties:
+        addressType:
+          $ref: '#/components/schemas/NewIpAddressType'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        name:
+          type: string
+    SortOrderDto:
+      type: string
+      enum:
+      - asc
+      - desc
+    UserPublicIpDto:
+      type: object
+      required:
+      - id
+      - userId
+      - clusterId
+      - name
+      - addressType
+      - status
+      - createdAt
+      properties:
+        address:
+          type:
+          - string
+          - 'null'
+        addressType:
+          $ref: '#/components/schemas/IpAddressType'
+        allowedActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicIpActionDto'
+          description: 'Operations currently legal for this public IP''s `status`, derived from
+
+            the same guards as request validation.'
+        attachedTo:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserVmReference'
+        clusterId:
+          $ref: '#/components/schemas/ClusterId'
+        createdAt:
+          type: string
+          format: date-time
+        id:
+          $ref: '#/components/schemas/UserPublicIpId'
+        lastPaidAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type: string
+        paidUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        priceHourlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time hourly price snapshot in USD, serialized as a string;
+
+            absent when the catalog has no active price for this resource. A UI
+
+            estimate, not the amount billed.'
+          example: '0.05'
+        priceMonthlyUsd:
+          type:
+          - string
+          - 'null'
+          description: 'Request-time monthly price snapshot in USD (`hourly × 730`), serialized
+
+            as a string. See `price_hourly_usd`.'
+          example: '36.50'
+        readySince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        removedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          $ref: '#/components/schemas/UserPublicIpStatusDto'
+        userId:
+          $ref: '#/components/schemas/UserId'
+    NewIpAddressType:
       type: string
       enum:
       - V4
-      - V6
-    SortFieldDto:
-      type: string
-      description: Field to order list results by. `status` sorts by the status label text, not a lifecycle order.
-      enum:
-      - createdAt
-      - name
-      - status
     UserPublicIpId:
-      type: string
-      format: uuid
-    UserId:
       type: string
       format: uuid
     ClusterId:
       type: string
       format: uuid
-    NewIpAddressType:
+    PublicIpActionDto:
       type: string
+      description: 'Wire representation of [`PublicIpAction`] — the operations exposed via
+
+        `UserPublicIpDto.allowedActions`.'
       enum:
-      - V4
-    UserPublicIpIdsDto:
-      type: object
-      required:
-      - ids
-      properties:
-        ids:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserPublicIpId'
+      - update
+      - delete
+      - attachToVm
   securitySchemes:
     access_jwt_token:
       type: http
