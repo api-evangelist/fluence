@@ -46,6 +46,9 @@ specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-07-19'
 image: https://www.fluence.network/favicon.ico
+x-docs-platform: scalar
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 tags:
 - Company
 - Crypto Web3
@@ -56,6 +59,7 @@ tags:
 - Virtual Machines
 - AI Infrastructure
 - Decentralized Cloud
+- Web3
 apis:
 - aid: fluence:fluence-billing-api
   name: Fluence Billing API
@@ -313,6 +317,8 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
+  - SecurityGroup
+  tags_raw:
   - Security Group
   properties:
   - type: OpenAPI
