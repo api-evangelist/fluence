@@ -51,6 +51,16 @@ x-docs-platform-confidence: medium
 x-docs-platform-checked: 2026-10-03
 tags:
 - Company
+- Web3
+- Cloud Compute
+- DePIN
+- GPU
+- Infrastructure
+- Virtual Machines
+- AI Infrastructure
+- Decentralized Cloud
+tags_raw:
+- Company
 - Crypto Web3
 - Cloud Compute
 - DePIN
@@ -133,6 +143,8 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
+  - Public Ip
+  tags_raw:
   - PublicIP
   properties:
   - type: OpenAPI
@@ -317,6 +329,8 @@ apis:
   humanURL: https://fluence.dev/docs/build/api/overview
   baseURL: https://api.fluence.dev
   tags:
+  - SecurityGroup
+  tags_raw:
   - Security Group
   properties:
   - type: OpenAPI
