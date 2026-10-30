@@ -64,6 +64,145 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Fluence is a company surfaced as a portfolio company of multicoin-capital and added to the API Evangelist network as a stub for enrichment. Sector: crypto-web3. This profile is a lead awaiting the enrichment pipeline.
+Fluence is a decentralized (DePIN) cloud-computing platform offering enterprise-grade CPU and GPU compute — virtual machines, GPU containers, and bare-metal instances — rented from a global marketplace of independent infrastructure providers at up to 85% below traditional clouds, with predictable pricing and zero egress fees. The Fluence API (api.fluence.dev) gives programmatic access to the marketplace: search available compute, deploy and manage VMs, attach storage and public IPs, configure VPCs, subnets, and security groups, register SSH keys, and handle billing. Compute is paid in USDC; the FLT token is used for staking and protocol governance on Fluence's Arbitrum Orbit L2 appchain. Backed by Multicoin Capital.
 
-Backed by: multicoin-capital — https://fluence.network
+**Areas:** Company · Web3 · Cloud Compute · DePIN · GPU · Infrastructure · Virtual Machines · AI Infrastructure · Decentralized Cloud
+
+## Fluence on APIs.io
+
+Everything profiled for Fluence is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/fluence/](https://apis.io/providers/fluence/)** — or go straight to one of the APIs or properties below.
+
+### APIs (12)
+
+- [Fluence Billing API](https://apis.io/apis/fluence/fluence-billing-api/) — Billing and payment related endpoints
+- [Fluence Hardware API](https://apis.io/apis/fluence/fluence-hardware-api/) — Hardware API endpoints
+- [Fluence Prices API](https://apis.io/apis/fluence/fluence-prices-api/) — Endpoints to get prices for different resources and cost estimation
+- [Fluence PublicIP API](https://apis.io/apis/fluence/fluence-publicip-api/) — The PublicIP API from Fluence — 3 operation(s) for publicip.
+- [Fluence Service API](https://apis.io/apis/fluence/fluence-service-api/) — The Service API from Fluence — 1 operation(s) for service.
+- [Fluence SSH keys API](https://apis.io/apis/fluence/fluence-ssh-keys-api/) — Endpoints to manage SSH keys
+- [Fluence Storage API](https://apis.io/apis/fluence/fluence-storage-api/) — Endpoints to create, view, update and delete storage resources
+- [Fluence Subnets API](https://apis.io/apis/fluence/fluence-subnets-api/) — Endpoints to create, view, update and delete subnets
+- [Fluence Users API](https://apis.io/apis/fluence/fluence-users-api/) — Users API endpoints
+- [Fluence V Ms API](https://apis.io/apis/fluence/fluence-vms-api/) — Endpoints to create, view, update and delete VMs
+- [Fluence VP Cs API](https://apis.io/apis/fluence/fluence-vpcs-api/) — Endpoints to create, view, update and delete VPCs
+- [Fluence Security Group API](https://apis.io/apis/fluence/fluence-security-group-api/) — Endpoints to create, view, update and delete security groups
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [fluence](https://apis.io/servers/fluence/fluence/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Fluence Agentic Access](https://apis.io/agentic-access/fluence/fluence-agentic-access/)
+
+#### Collections (12)
+
+Postman and Open Collection request collections.
+
+- [Fluence Billing API](https://apis.io/collections/fluence/open-fluence-billing-api/)
+- [Fluence Billing Hardware API](https://apis.io/collections/fluence/open-fluence-hardware-api/)
+- [Fluence Billing Prices API](https://apis.io/collections/fluence/open-fluence-prices-api/)
+- [Fluence Billing PublicIP API](https://apis.io/collections/fluence/open-fluence-publicip-api/)
+- [Fluence Billing SecurityGroup API](https://apis.io/collections/fluence/open-fluence-securitygroup-api/)
+- [Fluence Billing Service API](https://apis.io/collections/fluence/open-fluence-service-api/)
+- [Fluence Billing SSH keys API](https://apis.io/collections/fluence/open-fluence-ssh-keys-api/)
+- [Fluence Billing Storage API](https://apis.io/collections/fluence/open-fluence-storage-api/)
+- [Fluence Billing Subnets API](https://apis.io/collections/fluence/open-fluence-subnets-api/)
+- [Fluence Billing Users API](https://apis.io/collections/fluence/open-fluence-users-api/)
+- [Fluence Billing VMs API](https://apis.io/collections/fluence/open-fluence-vms-api/)
+- [Fluence Billing VPCs API](https://apis.io/collections/fluence/open-fluence-vpcs-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Fluence Openapi Overlay](https://apis.io/overlays/fluence/fluence-openapi-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Fluence Authentication](https://apis.io/security/fluence/fluence-authentication/)
+- [Fluence Domain Security](https://apis.io/security/fluence/fluence-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Fluence Scopes](https://apis.io/scopes/fluence/fluence-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.fluence.network)
+- [Documentation](https://fluence.dev/docs/build/overview)
+- [Getting started](https://fluence.dev/docs/build/overview)
+- [API reference](https://api.fluence.dev/swagger-ui/)
+- [Sign up](https://console.fluence.network/auth/sign-up)
+- [Blog](https://www.fluence.network/blog/)
+- [Compliance](https://www.fluence.network/)
+- [Terms of service](https://console.fluence.network/files/FLUENCE_TERMS_OF_SERVICE.pdf)
+- [Privacy policy](https://console.fluence.network/files/FLUENCE_PRIVACY_POLICY.pdf)
+- [GitHub](https://github.com/fluencelabs)
+
+## API Evangelist rating
+
+**Kin Score 36.4** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 49.5 |
+| Contract governance | 18.2 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 54.2 |
+| Access clarity | 7.9 |
+
+**Agent readiness 30.7** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 31.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/fluence/](https://apis.io/providers/fluence/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Fluence: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/fluence/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
